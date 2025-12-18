@@ -99,10 +99,11 @@ show_cert_brief() {
 
 # Measure command execution time in milliseconds
 time_cmd() {
-    local start=$(date +%s%N)
+    # macOS doesn't support date +%s%N, use perl for cross-platform milliseconds
+    local start=$(perl -MTime::HiRes=time -e 'printf "%.0f", time * 1000')
     "$@" > /dev/null 2>&1
-    local end=$(date +%s%N)
-    echo $(( (end - start) / 1000000 ))
+    local end=$(perl -MTime::HiRes=time -e 'printf "%.0f", time * 1000')
+    echo $(( end - start ))
 }
 
 # =============================================================================
