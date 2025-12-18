@@ -2,7 +2,7 @@
 # =============================================================================
 #  UC-03: "The real problem: Store Now, Decrypt Later"
 #
-#  Interactive Mosca calculator to assess your PQC urgency
+#  Interactive Mosca calculator to assess your PQC migration urgency
 #
 #  Key Message: Encrypted data captured today can be decrypted tomorrow.
 # =============================================================================
@@ -19,33 +19,31 @@ source "$SCRIPT_DIR/../../lib/common.sh"
 setup_demo "UC-03: Store Now, Decrypt Later"
 
 # =============================================================================
-# Introduction (brief)
+# Introduction
 # =============================================================================
 
-echo -e "${BOLD}THE THREAT: Store Now, Decrypt Later (SNDL)${NC}"
+echo -e "${BOLD}SCENARIO:${NC}"
+echo "  \"Our data is encrypted. Why worry about quantum computers?\""
 echo ""
-echo "  Adversaries are recording encrypted traffic TODAY."
-echo "  When quantum computers arrive, they'll decrypt it ALL."
-echo ""
-echo -e "  ${CYAN}See README.md and diagram.txt for detailed explanations.${NC}"
+echo -e "${BOLD}WHAT WE'LL DO:${NC}"
+echo "  1. Calculate YOUR urgency with Mosca's inequality"
 echo ""
 
-pause_for_explanation "Press Enter to calculate YOUR urgency..."
+pause_for_explanation "Press Enter to start the calculator..."
 
 # =============================================================================
-# Mosca's Inequality Calculator
+# Step 1: Mosca's Inequality Calculator
 # =============================================================================
 
-print_step "Mosca's Inequality Calculator"
+print_step "Step 1: Mosca's Inequality Calculator"
 
-echo -e "${CYAN}Formula: If X + Y > Z then ACT NOW${NC}"
+echo -e "${CYAN}Formula: If X + Y > Z → You have time. Otherwise → ACT NOW${NC}"
 echo ""
-echo "  X = Years until quantum computers exist"
-echo "  Y = Years to migrate your systems to PQC"
-echo "  Z = Years your data needs to stay secret"
+echo "  X = Years until quantum computers"
+echo "  Y = Years to migrate to PQC"
+echo "  Z = Years your data must stay secret"
 echo ""
 
-# Get user inputs
 echo -e "${BOLD}Enter your values:${NC}"
 echo ""
 
@@ -56,69 +54,42 @@ read -p "  Y - Years to migrate your systems (default: 5): " Y
 Y=${Y:-5}
 
 read -p "  Z - Years your data must stay secret: " Z
-
-# Validate Z is provided
 if [[ -z "$Z" ]]; then
     echo ""
-    echo -e "${YELLOW}No value for Z provided. Here are some examples:${NC}"
-    echo ""
-    echo "  Healthcare (HIPAA):     50 years"
-    echo "  Government classified:  75 years"
-    echo "  Financial records:      10 years"
-    echo "  Trade secrets:          20 years"
-    echo "  PCI compliance:          7 years"
-    echo ""
-    read -p "  Z - Years your data must stay secret: " Z
+    echo -e "  ${YELLOW}Examples: Healthcare=50, Government=75, Financial=10${NC}"
+    read -p "  Z: " Z
     Z=${Z:-20}
 fi
 
-# Calculate
+# =============================================================================
+# Step 2: Calculate Result
+# =============================================================================
+
+print_step "Step 2: Result"
+
 SUM=$((X + Y))
 
-echo ""
-echo "═══════════════════════════════════════════════════════════════"
-echo ""
-echo -e "  ${BOLD}Your values:${NC}"
-echo "    X (quantum timeline):  $X years"
-echo "    Y (migration time):    $Y years"
-echo "    Z (secrecy required):  $Z years"
-echo ""
-echo -e "  ${BOLD}Calculation:${NC}"
-echo "    X + Y = $X + $Y = $SUM"
+echo "  X + Y = $X + $Y = $SUM"
+echo "  Z = $Z"
 echo ""
 
 if [[ $SUM -gt $Z ]]; then
-    echo -e "  ${GREEN}Result: $SUM > $Z${NC}"
-    echo ""
-    echo -e "  ${GREEN}✓ You have time, but don't wait too long.${NC}"
-    echo "    Start planning your PQC migration now."
+    print_success "$SUM > $Z → You have time, but start planning now."
 else
-    echo -e "  ${RED}Result: $SUM ≤ $Z${NC}"
-    echo ""
-    echo -e "  ${RED}⚠ WARNING: You need to act NOW!${NC}"
-    echo ""
-    echo "    Data captured today will still be sensitive when"
-    echo "    quantum computers can decrypt it."
+    echo -e "  ${RED}⚠ $SUM ≤ $Z → ACT NOW! Your data is at risk.${NC}"
 fi
-
-echo ""
-echo "═══════════════════════════════════════════════════════════════"
 
 # =============================================================================
 # Key Message
 # =============================================================================
 
-echo ""
 print_key_message "Encrypted data captured today can be decrypted tomorrow."
 
-echo -e "${BOLD}Next steps:${NC}"
-echo "  1. Inventory your sensitive data and its lifetime"
-echo "  2. Start with hybrid encryption (classical + PQC)"
-echo "  3. See UC-01 for PQC certificates, UC-02 for hybrid approach"
-echo ""
+# =============================================================================
+# Lesson Learned
+# =============================================================================
 
-show_lesson "SNDL is not a future problem — it's happening now.
-Use Mosca's inequality to assess your urgency.
-See README.md for detailed threat analysis."
+show_lesson "SNDL is happening now. Use Mosca's inequality to assess urgency.
+See README.md and diagram.txt for detailed threat analysis."
 
 show_footer
