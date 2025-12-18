@@ -62,18 +62,13 @@ ML-KEM (Module Lattice Key Encapsulation Mechanism) is NIST's standard for post-
 | ML-KEM-768 | 3 (~192-bit) | 1,088 bytes | 1,184 bytes |
 | ML-KEM-1024 | 5 (~256-bit) | 1,568 bytes | 1,568 bytes |
 
-## Running the Demo
+## Run the Demo
 
 ```bash
 ./demo.sh
 ```
 
-The demo will:
-1. Show SNDL attack timeline
-2. Demonstrate classical ECDH key exchange
-3. Demonstrate ML-KEM key encapsulation
-4. Compare sizes and explain tradeoffs
-5. Show hybrid approach for migration
+The demo is an **interactive Mosca calculator** that helps you assess your PQC migration urgency based on your data's sensitivity lifetime.
 
 ## Technical Details
 
