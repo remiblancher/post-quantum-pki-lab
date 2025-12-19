@@ -69,6 +69,9 @@ SERIAL=$(openssl x509 -in "$DEMO_TMP/server.crt" -noout -serial 2>/dev/null | cu
 
 print_success "Certificate issued with serial: ${YELLOW}$SERIAL${NC}"
 
+echo ""
+echo -e "  ${CYAN}Inspect certificate:${NC} pki info $DEMO_TMP/server.crt"
+
 # =============================================================================
 # Step 2: Incident - Key Compromise
 # =============================================================================
@@ -104,6 +107,9 @@ echo ""
 
 echo ""
 print_success "Certificate revoked and CRL generated"
+
+echo ""
+echo -e "  ${CYAN}Inspect CRL:${NC} pki info $PQC_CA/ca.crl"
 
 # =============================================================================
 # Step 4: Compare CRL Sizes
