@@ -23,8 +23,8 @@ Quantum computers will eventually break RSA and ECC cryptography. The question i
 | 04 | Revocation & Incident | ["PKI operations don't change"](usecases/04-revocation-incident/) | 5 min | Operations |
 | 05 | Full PQC PKI | ["Full post-quantum chain of trust"](usecases/05-full-pqc-pki/) | 10 min | Architects |
 | 06 | Code Signing | ["Signatures that outlive the threat"](usecases/06-code-signing/) | 8 min | IoT/Defense |
-| 07 | Certificate Bundles | "Smooth rotation with bundles" | 10 min | Architects |
-| 08 | PQC Timestamping | "Trust Now, Verify Forever" | 10 min | Legal/AI/Compliance |
+| 07 | Certificate Bundles | ["Smooth rotation with bundles"](usecases/07-certificate-bundles/) | 10 min | Architects |
+| 08 | PQC Timestamping | ["Trust Now, Verify Forever"](usecases/08-pqc-timestamping/) | 10 min | Legal/AI/Compliance |
 
 ## Quick Start
 
