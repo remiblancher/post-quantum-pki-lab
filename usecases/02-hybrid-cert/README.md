@@ -33,16 +33,19 @@ This is the reality of PQC migration. You can't flip a switch and move everythin
 
 ## The Commands
 
-### Create a Hybrid CA
+### Step 1: Create Hybrid CA
 
 ```bash
 pki init-ca --name "Hybrid Root CA" \
     --algorithm ecdsa-p384 \
     --hybrid-algorithm ml-dsa-65 \
     --dir ./hybrid-ca
+
+# Inspect
+pki info ./hybrid-ca/ca.crt
 ```
 
-### Issue a Hybrid TLS Certificate
+### Step 2: Issue Hybrid TLS Certificate
 
 ```bash
 pki issue --ca-dir ./hybrid-ca \

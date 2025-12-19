@@ -36,6 +36,8 @@ The demo will:
 
 ## The Commands
 
+### Step 1: Create PQC CA and Issue Certificate
+
 ```bash
 # Create PQC CA
 pki init-ca --name "PQC Root CA" --algorithm ml-dsa-65 --dir ./pqc-ca
@@ -47,21 +49,25 @@ pki issue --ca-dir ./pqc-ca \
     --out server.crt \
     --key-out server.key
 
+# Inspect certificate
+pki info server.crt
+```
+
+### Step 2: Revoke Certificate
+
+```bash
 # Revoke certificate (serial from certificate)
 pki revoke <serial> --ca-dir ./pqc-ca --reason keyCompromise --gen-crl
 
-# Generate CRL separately
-pki gen-crl --ca-dir ./pqc-ca --days 7
+# Inspect CRL
+pki info ./pqc-ca/ca.crl
 ```
 
-### Inspect Certificates and CRL
+### Step 3: Generate CRL (optional)
 
 ```bash
-# View certificate details
-pki info server.crt
-
-# View CRL details
-pki info ./pqc-ca/ca.crl
+# Generate CRL separately
+pki gen-crl --ca-dir ./pqc-ca --days 7
 ```
 
 **Notice anything?** The revocation workflow is identical to classical PKI.

@@ -32,7 +32,7 @@ Short answer: **No.** The PKI workflow is identical. Only the algorithm name cha
 
 ## The Commands
 
-### Classical (ECDSA P-384)
+### Step 1: Classical (ECDSA P-384)
 
 ```bash
 # Create CA
@@ -50,7 +50,7 @@ pki issue --ca-dir ./classic-ca \
 pki info classic-server.crt
 ```
 
-### Post-Quantum (ML-DSA-65)
+### Step 2: Post-Quantum (ML-DSA-65)
 
 ```bash
 # Create CA
