@@ -54,6 +54,16 @@ pki revoke <serial> --ca-dir ./pqc-ca --reason keyCompromise --gen-crl
 pki gen-crl --ca-dir ./pqc-ca --days 7
 ```
 
+### Inspect Certificates and CRL
+
+```bash
+# View certificate details
+pki info server.crt
+
+# View CRL details
+pki info ./pqc-ca/ca.crl
+```
+
 **Notice anything?** The revocation workflow is identical to classical PKI.
 
 ## Revocation Concepts
