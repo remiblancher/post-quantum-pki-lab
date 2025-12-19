@@ -80,9 +80,7 @@ print_success "Classical certificate issued in ${YELLOW}${CLASSIC_CERT_TIME}ms${
 show_cert_brief "$DEMO_TMP/classic-server.crt" "Classical TLS Certificate"
 
 echo ""
-echo -e "  ${CYAN}Inspect certificate:${NC}"
-echo "    pki info $DEMO_TMP/classic-server.crt"
-echo "    openssl x509 -in $DEMO_TMP/classic-server.crt -text -noout"
+echo -e "  ${CYAN}Inspect certificate:${NC} pki info $DEMO_TMP/classic-server.crt"
 
 # =============================================================================
 # Step 3: Create Post-Quantum CA
@@ -131,9 +129,7 @@ print_success "Post-Quantum certificate issued in ${YELLOW}${PQC_CERT_TIME}ms${N
 show_cert_brief "$DEMO_TMP/pq-server.crt" "Post-Quantum TLS Certificate"
 
 echo ""
-echo -e "  ${CYAN}Inspect certificate:${NC}"
-echo "    pki info $DEMO_TMP/pq-server.crt"
-echo "    openssl x509 -in $DEMO_TMP/pq-server.crt -text -noout"
+echo -e "  ${CYAN}Inspect certificate:${NC} pki info $DEMO_TMP/pq-server.crt"
 
 # =============================================================================
 # Step 5: Comparison
