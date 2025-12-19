@@ -64,6 +64,16 @@ pki issue --ca-dir ./pqc-ca \
 
 **Notice anything?** The workflow is identical. Only the algorithm name changes.
 
+### Inspect Certificates
+
+```bash
+# View certificate details (simplified)
+pki info pq-server.crt
+
+# View certificate details (OpenSSL)
+openssl x509 -in pq-server.crt -text -noout
+```
+
 ## Expected Results
 
 ### Size Comparison
