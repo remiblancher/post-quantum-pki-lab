@@ -34,6 +34,28 @@ The demo will:
 4. Revoke the certificate
 5. Generate and examine the CRL
 
+## The Commands
+
+```bash
+# Create PQC CA
+pki init-ca --name "PQC Root CA" --algorithm ml-dsa-65 --dir ./pqc-ca
+
+# Issue TLS certificate
+pki issue --ca-dir ./pqc-ca \
+    --profile ml-dsa-kem/tls-server \
+    --cn server.example.com \
+    --out server.crt \
+    --key-out server.key
+
+# Revoke certificate (serial from certificate)
+pki revoke <serial> --ca-dir ./pqc-ca --reason keyCompromise --gen-crl
+
+# Generate CRL separately
+pki gen-crl --ca-dir ./pqc-ca --days 7
+```
+
+**Notice anything?** The revocation workflow is identical to classical PKI.
+
 ## Revocation Concepts
 
 ### Why Revocation Matters
