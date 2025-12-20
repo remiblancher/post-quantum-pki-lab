@@ -30,11 +30,6 @@ This is how zero-trust architectures work. With PQC certificates, these proofs r
 - **Bob** - Admin with valid client certificate
 - **Mallory** - Attacker without valid certificate
 
-## Prerequisites
-
-- `pki` tool installed
-- Go 1.21+ (for the HTTPS server)
-
 ## Quick Start
 
 ```bash
