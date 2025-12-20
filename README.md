@@ -22,10 +22,10 @@ Learn the core concepts of Post-Quantum PKI.
 | # | Title | What You'll See | Duration |
 |---|-------|-----------------|----------|
 | PKI-01 | ["Store Now, Decrypt Later"](usecases/pki/01-store-now-decrypt-later/) | Mosca calculator: X + Y > Z | 5 min |
-| PKI-02 | ["Classic vs PQC: Nothing Changes"](usecases/pki/02-nothing-changes/) | Side-by-side: ECDSA vs ML-DSA | 5 min |
-| PKI-03 | ["Full PQC Chain of Trust"](usecases/pki/03-chain-of-trust/) | `openssl verify OK` on full chain | 10 min |
-| PKI-04 | ["Hybrid PQC: Best of Both Worlds"](usecases/pki/04-best-of-both-worlds/) | 2 public keys in 1 certificate | 8 min |
-| PKI-05 | ["Oops, We Need to Revoke!"](usecases/pki/05-oops-revoke/) | Status: good → revoked | 5 min |
+| PKI-02 | ["Classic vs PQC: Nothing Changes"](usecases/pki/02-classic-vs-pqc/) | Side-by-side: ECDSA vs ML-DSA | 5 min |
+| PKI-03 | ["Full PQC Chain of Trust"](usecases/pki/03-full-pqc-chain/) | `openssl verify OK` on full chain | 10 min |
+| PKI-04 | ["Hybrid PQC: Best of Both Worlds"](usecases/pki/04-hybrid-catalyst/) | 2 public keys in 1 certificate | 8 min |
+| PKI-05 | ["Oops, We Need to Revoke!"](usecases/pki/05-revocation-crl/) | Status: good → revoked | 5 min |
 
 ### Section 2: Applications (~54 min)
 
@@ -33,12 +33,22 @@ See PQC in action with real-world applications.
 
 | # | Title | What You'll See | Duration |
 |---|-------|-----------------|----------|
-| APP-01 | ["PQC Signing: Sign It, Prove It"](usecases/applications/01-sign-it-prove-it/) | Valid ✓ → Tampered ✗ | 8 min |
-| APP-02 | ["PQC Timestamping: Trust Now, Verify Forever"](usecases/applications/02-trust-now-verify-forever/) | RFC 3161 timestamp proof | 8 min |
-| APP-03 | ["PQC mTLS: Show Me Your Badge"](usecases/applications/03-show-me-your-badge/) | "Welcome Alice!" via mTLS | 10 min |
-| APP-04 | ["PQC OCSP: Is This Cert Still Good?"](usecases/applications/04-is-this-cert-still-good/) | OCSP: good → revoked | 8 min |
-| APP-05 | ["Crypto-Agility: Rotate Without Breaking"](usecases/applications/05-rotate-without-breaking/) | Synchronized cert rotation | 10 min |
-| APP-06 | ["Build a PQC Tunnel"](usecases/applications/06-build-a-pqc-tunnel/) | Encrypted tunnel traffic | 10 min |
+| APP-01 | ["PQC Signing: Sign It, Prove It"](usecases/applications/01-pqc-code-signing/) | Valid ✓ → Tampered ✗ | 8 min |
+| APP-02 | ["PQC Timestamping: Trust Now, Verify Forever"](usecases/applications/02-pqc-timestamping/) | RFC 3161 timestamp proof | 8 min |
+| APP-03 | ["PQC mTLS: Show Me Your Badge"](usecases/applications/03-mtls-authentication/) | "Welcome Alice!" via mTLS | 10 min |
+| APP-04 | ["PQC OCSP: Is This Cert Still Good?"](usecases/applications/04-ocsp-responder/) | OCSP: good → revoked | 8 min |
+| APP-05 | ["Crypto-Agility: Rotate Without Breaking"](usecases/applications/05-crypto-agility/) | Synchronized cert rotation | 10 min |
+| APP-06 | ["Build a PQC Tunnel"](usecases/applications/06-tls-tunnel/) | Encrypted tunnel traffic | 10 min |
+
+### Section 3: Ops & Migration (~26 min) — *Optional*
+
+Bridge between demos and production migration.
+
+| # | Title | What You'll See | Duration |
+|---|-------|-----------------|----------|
+| OPS-01 | ["Inventory Before You Migrate"](usecases/ops/01-inventory-scan/) | Crypto inventory report | 8 min |
+| OPS-02 | ["Policy, Not Refactor"](usecases/ops/02-policy-profiles/) | Same workflow, different algo | 8 min |
+| OPS-03 | ["Incident Drill"](usecases/ops/03-incident-response/) | Revoke → Re-issue → Verify | 10 min |
 
 ## Quick Start
 
@@ -66,6 +76,12 @@ cd usecases/pki/01-store-now-decrypt-later
     ┌─────────────────────────────┐
     │  Applications (6 UC)        │  ~54 min
     │  See it in action           │
+    └─────────────┬───────────────┘
+                  │
+                  ▼
+    ┌─────────────────────────────┐
+    │  Ops & Migration (3 UC)     │  ~26 min
+    │  Plan your transition       │  (optional)
     └─────────────────────────────┘
 ```
 
@@ -74,9 +90,9 @@ cd usecases/pki/01-store-now-decrypt-later
 | Role | Recommended Path |
 |------|------------------|
 | **Developer** | PKI-01, PKI-02 → APP-01, APP-03 |
-| **Security Architect** | All PKI → APP-04, APP-05 |
+| **Security Architect** | All PKI → APP-04, APP-05 → OPS-01, OPS-02 |
 | **CISO/Executive** | PKI-01, PKI-04 → APP-02 |
-| **Operations** | PKI-05 → APP-04, APP-05, APP-06 |
+| **Operations** | PKI-05 → APP-04, APP-05, APP-06 → All OPS |
 
 ## Supported Algorithms
 
@@ -91,8 +107,8 @@ cd usecases/pki/01-store-now-decrypt-later
 - **ML-KEM** (FIPS 203) — Key encapsulation
 
 ### Hybrid
-- Catalyst certificates (ITU-T X.509 9.8)
-- Composite certificates
+- **Catalyst certificates** (ITU-T X.509 9.8)
+- Composite certificates (IETF draft-lamps-pq-composite-*) — *not yet supported*
 
 ## Requirements
 
@@ -107,6 +123,7 @@ post-quantum-pki-lab/
 ├── usecases/
 │   ├── pki/                # PKI fundamentals (5 UC)
 │   ├── applications/       # Real-world applications (6 UC)
+│   ├── ops/                # Ops & Migration (3 UC)
 │   └── _archive/           # Previous UC versions
 ├── tooling/                # Installation scripts
 ├── lib/                    # Shared shell functions
