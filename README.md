@@ -21,10 +21,10 @@ Learn the core concepts of Post-Quantum PKI.
 
 | # | Title | What You'll See | Duration |
 |---|-------|-----------------|----------|
-| PKI-01 | ["Store Now, Decrypt Later"](usecases/pki/01-store-now-decrypt-later/) | Mosca calculator: X + Y > Z | 5 min |
-| PKI-02 | ["Classic vs PQC: Nothing Changes"](usecases/pki/02-classic-vs-pqc/) | Side-by-side: ECDSA vs ML-DSA | 5 min |
-| PKI-03 | ["Full PQC Chain of Trust"](usecases/pki/03-full-pqc-chain/) | `openssl verify OK` on full chain | 10 min |
-| PKI-04 | ["Hybrid PQC: Best of Both Worlds"](usecases/pki/04-hybrid-catalyst/) | 2 public keys in 1 certificate | 8 min |
+| PKI-01 | ["Store Now, Decrypt Later"](usecases/pki/01-store-now-decrypt-later/) | Your urgency score: "Act now!" | 5 min |
+| PKI-02 | ["Classic vs PQC: Nothing Changes"](usecases/pki/02-classic-vs-pqc/) | Size & time comparison table | 5 min |
+| PKI-03 | ["Full PQC Chain of Trust"](usecases/pki/03-full-pqc-chain/) | Root → Issuing → End ✓ | 10 min |
+| PKI-04 | ["Hybrid PQC: Best of Both Worlds"](usecases/pki/04-hybrid-catalyst/) | ECDSA + ML-DSA in 1 cert | 8 min |
 | PKI-05 | ["Oops, We Need to Revoke!"](usecases/pki/05-revocation-crl/) | Status: good → revoked | 5 min |
 
 ### Section 2: Applications (~62 min)
@@ -33,13 +33,13 @@ See PQC in action with real-world applications.
 
 | # | Title | What You'll See | Duration |
 |---|-------|-----------------|----------|
-| APP-01 | ["PQC Signing: Sign It, Prove It"](usecases/applications/01-pqc-code-signing/) | Valid ✓ → Tampered ✗ | 8 min |
-| APP-02 | ["PQC Timestamping: Trust Now, Verify Forever"](usecases/applications/02-pqc-timestamping/) | RFC 3161 timestamp proof | 8 min |
+| APP-01 | ["PQC Signing: Sign It, Prove It"](usecases/applications/01-pqc-code-signing/) | Firmware: signed ✓ tampered ✗ | 8 min |
+| APP-02 | ["PQC Timestamping: Trust Now, Verify Forever"](usecases/applications/02-pqc-timestamping/) | Certified timestamp on file | 8 min |
 | APP-03 | ["PQC mTLS: Show Me Your Badge"](usecases/applications/03-mtls-authentication/) | "Welcome Alice!" via mTLS | 10 min |
-| APP-04 | ["PQC OCSP: Is This Cert Still Good?"](usecases/applications/04-ocsp-responder/) | OCSP: good → revoked | 8 min |
+| APP-04 | ["PQC OCSP: Is This Cert Still Good?"](usecases/applications/04-ocsp-responder/) | Real-time cert status check | 8 min |
 | APP-05 | ["Crypto-Agility: Rotate Without Breaking"](usecases/applications/05-crypto-agility/) | Synchronized cert rotation | 10 min |
-| APP-06 | ["Build a PQC Tunnel"](usecases/applications/06-tls-tunnel/) | Encrypted tunnel traffic | 10 min |
-| APP-07 | ["LTV: Trust Today, Verify in 2055"](usecases/applications/07-ltv-document-signing/) | LTV bundle for 30-year proof | 8 min |
+| APP-06 | ["Build a PQC Tunnel"](usecases/applications/06-tls-tunnel/) | Data through PQC tunnel | 10 min |
+| APP-07 | ["LTV: Trust Today, Verify in 2055"](usecases/applications/07-ltv-document-signing/) | Proof still valid in 2055 | 8 min |
 
 ### Section 3: Ops & Migration (~26 min) — *Optional*
 
@@ -47,7 +47,7 @@ Bridge between demos and production migration.
 
 | # | Title | What You'll See | Duration |
 |---|-------|-----------------|----------|
-| OPS-01 | ["Inventory Before You Migrate"](usecases/ops/01-inventory-scan/) | Crypto inventory report | 8 min |
+| OPS-01 | ["Inventory Before You Migrate"](usecases/ops/01-inventory-scan/) | "Found: 3 ECDSA, 0 PQC" | 8 min |
 | OPS-02 | ["Policy, Not Refactor"](usecases/ops/02-policy-profiles/) | Same workflow, different algo | 8 min |
 | OPS-03 | ["Incident Drill"](usecases/ops/03-incident-response/) | Revoke → Re-issue → Verify | 10 min |
 
