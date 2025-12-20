@@ -62,6 +62,45 @@ Modern Client (PQC aware):
 └────────────────────────────────────────────────────────────────────┘
 
 
+INTEROPERABILITY TEST
+─────────────────────
+
+Same hybrid certificate, different clients:
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        HYBRID CERTIFICATE                                    │
+│                    (ECDSA P-384 + ML-DSA-65)                                │
+└─────────────────────────────────────────────────────────────────────────────┘
+                    │                              │
+                    │                              │
+          ┌─────────▼─────────┐          ┌─────────▼─────────┐
+          │  Legacy Client    │          │  PQC-Aware Client │
+          │    (OpenSSL)      │          │    (pki tool)     │
+          └─────────┬─────────┘          └─────────┬─────────┘
+                    │                              │
+                    ▼                              ▼
+          ┌───────────────────┐          ┌───────────────────┐
+          │ Uses ECDSA key    │          │ Extracts BOTH     │
+          │ Verifies ECDSA    │          │ keys from cert    │
+          │ signature only    │          │                   │
+          │                   │          │ Verifies ECDSA ✓  │
+          │ Ignores unknown   │          │ Verifies ML-DSA ✓ │
+          │ PQC extensions    │          │                   │
+          └─────────┬─────────┘          └─────────┬─────────┘
+                    │                              │
+                    ▼                              ▼
+              ┌──────────┐                  ┌──────────┐
+              │  ✓ OK    │                  │  ✓ OK    │
+              │ (ECDSA)  │                  │  (BOTH)  │
+              └──────────┘                  └──────────┘
+
+Commands:
+  openssl verify -CAfile ca.crt server.crt    →  OK (classical only)
+  pki verify --cert server.crt --ca ca.crt    →  OK (both signatures)
+
+Key insight: ZERO breaking changes for legacy clients!
+
+
 MIGRATION TIMELINE
 ──────────────────
 
