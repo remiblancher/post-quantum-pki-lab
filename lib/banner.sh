@@ -23,6 +23,7 @@ EOF
 
 show_footer() {
     echo ""
+    echo -e "${CYAN}  ─────────────────────────────────────────────────${NC}"
     echo -e "  ${PURPLE}QentriQ${NC} — ${BLUE}https://qentriq.com${NC}"
     echo ""
 }
