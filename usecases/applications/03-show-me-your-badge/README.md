@@ -1,4 +1,4 @@
-# APP-03: "Show Me Your Badge"
+# APP-03: "PQC mTLS: Show Me Your Badge"
 
 ## Mutual TLS Authentication with Post-Quantum Certificates
 
