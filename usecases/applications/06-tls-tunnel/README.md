@@ -2,7 +2,7 @@
 
 ## Secure TLS Tunnel with Post-Quantum Certificates
 
-> **Key Message:** A TLS tunnel provides encrypted, authenticated transport. With PQC certificates, this tunnel is quantum-resistant.
+> **Key Message:** This tunnel uses PQC for *identity*. Full quantum resistance requires hybrid key exchange — coming with TLS + ML-KEM support.
 
 > **Visual diagrams:** See [`diagram.txt`](diagram.txt) for ASCII diagrams of the tunnel architecture.
 
@@ -58,7 +58,30 @@ This demo creates a simple port-forwarding tunnel secured with mTLS and ML-DSA c
 | Confidentiality | TLS 1.3 encryption |
 | Server Authentication | Server ML-DSA certificate |
 | Client Authentication | Client ML-DSA certificate (mTLS) |
-| Quantum Resistance | ML-DSA-65 signatures |
+
+## What Is (and Isn't) Quantum-Resistant
+
+| Layer | Algorithm | Quantum-Safe? | Notes |
+|-------|-----------|---------------|-------|
+| **Identity (Auth)** | ML-DSA-65 | ✅ Yes | Server & client certs |
+| **Key Exchange** | X25519/ECDHE | ❌ No | TLS 1.3 default |
+| **Encryption** | AES-256-GCM | ✅ Yes | Symmetric, quantum-safe |
+
+> **Important:** This demo protects *identity* with PQC. The session key exchange
+> uses classical ECDHE — vulnerable to "Store Now, Decrypt Later" attacks.
+>
+> For full PQC protection, the key exchange must use **ML-KEM** (hybrid or pure).
+> This requires TLS libraries with OQS support (e.g., liboqs, wolfSSL+PQC).
+
+### Migration Path
+
+```
+Today (this demo)          Tomorrow (full PQC)
+─────────────────          ───────────────────
+Auth: ML-DSA ✓             Auth: ML-DSA ✓
+KEX:  ECDHE ✗              KEX:  ML-KEM + ECDHE ✓
+Enc:  AES-256 ✓            Enc:  AES-256 ✓
+```
 
 ## Learning Outcomes
 
