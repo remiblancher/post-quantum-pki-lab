@@ -10,12 +10,8 @@ source "$SCRIPT_DIR/banner.sh"
 # Get the lab root directory
 LAB_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-# PKI binary location (check lab's bin/ first, then PATH)
-if [[ -x "$LAB_ROOT/bin/pki" ]]; then
-    PKI_BIN="$LAB_ROOT/bin/pki"
-else
-    PKI_BIN="${PKI_BIN:-pki}"
-fi
+# PKI binary location (always in bin/)
+PKI_BIN="$LAB_ROOT/bin/pki"
 
 # Temporary directory for demo artifacts
 DEMO_TMP="${DEMO_TMP:-/tmp/pqc-lab-demo-$$}"
@@ -34,8 +30,8 @@ setup_demo() {
     show_banner "$demo_name"
 
     # Check PKI binary
-    if ! command -v "$PKI_BIN" &> /dev/null; then
-        print_error "PKI binary not found: $PKI_BIN"
+    if [[ ! -x "$PKI_BIN" ]]; then
+        print_error "PKI tool not installed"
         print_info "Run: ./tooling/install.sh"
         exit 1
     fi
