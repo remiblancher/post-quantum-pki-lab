@@ -1,0 +1,184 @@
+================================================================================
+                    OPS-02: "Policy, Not Refactor"
+                 Algorithm Changes via Policy Diagrams
+================================================================================
+
+1. THE WRONG WAY vs THE RIGHT WAY
+────────────────────────────────────────────────────────────────────────────────
+
+    ❌ WRONG: Hardcoded Algorithms              ✓ RIGHT: Policy-Based Profiles
+    ───────────────────────────────              ──────────────────────────────
+
+    Application Code:                           Application Code:
+    ┌─────────────────────────────┐             ┌─────────────────────────────┐
+    │                             │             │                             │
+    │  key = generateECDSAKey()   │             │  cert = pki.issue(          │
+    │  cert = sign(key, "SHA256") │             │    profile: config.profile, │
+    │  // Hardcoded everywhere!   │             │    cn: "api.example.com"    │
+    │                             │             │  )                          │
+    └─────────────────────────────┘             └─────────────────────────────┘
+              │                                           │
+              │ To migrate:                               │ To migrate:
+              │ - Find all code                           │ - Change config
+              │ - Update libraries                        │ - Done!
+              │ - Test everything                         │
+              │ - Redeploy                                │
+              ▼                                           ▼
+    ┌─────────────────────────────┐             ┌─────────────────────────────┐
+    │   WEEKS OF WORK             │             │   5 MINUTES                 │
+    │   HIGH RISK                 │             │   LOW RISK                  │
+    └─────────────────────────────┘             └─────────────────────────────┘
+
+
+2. PROFILE ABSTRACTION
+────────────────────────────────────────────────────────────────────────────────
+
+                              ┌─────────────────────┐
+                              │    POLICY FILE      │
+                              │    (YAML/JSON)      │
+                              │                     │
+                              │  algorithm: ml-dsa  │
+                              │  key_size: 65       │
+                              │  validity: 365d     │
+                              └──────────┬──────────┘
+                                         │
+                                         ▼
+    ┌───────────────────────────────────────────────────────────────────────┐
+    │                           PKI TOOL                                    │
+    │                                                                       │
+    │   ┌─────────────┐    ┌─────────────┐    ┌─────────────┐              │
+    │   │   Profile   │    │   Profile   │    │   Profile   │              │
+    │   │   Loader    │───>│   Validator │───>│   Executor  │              │
+    │   └─────────────┘    └─────────────┘    └─────────────┘              │
+    │                                                                       │
+    └───────────────────────────────────────────────────────────────────────┘
+                                         │
+                                         ▼
+                              ┌─────────────────────┐
+                              │    CERTIFICATE      │
+                              │    (with specified  │
+                              │     algorithm)      │
+                              └─────────────────────┘
+
+
+3. PROFILE EXAMPLES
+────────────────────────────────────────────────────────────────────────────────
+
+    CLASSIC PROFILE                     PQC PROFILE
+    ───────────────                     ───────────
+
+    ec/tls-server:                      ml-dsa-kem/tls-server:
+    ┌─────────────────────────────┐     ┌─────────────────────────────┐
+    │ name: ec/tls-server         │     │ name: ml-dsa-kem/tls-server │
+    │ algorithm: ecdsa-p384       │     │ algorithm: ml-dsa-65        │
+    │ key_usage:                  │     │ key_usage:                  │
+    │   - digitalSignature        │     │   - digitalSignature        │
+    │   - keyEncipherment         │     │   - keyEncipherment         │
+    │ ext_key_usage:              │     │ ext_key_usage:              │
+    │   - serverAuth              │     │   - serverAuth              │
+    │ validity: 365d              │     │ validity: 365d              │
+    └─────────────────────────────┘     └─────────────────────────────┘
+              │                                   │
+              │                                   │
+              └─────────────┬─────────────────────┘
+                            │
+                            ▼
+                  SAME STRUCTURE!
+                  ONLY ALGORITHM DIFFERS
+
+
+4. MIGRATION WORKFLOW
+────────────────────────────────────────────────────────────────────────────────
+
+    DAY 0: Classic Policy               DAY 1: PQC Policy
+    ─────────────────────               ─────────────────────
+
+    config.yaml:                        config.yaml:
+    ┌─────────────────────────────┐     ┌─────────────────────────────┐
+    │ default_profile: ec/tls-... │ ──> │ default_profile: ml-dsa-... │
+    └─────────────────────────────┘     └─────────────────────────────┘
+              │                                   │
+              ▼                                   ▼
+    ┌─────────────────────────────┐     ┌─────────────────────────────┐
+    │ $ pki issue --cn api.ex...  │     │ $ pki issue --cn api.ex...  │
+    │                             │     │                             │
+    │ (same command)              │     │ (same command)              │
+    └─────────────────────────────┘     └─────────────────────────────┘
+              │                                   │
+              ▼                                   ▼
+    ┌─────────────────────────────┐     ┌─────────────────────────────┐
+    │ Output: ECDSA certificate   │     │ Output: ML-DSA certificate  │
+    └─────────────────────────────┘     └─────────────────────────────┘
+
+    NO CODE CHANGES!
+    NO WORKFLOW CHANGES!
+    JUST POLICY!
+
+
+5. GRADUAL ROLLOUT
+────────────────────────────────────────────────────────────────────────────────
+
+    Phase 1: Test                Phase 2: Pilot              Phase 3: Production
+    ────────────────             ─────────────────           ──────────────────
+
+    ┌─────────────────┐          ┌─────────────────┐         ┌─────────────────┐
+    │ Lab/Dev         │          │ Non-critical    │         │ All services    │
+    │ environments    │          │ services        │         │                 │
+    │                 │          │                 │         │                 │
+    │ Profile: PQC    │          │ Profile: PQC    │         │ Profile: PQC    │
+    └─────────────────┘          └─────────────────┘         └─────────────────┘
+           │                            │                           │
+           ▼                            ▼                           ▼
+    ┌─────────────────┐          ┌─────────────────┐         ┌─────────────────┐
+    │ Validate        │          │ Monitor for     │         │ Full PQC        │
+    │ compatibility   │          │ issues          │         │ deployment      │
+    └─────────────────┘          └─────────────────┘         └─────────────────┘
+
+
+6. COMPARISON: MANUAL vs POLICY-DRIVEN
+────────────────────────────────────────────────────────────────────────────────
+
+    ┌──────────────────┬─────────────────────┬─────────────────────┐
+    │                  │   Manual Approach   │   Policy-Driven     │
+    ├──────────────────┼─────────────────────┼─────────────────────┤
+    │ Time to migrate  │ Weeks/Months        │ Minutes             │
+    │ Risk level       │ High                │ Low                 │
+    │ Code changes     │ Many                │ None                │
+    │ Testing needed   │ Extensive           │ Minimal             │
+    │ Rollback time    │ Hours               │ Seconds             │
+    │ Expertise needed │ Cryptography        │ Configuration       │
+    │ Audit trail      │ Code reviews        │ Config versioning   │
+    └──────────────────┴─────────────────────┴─────────────────────┘
+
+
+7. POLICY GOVERNANCE
+────────────────────────────────────────────────────────────────────────────────
+
+                    ┌─────────────────────┐
+                    │   SECURITY POLICY   │
+                    │   "All new certs    │
+                    │    must use PQC"    │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │   PKI POLICY FILE   │
+                    │   profiles.yaml     │
+                    └──────────┬──────────┘
+                               │
+              ┌────────────────┼────────────────┐
+              │                │                │
+              ▼                ▼                ▼
+    ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
+    │   TLS Server    │ │   Code Signing  │ │   Client Auth   │
+    │   Certificates  │ │   Certificates  │ │   Certificates  │
+    │                 │ │                 │ │                 │
+    │   ✓ ML-DSA-65   │ │   ✓ ML-DSA-65   │ │   ✓ ML-DSA-65   │
+    └─────────────────┘ └─────────────────┘ └─────────────────┘
+
+    ONE POLICY CHANGE → ALL CERTIFICATES UPDATED
+
+
+================================================================================
+                              END OF DIAGRAMS
+================================================================================
