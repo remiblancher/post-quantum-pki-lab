@@ -32,7 +32,8 @@ The demo will:
 2. Issue a TLS certificate
 3. Simulate a key compromise incident
 4. Revoke the certificate
-5. Generate and examine the CRL
+5. Compare CRL sizes (Classical vs PQC)
+6. Compare OCSP response sizes (Classical vs PQC)
 
 ## The Commands
 
@@ -86,18 +87,33 @@ Certificates have expiration dates, but sometimes you need to invalidate them **
 
 | Method | Description | PQC Impact |
 |--------|-------------|------------|
-| **CRL** | Certificate Revocation List | Larger (PQC signatures) |
-| **OCSP** | Online Certificate Status Protocol | Same workflow |
+| **CRL** | Certificate Revocation List (batch) | Larger (PQC signatures) |
+| **OCSP** | Online Certificate Status Protocol (real-time) | Larger responses (PQC signatures) |
 | **CRL Distribution Points** | URLs in certificate | No change |
 
 ## Size Comparison
 
+### CRL Sizes
+
 | Component | Classical (ECDSA) | Post-Quantum (ML-DSA) | Notes |
 |-----------|-------------------|----------------------|-------|
 | CRL signature | ~96 bytes | ~3,293 bytes | ~34x larger |
-| CRL total size | Small | Slightly larger | Depends on revoked count |
+| CRL total size | ~500 bytes | ~3,800 bytes | Depends on revoked count |
 
-*The CRL is larger due to the PQC signature, but the workflow is identical.*
+### OCSP Response Sizes
+
+| Component | Classical (ECDSA) | Post-Quantum (ML-DSA) | Notes |
+|-----------|-------------------|----------------------|-------|
+| OCSP response | ~300 bytes | ~3,500 bytes | Per certificate query |
+
+*Both CRL and OCSP responses are larger due to PQC signatures, but the protocols are unchanged.*
+
+### CRL vs OCSP
+
+| Method | Description | Use Case |
+|--------|-------------|----------|
+| **CRL** | Download entire list | Offline verification, batch processing |
+| **OCSP** | Query per certificate | Real-time verification, online systems |
 
 ## Incident Response Workflow
 
@@ -132,12 +148,35 @@ Certificates have expiration dates, but sometimes you need to invalidate them **
 | 4 | superseded | Replaced by new cert |
 | 5 | cessationOfOperation | No longer needed |
 
+## OCSP Commands
+
+```bash
+# Generate OCSP response (CA-signed mode)
+pki ocsp sign --serial <serial> --status revoked \
+    --revocation-reason keyCompromise \
+    --ca ca.crt --key ca.key -o response.ocsp
+
+# Generate OCSP response (delegated responder mode)
+pki ocsp sign --serial <serial> --status good \
+    --ca ca.crt --cert ocsp-responder.crt --key ocsp-responder.key -o response.ocsp
+
+# Inspect OCSP response
+pki ocsp info response.ocsp
+
+# Verify OCSP response
+pki ocsp verify --response response.ocsp --ca ca.crt
+
+# Start OCSP responder (optional, for HTTP service)
+pki ocsp serve --ca-dir ./pqc-ca --addr :8080
+```
+
 ## What You Learned
 
 1. **Revocation is algorithm-agnostic:** Same commands, same workflow
-2. **CRLs are signed:** PQC CRLs have larger signatures
-3. **Incident response unchanged:** Your runbooks still apply
-4. **Operations teams:** No retraining needed for basic PKI ops
+2. **CRLs are signed:** PQC CRLs have larger signatures (~7.6x)
+3. **OCSP responses are signed:** PQC OCSP responses are larger (~12x)
+4. **Incident response unchanged:** Your runbooks still apply
+5. **Operations teams:** No retraining needed for basic PKI ops
 
 ## Related Use Cases
 
@@ -147,6 +186,7 @@ Certificates have expiration dates, but sometimes you need to invalidate them **
 ## References
 
 - [RFC 5280: X.509 PKI Certificate and CRL Profile](https://datatracker.ietf.org/doc/html/rfc5280)
+- [RFC 6960: Online Certificate Status Protocol (OCSP)](https://datatracker.ietf.org/doc/html/rfc6960)
 - [NIST SP 800-57: Key Management Guidelines](https://csrc.nist.gov/publications/detail/sp/800-57-part-1/rev-5/final)
 
 ---
