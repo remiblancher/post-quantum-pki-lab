@@ -18,17 +18,12 @@ show_banner() {
 EOF
     echo -e "${NC}"
     echo -e "${BOLD_WHITE}  $title${NC}"
-    echo -e "${CYAN}  ─────────────────────────────────────────────────${NC}"
-    echo -e "  ${PURPLE}QentriQ${NC} — Quantum-Safe PKI"
-    echo -e "  ${BLUE}https://qentriq.com${NC}"
     echo ""
 }
 
 show_footer() {
     echo ""
-    echo -e "${CYAN}  ─────────────────────────────────────────────────${NC}"
-    echo -e "  ${BOLD}Need help with your PQC transition?${NC}"
-    echo -e "  Contact ${PURPLE}QentriQ${NC}: ${BLUE}https://qentriq.com${NC}"
+    echo -e "  ${PURPLE}QentriQ${NC} — ${BLUE}https://qentriq.com${NC}"
     echo ""
 }
 
