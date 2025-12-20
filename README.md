@@ -130,9 +130,7 @@ post-quantum-pki-lab/
 
 ## About
 
-This project is part of the **Quantum-Safe PKI** initiative by **QentriQ**.
-
-**Need help with your PQC transition?** [Contact us](https://qentriq.com)
+Built by [QentriQ](https://qentriq.com)
 
 ## License
 
