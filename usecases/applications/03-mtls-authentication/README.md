@@ -92,5 +92,5 @@ After this demo, you'll understand:
 
 ## Next Steps
 
-- [APP-04: Is This Cert Still Good?](../04-is-this-cert-still-good/) - Add OCSP checking
-- [APP-06: Build a PQC Tunnel](../06-build-a-pqc-tunnel/) - Secure tunneling
+- [APP-04: OCSP Responder](../04-ocsp-responder/) - Add OCSP checking
+- [APP-06: TLS Tunnel](../06-tls-tunnel/) - Secure tunneling
