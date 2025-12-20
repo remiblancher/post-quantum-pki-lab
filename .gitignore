@@ -1,0 +1,5 @@
+# Compiled binary
+bin/pki
+
+# Temporary demo workspaces
+workspace/
