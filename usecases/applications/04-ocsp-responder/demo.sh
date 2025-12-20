@@ -16,7 +16,7 @@ source "$SCRIPT_DIR/../../../lib/common.sh"
 # Demo Setup
 # =============================================================================
 
-setup_demo "UC-09: Trust, but verify"
+setup_demo "APP-04: OCSP Responder"
 
 PQC_CA="$DEMO_TMP/pqc-ca"
 CLASSIC_CA="$DEMO_TMP/classic-ca"

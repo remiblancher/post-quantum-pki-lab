@@ -16,7 +16,7 @@ source "$SCRIPT_DIR/../../../lib/common.sh"
 # Demo Setup
 # =============================================================================
 
-setup_demo "UC-02: Hybrid = best of both worlds"
+setup_demo "PKI-04: Hybrid PQC"
 
 HYBRID_CA="$DEMO_TMP/hybrid-ca"
 CLASSIC_CA="$DEMO_TMP/classic-ca"

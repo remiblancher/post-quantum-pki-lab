@@ -17,7 +17,7 @@ source "$SCRIPT_DIR/../../../lib/common.sh"
 # Demo Setup
 # =============================================================================
 
-setup_demo "UC-07: Smooth rotation with bundles"
+setup_demo "APP-05: Crypto-Agility"
 
 HYBRID_CA="$DEMO_TMP/hybrid-ca"
 

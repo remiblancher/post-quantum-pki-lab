@@ -13,8 +13,8 @@ LAB_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 # PKI binary location (always in bin/)
 PKI_BIN="$LAB_ROOT/bin/pki"
 
-# Temporary directory for demo artifacts
-DEMO_TMP="${DEMO_TMP:-/tmp/pqc-lab-demo-$$}"
+# Workspace directory for demo artifacts (persists after demo)
+WORKSPACE="$LAB_ROOT/workspace"
 
 # =============================================================================
 # Setup and Cleanup
@@ -23,7 +23,18 @@ DEMO_TMP="${DEMO_TMP:-/tmp/pqc-lab-demo-$$}"
 setup_demo() {
     local demo_name="$1"
 
-    # Create temp directory
+    # Extract UC identifier (e.g., "PKI-01: Store Now..." → "pki-01")
+    local uc_id=$(echo "$demo_name" | grep -oE '^[A-Z]+-[0-9]+' | tr '[:upper:]' '[:lower:]')
+
+    # Set demo workspace
+    DEMO_TMP="$WORKSPACE/${uc_id:-demo}"
+
+    # Clean previous run if exists
+    if [[ -d "$DEMO_TMP" ]]; then
+        rm -rf "$DEMO_TMP"
+    fi
+
+    # Create workspace directory
     mkdir -p "$DEMO_TMP"
 
     # Show banner
@@ -36,17 +47,9 @@ setup_demo() {
         exit 1
     fi
 
-    print_info "Demo artifacts: $DEMO_TMP"
+    print_info "Artifacts: $DEMO_TMP"
     echo ""
 }
-
-cleanup_demo() {
-    if [[ -d "$DEMO_TMP" ]]; then
-        rm -rf "$DEMO_TMP"
-    fi
-}
-
-trap cleanup_demo EXIT
 
 # =============================================================================
 # Certificate Helpers

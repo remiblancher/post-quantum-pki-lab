@@ -16,7 +16,7 @@ source "$SCRIPT_DIR/../../../lib/common.sh"
 # Demo Setup
 # =============================================================================
 
-setup_demo "UC-05: Full post-quantum chain of trust"
+setup_demo "PKI-03: Full PQC Chain of Trust"
 
 ROOT_CA="$DEMO_TMP/pqc-root-ca"
 ISSUING_CA="$DEMO_TMP/pqc-issuing-ca"

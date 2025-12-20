@@ -17,7 +17,7 @@ source "$SCRIPT_DIR/../../../lib/common.sh"
 # Demo Setup
 # =============================================================================
 
-setup_demo "UC-06: Signatures that outlive the threat"
+setup_demo "APP-01: PQC Code Signing"
 
 CLASSIC_CA="$DEMO_TMP/classic-code-ca"
 PQC_CA="$DEMO_TMP/pqc-code-ca"
