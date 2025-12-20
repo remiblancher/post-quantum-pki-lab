@@ -128,22 +128,18 @@ echo -e "    pki info $DEMO_TMP/pqc-code.crt"
 
 print_step "Step 4: Sign a Binary (CMS/PKCS#7)"
 
-# Create test binary
-cat > "$DEMO_TMP/myapp.sh" << 'EOF'
-#!/bin/bash
-echo "Hello World - ACME Software v1.0"
-EOF
-chmod +x "$DEMO_TMP/myapp.sh"
-echo -e "${CYAN}Created test binary: $DEMO_TMP/myapp.sh${NC}"
+# Create test firmware binary (simulated)
+dd if=/dev/urandom of="$DEMO_TMP/firmware-v1.2.bin" bs=1024 count=100 2>/dev/null
+echo -e "${CYAN}Created test firmware: $DEMO_TMP/firmware-v1.2.bin (100 KB)${NC}"
 echo ""
 
 echo -e "${CYAN}Signing with classical certificate...${NC}"
 echo -e "Command:"
-echo -e "  ${CYAN}pki cms sign --data myapp.sh --cert classic-code.crt --key classic-code.key -o myapp-classic.p7s${NC}"
+echo -e "  ${CYAN}pki cms sign --data firmware-v1.2.bin --cert classic-code.crt --key classic-code.key -o myapp-classic.p7s${NC}"
 echo ""
 
 CLASSIC_SIGN_TIME=$(time_cmd "$PKI_BIN" cms sign \
-    --data "$DEMO_TMP/myapp.sh" \
+    --data "$DEMO_TMP/firmware-v1.2.bin" \
     --cert "$DEMO_TMP/classic-code.crt" \
     --key "$DEMO_TMP/classic-code.key" \
     -o "$DEMO_TMP/myapp-classic.p7s")
@@ -153,11 +149,11 @@ print_success "Classical signature created in ${YELLOW}${CLASSIC_SIGN_TIME}ms${N
 echo ""
 echo -e "${CYAN}Signing with PQC certificate...${NC}"
 echo -e "Command:"
-echo -e "  ${CYAN}pki cms sign --data myapp.sh --cert pqc-code.crt --key pqc-code.key -o myapp-pqc.p7s${NC}"
+echo -e "  ${CYAN}pki cms sign --data firmware-v1.2.bin --cert pqc-code.crt --key pqc-code.key -o myapp-pqc.p7s${NC}"
 echo ""
 
 PQC_SIGN_TIME=$(time_cmd "$PKI_BIN" cms sign \
-    --data "$DEMO_TMP/myapp.sh" \
+    --data "$DEMO_TMP/firmware-v1.2.bin" \
     --cert "$DEMO_TMP/pqc-code.crt" \
     --key "$DEMO_TMP/pqc-code.key" \
     -o "$DEMO_TMP/myapp-pqc.p7s")
@@ -172,12 +168,12 @@ print_step "Step 5: Verify Signatures"
 
 echo -e "${CYAN}Verifying classical signature...${NC}"
 echo -e "Command:"
-echo -e "  ${CYAN}pki cms verify --signature myapp-classic.p7s --data myapp.sh --ca ca.crt${NC}"
+echo -e "  ${CYAN}pki cms verify --signature myapp-classic.p7s --data firmware-v1.2.bin --ca ca.crt${NC}"
 echo ""
 
 "$PKI_BIN" cms verify \
     --signature "$DEMO_TMP/myapp-classic.p7s" \
-    --data "$DEMO_TMP/myapp.sh" \
+    --data "$DEMO_TMP/firmware-v1.2.bin" \
     --ca "$CLASSIC_CA/ca.crt"
 
 print_success "Classical signature verified"
@@ -187,7 +183,7 @@ echo -e "${CYAN}Verifying PQC signature...${NC}"
 
 "$PKI_BIN" cms verify \
     --signature "$DEMO_TMP/myapp-pqc.p7s" \
-    --data "$DEMO_TMP/myapp.sh" \
+    --data "$DEMO_TMP/firmware-v1.2.bin" \
     --ca "$PQC_CA/ca.crt"
 
 print_success "PQC signature verified"

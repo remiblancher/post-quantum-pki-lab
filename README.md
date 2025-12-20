@@ -27,7 +27,7 @@ Learn the core concepts of Post-Quantum PKI.
 | PKI-04 | ["Hybrid PQC: Best of Both Worlds"](usecases/pki/04-hybrid-catalyst/) | 2 public keys in 1 certificate | 8 min |
 | PKI-05 | ["Oops, We Need to Revoke!"](usecases/pki/05-revocation-crl/) | Status: good → revoked | 5 min |
 
-### Section 2: Applications (~54 min)
+### Section 2: Applications (~62 min)
 
 See PQC in action with real-world applications.
 
@@ -39,6 +39,7 @@ See PQC in action with real-world applications.
 | APP-04 | ["PQC OCSP: Is This Cert Still Good?"](usecases/applications/04-ocsp-responder/) | OCSP: good → revoked | 8 min |
 | APP-05 | ["Crypto-Agility: Rotate Without Breaking"](usecases/applications/05-crypto-agility/) | Synchronized cert rotation | 10 min |
 | APP-06 | ["Build a PQC Tunnel"](usecases/applications/06-tls-tunnel/) | Encrypted tunnel traffic | 10 min |
+| APP-07 | ["LTV: Trust Today, Verify in 2055"](usecases/applications/07-ltv-document-signing/) | LTV bundle for 30-year proof | 8 min |
 
 ### Section 3: Ops & Migration (~26 min) — *Optional*
 
@@ -74,7 +75,7 @@ cd usecases/pki/01-store-now-decrypt-later
                   │
                   ▼
     ┌─────────────────────────────┐
-    │  Applications (6 UC)        │  ~54 min
+    │  Applications (7 UC)        │  ~62 min
     │  See it in action           │
     └─────────────┬───────────────┘
                   │
@@ -122,7 +123,7 @@ cd usecases/pki/01-store-now-decrypt-later
 post-quantum-pki-lab/
 ├── usecases/
 │   ├── pki/                # PKI fundamentals (5 UC)
-│   ├── applications/       # Real-world applications (6 UC)
+│   ├── applications/       # Real-world applications (7 UC)
 │   ├── ops/                # Ops & Migration (3 UC)
 │   └── _archive/           # Previous UC versions
 ├── tooling/                # Installation scripts
