@@ -106,11 +106,6 @@ contract-ltv-proof/
 - **TSA-01** - Timestamp Authority providing time proof
 - **OCSP-01** - OCSP Responder providing certificate status
 
-## Prerequisites
-
-- `pki` tool installed
-- ~10 minutes
-
 ## Quick Start
 
 ```bash

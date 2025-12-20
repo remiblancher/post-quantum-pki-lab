@@ -46,10 +46,6 @@ TODAY                           FUTURE (10-30 years)
 ./demo.sh
 ```
 
-**Prerequisites:**
-- PKI tool installed (`../../tooling/install.sh`)
-- ~2 minutes of your time
-
 ## The Commands
 
 ### Step 1: Create Timestamp Authority CA

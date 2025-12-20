@@ -30,10 +30,6 @@ Certificate bundles solve this by grouping related certificates with a coupled l
 ./demo.sh
 ```
 
-**Prerequisites:**
-- PKI tool installed (`../../tooling/install.sh`)
-- ~5 minutes of your time
-
 ## The Commands
 
 ### Step 1: Create Hybrid CA

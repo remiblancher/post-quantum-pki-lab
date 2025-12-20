@@ -28,10 +28,6 @@ This demo simulates an algorithm deprecation incident and walks through the comp
 - **Security** - Team that declared the incident
 - **Services** - Systems that need new certificates
 
-## Prerequisites
-
-- `pki` tool installed
-
 ## Quick Start
 
 ```bash

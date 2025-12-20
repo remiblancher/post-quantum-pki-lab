@@ -27,11 +27,6 @@ This is the reality of PQC migration. You can't flip a switch and move everythin
 ./demo.sh
 ```
 
-**Prerequisites:**
-- PKI tool installed (`../../tooling/install.sh`)
-- OpenSSL 3.x (for interop test)
-- ~8 minutes of your time
-
 ## The Commands
 
 ### Step 1: Create Hybrid CA
