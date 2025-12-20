@@ -26,10 +26,6 @@ This demo shows a production-ready 3-level PKI hierarchy using only post-quantum
 ./demo.sh
 ```
 
-**Prerequisites:**
-- PKI tool installed (`../tooling/install.sh`)
-- ~3 minutes of your time
-
 ## The Commands
 
 ### Step 1: Create Root CA (ML-DSA-87)

@@ -25,10 +25,6 @@ This demo simulates scanning a PKI environment and generating a cryptographic in
 - **Bob** - PKI Admin preparing for PQC migration
 - **Auditor** - Needs cryptographic inventory for compliance
 
-## Prerequisites
-
-- `pki` tool installed
-
 ## Quick Start
 
 ```bash

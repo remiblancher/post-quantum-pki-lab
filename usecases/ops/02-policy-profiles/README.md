@@ -25,10 +25,6 @@ No! With a well-designed PKI, changing algorithms is just a policy configuration
 - **Bob** - PKI Admin implementing new security policy
 - **Policy** - Security requirement driving the change
 
-## Prerequisites
-
-- `pki` tool installed
-
 ## Quick Start
 
 ```bash

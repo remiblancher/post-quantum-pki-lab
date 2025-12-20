@@ -26,10 +26,6 @@ Short answer: **No.** The PKI workflow is identical. Only the algorithm name cha
 ./demo.sh
 ```
 
-**Prerequisites:**
-- PKI tool installed (`../tooling/install.sh`)
-- ~2 minutes of your time
-
 ## The Commands
 
 ### Step 1: Classical (ECDSA P-384)

@@ -40,11 +40,6 @@ This demo creates a simple port-forwarding tunnel secured with mTLS and ML-DSA c
 - **Backend** - Internal HTTP service (not directly exposed)
 - **Tunnel** - Secure bridge with ML-DSA authentication
 
-## Prerequisites
-
-- `pki` tool installed
-- Go 1.21+
-
 ## Quick Start
 
 ```bash
