@@ -128,6 +128,8 @@ post-quantum-pki-lab/
 └── assets/                 # Diagrams and branding
 ```
 
+---
+
 ## About
 
 Built by [QentriQ](https://qentriq.com)
