@@ -120,13 +120,14 @@ Final Key = KDF(ECDH_shared || ML-KEM_shared)
 
 ## Size Comparison
 
-| Component | ECDH (P-256) | ML-KEM-768 | Ratio |
-|-----------|--------------|------------|-------|
-| Public key | 65 bytes | 1,184 bytes | ~18x |
-| Ciphertext | 65 bytes | 1,088 bytes | ~17x |
-| Shared secret | 32 bytes | 32 bytes | 1x |
+| Component | RSA-2048 | ECDH (P-256) | ML-KEM-768 |
+|-----------|----------|--------------|------------|
+| Public key | 256 bytes | 65 bytes | 1,184 bytes |
+| Ciphertext/Exchange | 256 bytes | 65 bytes | 1,088 bytes |
+| Shared secret | 32 bytes | 32 bytes | 32 bytes |
+| Quantum-safe | No | No | **Yes** |
 
-*The shared secret size is the same — only the exchange is larger.*
+*The shared secret size is the same — only the exchange is larger. ML-KEM is ~4x larger than RSA but provides quantum resistance.*
 
 ## When to Act
 
@@ -165,12 +166,6 @@ Where:
 - Medical records need 50 years of secrecy (Z = 50)
 
 X + Y = 15 < 50 = Z → **Act now!**
-
-## Related Use Cases
-
-- **Certificate comparison:** [UC-01: Classical vs PQC TLS](../01-classic-vs-pqc-tls/)
-- **Hybrid approach:** [UC-02: Hybrid Certificates](../02-hybrid-cert/)
-- **Long-term signatures:** [UC-06: Code Signing](../06-code-signing/)
 
 ## References
 
