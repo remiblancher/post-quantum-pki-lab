@@ -29,7 +29,8 @@ This is the reality of PQC migration. You can't flip a switch and move everythin
 
 **Prerequisites:**
 - PKI tool installed (`../../tooling/install.sh`)
-- ~3 minutes of your time
+- OpenSSL 3.x (for interop test)
+- ~8 minutes of your time
 
 ## The Commands
 
@@ -96,6 +97,27 @@ A Catalyst certificate (ITU-T X.509 Section 9.8) looks like this:
 - Verify **both** signatures (classical AND post-quantum)
 - Use the appropriate key based on negotiated protocol
 
+## Interoperability Test
+
+This demo includes an interoperability test showing how both legacy and modern clients handle the same hybrid certificate:
+
+```bash
+# Legacy client (OpenSSL - classical only)
+openssl verify -CAfile hybrid-ca/ca.crt hybrid-server.crt
+# → OK (uses ECDSA, ignores PQC extensions)
+
+# PQC-aware client (pki tool)
+pki verify --cert hybrid-server.crt --ca hybrid-ca/ca.crt
+# → OK (verifies BOTH ECDSA and ML-DSA signatures)
+```
+
+| Client Type | What It Does | Result |
+|-------------|--------------|--------|
+| Legacy (OpenSSL) | Uses ECDSA, ignores PQC extensions | ✓ OK |
+| PQC-Aware (pki) | Verifies BOTH signatures | ✓ OK |
+
+**This is the power of hybrid: zero breaking changes for legacy clients.**
+
 ## Size Comparison
 
 | Metric | Classical (ECDSA) | Hybrid (Catalyst) | Overhead |
@@ -150,6 +172,7 @@ This demo uses the **Catalyst** approach because:
 - Quantum security for modern clients
 - No forced upgrade timeline
 - Defense in depth
+- **Interoperability**: Same cert works with OpenSSL AND PQC-aware tools
 
 ### The trade-off:
 - Larger certificates (~5x)
@@ -158,8 +181,8 @@ This demo uses the **Catalyst** approach because:
 
 ## Next Steps
 
-- [UC-03: Store Now, Decrypt Later](../03-store-now-decrypt-later/) — Why encryption needs PQC now
-- [UC-05: Full PQC PKI](../05-full-pqc-pki/) — When you're ready for pure PQC
+- [PKI-01: Store Now, Decrypt Later](../01-store-now-decrypt-later/) — Why encryption needs PQC now
+- [PKI-03: Full PQC Chain](../03-full-pqc-chain/) — When you're ready for pure PQC
 
 ## References
 
