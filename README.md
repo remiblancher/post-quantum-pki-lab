@@ -107,6 +107,43 @@ cd usecases/pki/01-store-now-decrypt-later
 - **Catalyst certificates** (ITU-T X.509 9.8)
 - Composite certificates (IETF draft-lamps-pq-composite-*) — *not yet supported*
 
+## Profiles
+
+Profiles are certificate templates that define **algorithm + validity + X.509 extensions**. Instead of specifying each parameter manually, you choose a profile that matches your use case.
+
+### Naming Convention
+
+```
+<algorithm-family>/<certificate-type>
+```
+
+### Available Profiles
+
+| Profile | Algorithm | Validity | Use Case |
+|---------|-----------|----------|----------|
+| `ec/root-ca` | ECDSA P-384 | 20 years | Classical Root CA |
+| `ec/issuing-ca` | ECDSA P-256 | 10 years | Classical Issuing CA |
+| `ec/tls-server` | ECDSA P-256 | 1 year | Classical TLS server |
+| `ml-dsa-kem/root-ca` | ML-DSA-65 | 20 years | Post-quantum Root CA |
+| `ml-dsa-kem/issuing-ca` | ML-DSA-65 | 10 years | Post-quantum Issuing CA |
+| `ml-dsa-kem/tls-server` | ML-DSA-65 + ML-KEM-768 | 1 year | Post-quantum TLS server |
+| `hybrid/catalyst/root-ca` | ECDSA + ML-DSA | 20 years | Hybrid Root CA |
+
+### Example Usage
+
+```bash
+# Create a classical CA
+pki init-ca --profile ec/root-ca --name "My Root CA" --dir ./ca
+
+# Create a post-quantum CA
+pki init-ca --profile ml-dsa-kem/root-ca --name "PQ Root CA" --dir ./pqc-ca
+
+# Issue a TLS certificate
+pki issue --ca-dir ./ca --profile ec/tls-server --cn example.com --out cert.crt
+```
+
+> **Tip:** Profiles include default subject DN fields (Country, Organization). You only need to specify `--name` for the Common Name.
+
 ## Requirements
 
 - Go 1.21+ (for building the PKI tool)
