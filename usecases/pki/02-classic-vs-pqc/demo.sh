@@ -16,7 +16,7 @@ source "$SCRIPT_DIR/../../../lib/common.sh"
 # Demo Setup
 # =============================================================================
 
-setup_demo "UC-01: Nothing changes... except the algorithm"
+setup_demo "PKI-02: Classic vs PQC"
 
 CLASSIC_CA="$DEMO_TMP/classic-ca"
 PQC_CA="$DEMO_TMP/pqc-ca"

@@ -16,7 +16,7 @@ source "$SCRIPT_DIR/../../../lib/common.sh"
 # Demo Setup
 # =============================================================================
 
-setup_demo "UC-03: Store Now, Decrypt Later"
+setup_demo "PKI-01: Store Now, Decrypt Later"
 
 # =============================================================================
 # Introduction

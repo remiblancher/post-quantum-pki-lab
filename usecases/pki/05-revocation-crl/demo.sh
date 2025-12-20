@@ -16,7 +16,7 @@ source "$SCRIPT_DIR/../../../lib/common.sh"
 # Demo Setup
 # =============================================================================
 
-setup_demo "UC-04: PKI operations don't change"
+setup_demo "PKI-05: Revocation"
 
 PQC_CA="$DEMO_TMP/pqc-ca"
 CLASSIC_CA="$DEMO_TMP/classic-ca"
