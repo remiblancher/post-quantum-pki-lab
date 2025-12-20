@@ -1,4 +1,4 @@
-# APP-04: "Is This Cert Still Good?"
+# APP-04: "PQC OCSP: Is This Cert Still Good?"
 
 > **Key Message:** Real-time certificate verification with OCSP works exactly the same with PQC.
 

@@ -1,4 +1,4 @@
-# PKI-04: "Best of Both Worlds"
+# PKI-04: "Hybrid PQC: Best of Both Worlds"
 
 ## Hybrid Certificates (Catalyst): Classical + Post-Quantum
 

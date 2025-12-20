@@ -1,4 +1,4 @@
-# PKI-02: "Nothing Changes... Except the Algorithm"
+# PKI-02: "Classic vs PQC: Nothing Changes"
 
 ## Classical vs Post-Quantum: Same PKI, Different Crypto
 

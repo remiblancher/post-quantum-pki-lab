@@ -1,4 +1,4 @@
-# PKI-03: "Chain of Trust"
+# PKI-03: "Full PQC Chain of Trust"
 
 ## Build a Complete PQC PKI Hierarchy
 

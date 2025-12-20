@@ -1,4 +1,4 @@
-# APP-01: "Sign It, Prove It"
+# APP-01: "PQC Signing: Sign It, Prove It"
 
 ## Document Signing with Post-Quantum Cryptography
 
