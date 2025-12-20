@@ -122,11 +122,17 @@ post-quantum-pki-lab/
 │   ├── applications/       # Real-world applications (7 UC)
 │   ├── ops/                # Ops & Migration (3 UC)
 │   └── _archive/           # Previous UC versions
+├── workspace/              # Demo artifacts (generated, gitignored)
+│   ├── pki-01/             # Artifacts from PKI-01
+│   ├── pki-02/             # Artifacts from PKI-02
+│   └── ...
 ├── tooling/                # Installation scripts
 ├── lib/                    # Shared shell functions
 ├── docker/                 # Container environments
 └── assets/                 # Diagrams and branding
 ```
+
+> **Note:** After running a demo, explore the generated certificates and keys in `workspace/`. Each use case has its own subfolder that persists until you run the demo again.
 
 ---
 

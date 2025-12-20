@@ -17,7 +17,7 @@ source "$SCRIPT_DIR/../../../lib/common.sh"
 # Demo Setup
 # =============================================================================
 
-setup_demo "UC-08: Trust Now, Verify Forever"
+setup_demo "APP-02: PQC Timestamping"
 
 CLASSIC_TSA="$DEMO_TMP/classic-tsa"
 PQC_TSA="$DEMO_TMP/pqc-tsa"
