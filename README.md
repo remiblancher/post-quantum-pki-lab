@@ -22,9 +22,9 @@ Learn the core concepts of Post-Quantum PKI.
 | # | Title | What You'll See | Duration |
 |---|-------|-----------------|----------|
 | PKI-01 | ["Store Now, Decrypt Later"](usecases/pki/01-store-now-decrypt-later/) | Mosca calculator: X + Y > Z | 5 min |
-| PKI-02 | ["Nothing Changes... Except the Algorithm"](usecases/pki/02-nothing-changes/) | Side-by-side: ECDSA vs ML-DSA | 5 min |
-| PKI-03 | ["Chain of Trust"](usecases/pki/03-chain-of-trust/) | `openssl verify OK` on full chain | 10 min |
-| PKI-04 | ["Best of Both Worlds"](usecases/pki/04-best-of-both-worlds/) | 2 public keys in 1 certificate | 8 min |
+| PKI-02 | ["Classic vs PQC: Nothing Changes"](usecases/pki/02-nothing-changes/) | Side-by-side: ECDSA vs ML-DSA | 5 min |
+| PKI-03 | ["Full PQC Chain of Trust"](usecases/pki/03-chain-of-trust/) | `openssl verify OK` on full chain | 10 min |
+| PKI-04 | ["Hybrid PQC: Best of Both Worlds"](usecases/pki/04-best-of-both-worlds/) | 2 public keys in 1 certificate | 8 min |
 | PKI-05 | ["Oops, We Need to Revoke!"](usecases/pki/05-oops-revoke/) | Status: good → revoked | 5 min |
 
 ### Section 2: Applications (~54 min)
@@ -33,11 +33,11 @@ See PQC in action with real-world applications.
 
 | # | Title | What You'll See | Duration |
 |---|-------|-----------------|----------|
-| APP-01 | ["Sign It, Prove It"](usecases/applications/01-sign-it-prove-it/) | Valid ✓ → Tampered ✗ | 8 min |
-| APP-02 | ["Trust Now, Verify Forever"](usecases/applications/02-trust-now-verify-forever/) | RFC 3161 timestamp proof | 8 min |
-| APP-03 | ["Show Me Your Badge"](usecases/applications/03-show-me-your-badge/) | "Welcome Alice!" via mTLS | 10 min |
-| APP-04 | ["Is This Cert Still Good?"](usecases/applications/04-is-this-cert-still-good/) | OCSP: good → revoked | 8 min |
-| APP-05 | ["Rotate Without Breaking"](usecases/applications/05-rotate-without-breaking/) | Synchronized cert rotation | 10 min |
+| APP-01 | ["PQC Signing: Sign It, Prove It"](usecases/applications/01-sign-it-prove-it/) | Valid ✓ → Tampered ✗ | 8 min |
+| APP-02 | ["PQC Timestamping: Trust Now, Verify Forever"](usecases/applications/02-trust-now-verify-forever/) | RFC 3161 timestamp proof | 8 min |
+| APP-03 | ["PQC mTLS: Show Me Your Badge"](usecases/applications/03-show-me-your-badge/) | "Welcome Alice!" via mTLS | 10 min |
+| APP-04 | ["PQC OCSP: Is This Cert Still Good?"](usecases/applications/04-is-this-cert-still-good/) | OCSP: good → revoked | 8 min |
+| APP-05 | ["Crypto-Agility: Rotate Without Breaking"](usecases/applications/05-rotate-without-breaking/) | Synchronized cert rotation | 10 min |
 | APP-06 | ["Build a PQC Tunnel"](usecases/applications/06-build-a-pqc-tunnel/) | Encrypted tunnel traffic | 10 min |
 
 ## Quick Start

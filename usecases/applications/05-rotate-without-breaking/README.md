@@ -1,4 +1,4 @@
-# APP-05: "Rotate Without Breaking"
+# APP-05: "Crypto-Agility: Rotate Without Breaking"
 
 ## Crypto-Agility with Certificate Bundles
 

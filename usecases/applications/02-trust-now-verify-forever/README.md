@@ -1,4 +1,4 @@
-# APP-02: "Trust Now, Verify Forever"
+# APP-02: "PQC Timestamping: Trust Now, Verify Forever"
 
 ## Post-Quantum Timestamping (RFC 3161)
 
