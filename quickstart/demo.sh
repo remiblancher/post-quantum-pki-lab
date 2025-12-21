@@ -35,7 +35,7 @@ echo "  \"I want to issue post-quantum certificates."
 echo "   Does it change my PKI workflow?\""
 echo ""
 echo -e "  Short answer: ${GREEN}No.${NC} The workflow is identical."
-echo "  Only the algorithm name changes. This demo proves it."
+echo "  Only the algorithm name changes."
 echo ""
 
 echo -e "${BOLD}WHAT WE'LL DO:${NC}"
