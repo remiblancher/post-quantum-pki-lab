@@ -6,6 +6,9 @@
 # Reset
 export NC='\033[0m'
 
+# Dim (faded text)
+export DIM='\033[2m'
+
 # Regular Colors
 export BLACK='\033[0;30m'
 export RED='\033[0;31m'
