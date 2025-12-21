@@ -112,21 +112,6 @@ pki info pq-server.crt
 - Profile: `ec/*` → `ml-dsa/*`
 - Key and signature sizes
 
-## Algorithms Used
-
-### ECDSA P-384 (Classical)
-- Elliptic Curve Digital Signature Algorithm
-- NIST P-384 curve
-- ~192-bit security level
-- Vulnerable to Shor's algorithm on quantum computers
-
-### ML-DSA-65 (Post-Quantum)
-- Module-Lattice Digital Signature Algorithm
-- NIST FIPS 204 standard (2024)
-- Security Level 3 (~192-bit equivalent)
-- Resistant to known quantum attacks
-- Based on the hardness of Module-LWE problem
-
 ## References
 
 - [NIST Post-Quantum Cryptography](https://csrc.nist.gov/projects/post-quantum-cryptography)
