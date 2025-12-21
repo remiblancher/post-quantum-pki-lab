@@ -106,18 +106,6 @@ pki info pq-server.crt
 - Profile: `ec/*` → `ml-dsa/*`
 - Key and signature sizes
 
-## What's Next?
-
-Your classical CA works perfectly today. The question is: **for how long?**
-
-Your ECDSA certificates are being harvested right now. When quantum computers arrive, they'll be decrypted.
-
-```bash
-./journey/00-revelation/demo.sh
-```
-
-Discover the "Store Now, Decrypt Later" threat.
-
 ## Algorithms Used
 
 ### ECDSA P-384 (Classical)
@@ -139,8 +127,8 @@ Discover the "Store Now, Decrypt Later" threat.
 - [FIPS 204: ML-DSA Standard](https://csrc.nist.gov/pubs/fips/204/final)
 - [Cloudflare CIRCL Library](https://github.com/cloudflare/circl)
 
-## Reset
+---
 
-```bash
-./reset.sh quickstart
-```
+← [Home](../README.md) | [Next: The Revelation →](../journey/00-revelation/)
+
+**Need help with your PQC transition?** Contact [QentriQ](https://qentriq.com)
