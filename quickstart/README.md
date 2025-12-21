@@ -1,102 +1,102 @@
-# Quick Start : Ma première PKI
+# Quick Start: My First PKI
 
-**Durée : 10 minutes**
+**Duration: 10 minutes**
 
-## Objectif
+## Objective
 
-Créer ta première PKI (Public Key Infrastructure) en tapant toi-même les commandes.
+Create your first PKI (Public Key Infrastructure) by typing the commands yourself.
 
-À la fin de ce Quick Start, tu auras :
-- Une Autorité de Certification (CA) fonctionnelle
-- Un certificat TLS pour un serveur
-- Compris la différence entre classique et post-quantique
+At the end of this Quick Start, you will have:
+- A working Certificate Authority (CA)
+- A TLS certificate for a server
+- Understood the difference between classical and post-quantum
 
-## Prérequis
+## Prerequisites
 
-1. L'outil `pki` doit être installé :
+1. The `pki` tool must be installed:
    ```bash
    ./tooling/install.sh
    ```
 
-2. Un terminal bash
+2. A bash terminal
 
-## Lancer le Quick Start
+## Launch the Quick Start
 
 ```bash
 ./quickstart/demo.sh
 ```
 
-## Ce que tu vas apprendre
+## What You'll Learn
 
-### Étape 1 : Créer ta CA
+### Step 1: Create Your CA
 ```bash
-pki init-ca --name "Ma Premiere CA" --algorithm ecdsa-p384 --dir ./workspace/quickstart/classic-ca
+pki init-ca --name "My First CA" --algorithm ecdsa-p384 --dir ./workspace/quickstart/classic-ca
 ```
 
-Une CA possède :
-- `ca.key` : la clé privée (à garder secrète !)
-- `ca.crt` : le certificat auto-signé (à distribuer)
+A CA has:
+- `ca.key`: the private key (keep it secret!)
+- `ca.crt`: the self-signed certificate (distribute it)
 
-### Étape 2 : Émettre un certificat TLS
+### Step 2: Issue a TLS Certificate
 ```bash
 pki issue --ca-dir ./workspace/quickstart/classic-ca \
     --profile ec/tls-server \
-    --cn "mon-serveur.local" \
-    --dns "mon-serveur.local" \
+    --cn "my-server.local" \
+    --dns "my-server.local" \
     --out ./workspace/quickstart/server.crt \
     --key-out ./workspace/quickstart/server.key
 ```
 
-### Étape 3 : Vérifier le certificat
+### Step 3: Verify the Certificate
 ```bash
 pki verify --ca ./workspace/quickstart/classic-ca/ca.crt \
     --cert ./workspace/quickstart/server.crt
 ```
 
-### Étape 4 : Comparer avec le Post-Quantum
+### Step 4: Compare with Post-Quantum
 
-Le script crée automatiquement une CA post-quantique (ML-DSA-65) pour comparer les tailles.
+The script automatically creates a post-quantum CA (ML-DSA-65) to compare sizes.
 
-**Observation typique :**
-| Fichier | ECDSA | ML-DSA | Ratio |
-|---------|-------|--------|-------|
+**Typical observation:**
+| File | ECDSA | ML-DSA | Ratio |
+|------|-------|--------|-------|
 | CA Certificate | ~800 B | ~3 KB | ~4x |
 | Server Certificate | ~1 KB | ~5 KB | ~5x |
 | Private Key | ~300 B | ~4 KB | ~13x |
 
-## Fichiers générés
+## Generated Files
 
-Après le Quick Start, tes fichiers sont dans :
+After the Quick Start, your files are in:
 ```
 workspace/quickstart/
-├── classic-ca/           # Ta CA ECDSA P-384
+├── classic-ca/           # Your ECDSA P-384 CA
 │   ├── ca.crt
 │   ├── ca.key
 │   ├── index.txt
 │   └── serial
-├── server.crt            # Ton certificat TLS
-├── server.key            # Ta clé privée TLS
-├── pqc-ca-demo/          # CA de démo ML-DSA-65
-├── pqc-server.crt        # Certificat PQC de démo
-└── pqc-server.key        # Clé PQC de démo
+├── server.crt            # Your TLS certificate
+├── server.key            # Your TLS private key
+├── pqc-ca-demo/          # Demo ML-DSA-65 CA
+├── pqc-server.crt        # Demo PQC certificate
+└── pqc-server.key        # Demo PQC key
 ```
 
-## Et après ?
+## What's Next?
 
-Ta CA classique sera cassable par un ordinateur quantique. Pour comprendre l'urgence :
+Your classical CA will be breakable by a quantum computer. To understand the urgency:
 
 ```bash
 ./journey/00-revelation/demo.sh
 ```
 
-Ou lance le menu principal :
+Or launch the main menu:
 ```bash
 ./start.sh
 ```
 
-## Réinitialiser
+## Reset
 
-Pour recommencer le Quick Start à zéro :
+To restart the Quick Start from scratch:
 ```bash
 rm -rf ./workspace/quickstart
 ./quickstart/demo.sh
