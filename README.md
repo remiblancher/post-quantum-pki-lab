@@ -80,6 +80,7 @@ Then start with: `./journey/00-quickstart/demo.sh`
 ```
 post-quantum-pki-lab/
 ├── reset.sh                    # Reset workspaces
+├── profiles/                   # Algorithm profiles (ec, ml-dsa-kem, hybrid...)
 ├── journey/                    # Guided journey
 │   ├── 00-quickstart/          # Quick Start (10 min)
 │   ├── 01-revelation/          # "Store Now, Decrypt Later"

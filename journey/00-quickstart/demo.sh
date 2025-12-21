@@ -35,8 +35,8 @@ init_steps 5
 echo -e "${BOLD}WHAT WE'LL DO:${NC}"
 echo "  1. Create a classical Root CA using profile 'ec/root-ca'"
 echo "  2. Issue a TLS certificate using profile 'ec/tls-server'"
-echo "  3. Create a post-quantum Root CA using profile 'ml-dsa/root-ca'"
-echo "  4. Issue a TLS certificate using profile 'ml-dsa/tls-server'"
+echo "  3. Create a post-quantum Root CA using profile 'ml-dsa-kem/root-ca'"
+echo "  4. Issue a TLS certificate using profile 'ml-dsa-kem/tls-server'"
 echo "  5. Compare sizes"
 echo ""
 
@@ -77,9 +77,9 @@ pause
 # =============================================================================
 
 step "Create Post-Quantum Root CA" \
-     "Profile 'ml-dsa/root-ca' = ML-DSA-65 (FIPS 204), 20 years, CA extensions"
+     "Profile 'ml-dsa-kem/root-ca' = ML-DSA-65 (FIPS 204), 20 years, CA extensions"
 
-run_cmd "$PKI_BIN init-ca --profile ml-dsa/root-ca --name 'PQ Root CA' --dir $PQC_CA"
+run_cmd "$PKI_BIN init-ca --profile ml-dsa-kem/root-ca --name 'PQ Root CA' --dir $PQC_CA"
 
 show_files "$PQC_CA"
 
@@ -90,9 +90,9 @@ pause
 # =============================================================================
 
 step "Issue Post-Quantum TLS Certificate" \
-     "Profile 'ml-dsa/tls-server' = ML-DSA key, TLS Server extensions"
+     "Profile 'ml-dsa-kem/tls-server' = ML-DSA key, TLS Server extensions"
 
-run_cmd "$PKI_BIN issue --ca-dir $PQC_CA --profile ml-dsa/tls-server --cn pq.example.com --dns pq.example.com --out $DEMO_TMP/pq-server.crt --key-out $DEMO_TMP/pq-server.key"
+run_cmd "$PKI_BIN issue --ca-dir $PQC_CA --profile ml-dsa-kem/tls-server --cn pq.example.com --dns pq.example.com --out $DEMO_TMP/pq-server.crt --key-out $DEMO_TMP/pq-server.key"
 
 echo ""
 echo -e "  ${GREEN}Certificate issued.${NC}"
@@ -140,7 +140,7 @@ echo "  - Structure: X.509 certificates"
 echo ""
 
 echo -e "${BOLD}What changed:${NC}"
-echo "  - Profile: ec/* -> ml-dsa/*"
+echo "  - Profile: ec/* -> ml-dsa-kem/*"
 echo "  - Sizes: ~5-10x larger"
 echo ""
 
