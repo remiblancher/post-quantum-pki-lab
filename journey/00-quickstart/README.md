@@ -34,7 +34,7 @@ Short answer: **No.** The PKI workflow is identical. Only the algorithm name cha
 cd workspace/quickstart
 ```
 
-> **Profiles:** [`pki/profiles/`](../../pki/profiles/) — customize validity, extensions, or subject DN
+> **Profiles:** [`profiles/`](../../profiles/) — customize validity, extensions, or subject DN
 
 ### Step 1: Classical (ECDSA P-384)
 
@@ -58,11 +58,11 @@ pki info classic-server.crt
 
 ```bash
 # Create CA
-pki init-ca --profile ml-dsa/root-ca --name "PQ Root CA" --dir ./pqc-ca
+pki init-ca --profile ml-dsa-kem/root-ca --name "PQ Root CA" --dir ./pqc-ca
 
 # Issue TLS certificate
 pki issue --ca-dir ./pqc-ca \
-    --profile ml-dsa/tls-server \
+    --profile ml-dsa-kem/tls-server \
     --cn pq.example.com \
     --dns pq.example.com \
     --out pq-server.crt \
@@ -109,7 +109,7 @@ pki info pq-server.crt
 - Your PKI knowledge
 
 ### What changed:
-- Profile: `ec/*` → `ml-dsa/*`
+- Profile: `ec/*` → `ml-dsa-kem/*`
 - Key and signature sizes
 
 ## References
