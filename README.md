@@ -175,6 +175,7 @@ Each level has its own workspace. Your CAs and certificates are preserved betwee
 
 ## Useful Links
 
+- [Glossary](docs/GLOSSARY.md) — PQC and PKI terminology
 - [NIST Post-Quantum Cryptography](https://csrc.nist.gov/projects/post-quantum-cryptography)
 - [FIPS 203 (ML-KEM)](https://csrc.nist.gov/pubs/fips/203/final)
 - [FIPS 204 (ML-DSA)](https://csrc.nist.gov/pubs/fips/204/final)
