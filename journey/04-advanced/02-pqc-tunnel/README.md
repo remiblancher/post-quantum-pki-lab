@@ -1,83 +1,83 @@
-# Mission 10 : "Secure the Tunnel"
+# Mission 10: "Secure the Tunnel"
 
-## ML-KEM : Echange de cles post-quantique
+## ML-KEM: Post-Quantum Key Exchange
 
-### Le probleme
+### The Problem
 
-Tu veux etablir une connexion securisee avec Bob.
-Il te faut un **secret partage** pour chiffrer la communication.
+You want to establish a secure connection with Bob.
+You need a **shared secret** to encrypt the communication.
 
-Mais comment partager un secret sur un canal non securise ?
+But how do you share a secret over an insecure channel?
 
 ```
-AUJOURD'HUI : ECDH (Diffie-Hellman sur courbes elliptiques)
-─────────────────────────────────────────────────────────────
+TODAY: ECDH (Diffie-Hellman on elliptic curves)
+───────────────────────────────────────────────
 
 Alice                                           Bob
   │                                               │
-  │  g^a (cle publique Alice)                     │
+  │  g^a (Alice's public key)                     │
   │  ─────────────────────────────────────────►   │
   │                                               │
-  │  g^b (cle publique Bob)                       │
+  │  g^b (Bob's public key)                       │
   │  ◄─────────────────────────────────────────   │
   │                                               │
   │                                               │
   ▼                                               ▼
-g^(ab) = Secret partage                   g^(ab) = Secret partage
+g^(ab) = Shared secret                   g^(ab) = Shared secret
 
 
-PROBLEME : Un ordinateur quantique peut calculer 'a' depuis g^a
-           → Le secret est compromis retroactivement (SNDL)
+PROBLEM: A quantum computer can calculate 'a' from g^a
+         → The secret is retroactively compromised (SNDL)
 ```
 
-### La menace
+### The Threat
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
-│  SNDL applique a l'echange de cles                              │
+│  SNDL applied to key exchange                                   │
 │                                                                  │
 │                                                                  │
-│    AUJOURD'HUI                         DANS 15 ANS              │
+│    TODAY                              IN 15 YEARS               │
 │                                                                  │
-│    Alice ◄────────────► Bob            Ordinateur quantique     │
+│    Alice ◄────────────► Bob            Quantum computer         │
 │          ECDH                                │                   │
 │           │                                  │                   │
 │           │                                  ▼                   │
-│           │                          Casse ECDH                 │
+│           │                          Breaks ECDH                │
 │           ▼                                  │                   │
-│    Adversaire capture                        │                   │
-│    les cles publiques                        ▼                   │
-│    g^a et g^b                         Calcule le secret         │
-│           │                           partage g^(ab)            │
+│    Adversary captures                        │                   │
+│    public keys                               ▼                   │
+│    g^a and g^b                         Calculates shared        │
+│           │                            secret g^(ab)            │
 │           │                                  │                   │
 │           └──────────────────────────────────┘                  │
 │                                                                  │
-│    → Dechiffre TOUT le trafic capture il y a 15 ans            │
+│    → Decrypts ALL traffic captured 15 years ago                 │
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
-### La solution : ML-KEM (Key Encapsulation Mechanism)
+### The Solution: ML-KEM (Key Encapsulation Mechanism)
 
-ML-KEM fonctionne differemment : **encapsulation** au lieu d'echange.
+ML-KEM works differently: **encapsulation** instead of exchange.
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
-│  ML-KEM : Encapsulation de cle                                  │
+│  ML-KEM: Key encapsulation                                      │
 │                                                                  │
 │                                                                  │
-│  1. Bob a une paire de cles ML-KEM                              │
+│  1. Bob has an ML-KEM key pair                                  │
 │                                                                  │
 │     ┌─────────────────┐                                         │
 │     │  Bob            │                                         │
 │     │  ───            │                                         │
-│     │  pk (publique)  │  ←── Publiee (certificat)              │
-│     │  sk (privee)    │  ←── Gardee secrete                    │
+│     │  pk (public)    │  ←── Published (certificate)           │
+│     │  sk (private)   │  ←── Kept secret                       │
 │     └─────────────────┘                                         │
 │                                                                  │
-│  2. Alice encapsule un secret                                    │
+│  2. Alice encapsulates a secret                                  │
 │                                                                  │
 │     Alice                                                        │
 │       │                                                          │
@@ -85,12 +85,12 @@ ML-KEM fonctionne differemment : **encapsulation** au lieu d'echange.
 │       │  ─────────────                                          │
 │       ▼                                                          │
 │     ┌─────────────────────────────────────────┐                 │
-│     │  Resultat :                              │                 │
-│     │  - ciphertext (envoye a Bob)            │                 │
-│     │  - shared_secret (garde par Alice)      │                 │
+│     │  Result:                                 │                 │
+│     │  - ciphertext (sent to Bob)             │                 │
+│     │  - shared_secret (kept by Alice)        │                 │
 │     └─────────────────────────────────────────┘                 │
 │                                                                  │
-│  3. Bob decapsule                                                │
+│  3. Bob decapsulates                                             │
 │                                                                  │
 │     Bob                                                          │
 │       │                                                          │
@@ -98,12 +98,12 @@ ML-KEM fonctionne differemment : **encapsulation** au lieu d'echange.
 │       │  ──────────────────────────                             │
 │       ▼                                                          │
 │     ┌─────────────────────────────────────────┐                 │
-│     │  Resultat :                              │                 │
-│     │  - shared_secret (identique a Alice)    │                 │
+│     │  Result:                                 │                 │
+│     │  - shared_secret (identical to Alice's) │                 │
 │     └─────────────────────────────────────────┘                 │
 │                                                                  │
-│  ✓ Meme secret partage                                          │
-│  ✓ Resistant aux ordinateurs quantiques                         │
+│  ✓ Same shared secret                                           │
+│  ✓ Resistant to quantum computers                               │
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
 ```
@@ -114,76 +114,76 @@ ML-KEM fonctionne differemment : **encapsulation** au lieu d'echange.
 
 | Aspect | ML-DSA | ML-KEM |
 |--------|--------|--------|
-| **Usage** | Signatures | Echange de cles |
-| **Objectif** | AUTHENTICITE | CONFIDENTIALITE |
+| **Usage** | Signatures | Key exchange |
+| **Goal** | AUTHENTICITY | CONFIDENTIALITY |
 | **Operations** | Sign / Verify | Encaps / Decaps |
-| **TLS** | Authentification serveur | Etablissement session |
-| **Certificat** | keyUsage: digitalSignature | keyUsage: keyEncipherment |
+| **TLS** | Server authentication | Session establishment |
+| **Certificate** | keyUsage: digitalSignature | keyUsage: keyEncipherment |
 
 ---
 
-## Hybride en pratique : X25519 + ML-KEM-768
+## Hybrid in Practice: X25519 + ML-KEM-768
 
-Pour la transition, on combine les deux :
+For transition, we combine both:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                                                                 │
-│  KEM HYBRIDE = X25519 + ML-KEM-768                             │
+│  HYBRID KEM = X25519 + ML-KEM-768                              │
 │                                                                 │
 │                                                                 │
-│  1. Echange X25519 (classique)                                 │
+│  1. X25519 exchange (classic)                                  │
 │     └── secret_1 = ECDH(x25519_alice, x25519_bob)              │
 │                                                                 │
-│  2. Encapsulation ML-KEM-768 (post-quantique)                  │
+│  2. ML-KEM-768 encapsulation (post-quantum)                    │
 │     └── secret_2, ciphertext = Encaps(mlkem_bob_pk)            │
 │                                                                 │
-│  3. Derivation combinee                                         │
+│  3. Combined derivation                                         │
 │     └── final_secret = KDF(secret_1 || secret_2)               │
 │                                                                 │
 │                                                                 │
-│  Securite :                                                     │
-│  - Si X25519 est casse → ML-KEM protege                        │
-│  - Si ML-KEM est casse → X25519 protege                        │
-│  - Les deux doivent etre casses simultanement                  │
+│  Security:                                                      │
+│  - If X25519 is broken → ML-KEM protects                       │
+│  - If ML-KEM is broken → X25519 protects                       │
+│  - Both must be broken simultaneously                          │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Ce que tu vas faire
+## What You'll Do
 
-1. **Generer une paire ML-KEM-768** pour Bob
-2. **Creer un certificat KEM** (keyUsage: keyEncipherment)
-3. **Encapsuler un secret** avec la cle publique de Bob
-4. **Decapsuler** et verifier que le secret est identique
-5. **Comparer les tailles** : X25519 vs ML-KEM-768
+1. **Generate an ML-KEM-768 pair** for Bob
+2. **Create a KEM certificate** (keyUsage: keyEncipherment)
+3. **Encapsulate a secret** with Bob's public key
+4. **Decapsulate** and verify the secret is identical
+5. **Compare sizes**: X25519 vs ML-KEM-768
 
 ---
 
-## Tailles ML-KEM
+## ML-KEM Sizes
 
-| Niveau | Cle publique | Cle privee | Ciphertext | Secret |
-|--------|-------------|------------|------------|--------|
+| Level | Public key | Private key | Ciphertext | Secret |
+|-------|------------|-------------|------------|--------|
 | ML-KEM-512 | 800 bytes | 1632 bytes | 768 bytes | 32 bytes |
 | ML-KEM-768 | 1184 bytes | 2400 bytes | 1088 bytes | 32 bytes |
 | ML-KEM-1024 | 1568 bytes | 3168 bytes | 1568 bytes | 32 bytes |
 
-**Comparaison** : X25519 = 32 bytes cle publique, 32 bytes ciphertext
+**Comparison**: X25519 = 32 bytes public key, 32 bytes ciphertext
 
 ---
 
-## Ce que tu auras a la fin
+## What You'll Have at the End
 
-- Paire de cles ML-KEM-768
-- Certificat KEM
-- Encapsulation / Decapsulation reussie
-- Secret partage quantum-safe
+- ML-KEM-768 key pair
+- KEM certificate
+- Successful encapsulation / decapsulation
+- Quantum-safe shared secret
 
 ---
 
-## Lancer la mission
+## Run the Mission
 
 ```bash
 ./demo.sh
@@ -191,6 +191,6 @@ Pour la transition, on combine les deux :
 
 ---
 
-## Prochaine mission
+## Next Mission
 
-→ **Mission 11 : "Encrypt for Their Eyes Only"** (CMS Encryption)
+→ **Mission 11: "Encrypt for Their Eyes Only"** (CMS Encryption)

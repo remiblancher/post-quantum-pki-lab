@@ -1,29 +1,29 @@
-# Mission 1 : "Build Your Quantum-Safe Foundation"
+# Mission 1: "Build Your Quantum-Safe Foundation"
 
-## Full PQC Chain avec ML-DSA
+## Full PQC Chain with ML-DSA
 
-### Le probleme
+### The Problem
 
-Ta CA classique (ECDSA) sera cassable par un ordinateur quantique.
-Tous les certificats qu'elle a signes deviendront non fiables.
+Your classic CA (ECDSA) will be breakable by a quantum computer.
+All the certificates it signed will become untrustworthy.
 
 ```
-AUJOURD'HUI                          DANS 10-15 ANS
-───────────                          ──────────────
+TODAY                                IN 10-15 YEARS
+─────                                ──────────────
 
-   Ta CA ECDSA                          Ordinateur Quantique
+   Your ECDSA CA                        Quantum Computer
        │                                       │
-       │ Signe                                 │ Casse ECDSA
+       │ Signs                                 │ Breaks ECDSA
        ▼                                       ▼
-  [Certificat]  ───────────────────────►  [Certificat FORGE]
+  [Certificate]  ───────────────────────►  [FORGED Certificate]
 
-  "Ce serveur est                         "N'importe qui peut
-   authentique"                            forger ce certificat"
+  "This server is                        "Anyone can forge
+   authentic"                             this certificate"
 ```
 
-### La solution
+### The Solution
 
-Creer une nouvelle hierarchie CA avec **ML-DSA** (post-quantique).
+Create a new CA hierarchy with **ML-DSA** (post-quantum).
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -31,18 +31,18 @@ Creer une nouvelle hierarchie CA avec **ML-DSA** (post-quantique).
 │                    ROOT CA                                      │
 │                    ════════                                     │
 │                    ML-DSA-87                                    │
-│                    (securite maximale, 256 bits)                │
+│                    (maximum security, 256 bits)                 │
 │                           │                                     │
-│                           │ Signe                               │
+│                           │ Signs                               │
 │                           ▼                                     │
 │                    ISSUING CA                                   │
 │                    ══════════                                   │
 │                    ML-DSA-65                                    │
-│                    (operations quotidiennes)                    │
+│                    (daily operations)                           │
 │                           │                                     │
-│                           │ Signe                               │
+│                           │ Signs                               │
 │                           ▼                                     │
-│                    CERTIFICAT TLS                               │
+│                    TLS CERTIFICATE                              │
 │                    ═══════════════                              │
 │                    ML-DSA-65                                    │
 │                    server.example.com                           │
@@ -52,37 +52,37 @@ Creer une nouvelle hierarchie CA avec **ML-DSA** (post-quantique).
 
 ---
 
-## Ce que tu vas faire
+## What You'll Do
 
-1. **Creer la Root CA** avec ML-DSA-87 (niveau de securite maximal)
-2. **Creer l'Issuing CA** avec ML-DSA-65 (signee par la Root)
-3. **Emettre un certificat TLS** pour un serveur
-4. **Verifier la chaine de confiance**
-
----
-
-## Les niveaux de securite ML-DSA
-
-| Niveau | Algorithme | Securite | Usage |
-|--------|------------|----------|-------|
-| 2 | ML-DSA-44 | 128 bits | Applications legeres |
-| 3 | ML-DSA-65 | 192 bits | **Usage general** |
-| 5 | ML-DSA-87 | 256 bits | **Root CA, haute securite** |
-
-**Recommandation** : ML-DSA-87 pour la Root, ML-DSA-65 pour le reste.
+1. **Create the Root CA** with ML-DSA-87 (maximum security level)
+2. **Create the Issuing CA** with ML-DSA-65 (signed by Root)
+3. **Issue a TLS certificate** for a server
+4. **Verify the chain of trust**
 
 ---
 
-## Ce que tu auras a la fin
+## ML-DSA Security Levels
 
-- Root CA post-quantique (ML-DSA-87)
-- Issuing CA post-quantique (ML-DSA-65)
-- Certificat TLS post-quantique
-- Chaine de confiance verifiee
+| Level | Algorithm | Security | Usage |
+|-------|-----------|----------|-------|
+| 2 | ML-DSA-44 | 128 bits | Lightweight applications |
+| 3 | ML-DSA-65 | 192 bits | **General use** |
+| 5 | ML-DSA-87 | 256 bits | **Root CA, high security** |
+
+**Recommendation**: ML-DSA-87 for Root, ML-DSA-65 for everything else.
 
 ---
 
-## Lancer la mission
+## What You'll Have at the End
+
+- Post-quantum Root CA (ML-DSA-87)
+- Post-quantum Issuing CA (ML-DSA-65)
+- Post-quantum TLS certificate
+- Verified chain of trust
+
+---
+
+## Run the Mission
 
 ```bash
 ./demo.sh
@@ -90,6 +90,6 @@ Creer une nouvelle hierarchie CA avec **ML-DSA** (post-quantique).
 
 ---
 
-## Prochaine mission
+## Next Mission
 
-→ **Mission 2 : "Best of Both Worlds"** (Hybrid Catalyst)
+→ **Mission 2: "Best of Both Worlds"** (Hybrid Catalyst)

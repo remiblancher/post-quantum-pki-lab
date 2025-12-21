@@ -1,13 +1,13 @@
-# Mission 7 : "Is This Cert Still Good?"
+# Mission 7: "Is This Cert Still Good?"
 
-## OCSP Responder avec Hybride
+## OCSP Responder with Hybrid
 
-### Le probleme
+### The Problem
 
-Tu as une CRL. Mais elle est mise a jour toutes les heures.
+You have a CRL. But it's updated every hour.
 
-Un certificat a ete revoque il y a 30 secondes.
-Les clients ne le savent pas encore.
+A certificate was revoked 30 seconds ago.
+Clients don't know yet.
 
 ```
 TIMELINE
@@ -16,70 +16,70 @@ TIMELINE
   03:00    03:30    04:00    04:30    05:00
     │        │        │        │        │
     ▼        ▼        ▼        ▼        ▼
-  CRL     Revoc    CRL      CRL      CRL
-  publiee  cert    publiee  publiee  publiee
+  CRL      Revoc    CRL      CRL      CRL
+  published cert    published published published
 
                 ↑
                 │
-                Pendant 30 min, les clients
-                font encore confiance au
-                certificat revoque !
+                For 30 min, clients
+                still trust the
+                revoked certificate!
 ```
 
-### La menace
+### The Threat
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
-│  FENETRE DE VULNERABILITE : CRL obsolete                        │
+│  VULNERABILITY WINDOW: Stale CRL                                │
 │                                                                  │
 │                                                                  │
-│    03:30  Certificat revoque (cle compromise)                   │
-│    03:35  Client verifie le certificat                          │
+│    03:30  Certificate revoked (key compromised)                 │
+│    03:35  Client checks the certificate                         │
 │                                                                  │
 │       Client                         CRL (03:00)                 │
 │         │                               │                        │
-│         │  "Ce cert est valide ?"       │                        │
+│         │  "Is this cert valid?"        │                        │
 │         │  ───────────────────────────► │                        │
 │         │                               │                        │
 │         │  ◄─────────────────────────── │                        │
-│         │  "Oui, valide"                │                        │
-│         │  (CRL obsolete!)              │                        │
+│         │  "Yes, valid"                 │                        │
+│         │  (stale CRL!)                 │                        │
 │         ▼                                                        │
-│       ✓ Connexion acceptee                                       │
+│       ✓ Connection accepted                                      │
 │                                                                  │
-│    L'attaquant peut utiliser le cert pendant 30 min !           │
+│    The attacker can use the cert for 30 min!                    │
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
-### La solution : OCSP (Online Certificate Status Protocol)
+### The Solution: OCSP (Online Certificate Status Protocol)
 
-Verification en **temps reel** :
+**Real-time** verification:
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
-│  OCSP : Demande instantanee                                     │
+│  OCSP: Instant query                                            │
 │                                                                  │
 │                                                                  │
 │    Client                         OCSP Responder                │
 │      │                                  │                        │
-│      │  "Statut du cert 12345 ?"        │                        │
+│      │  "Status of cert 12345?"         │                        │
 │      │  ──────────────────────────────► │                        │
 │      │                                  │                        │
-│      │                                  │  Consulte la base      │
-│      │                                  │  temps reel            │
+│      │                                  │  Checks real-time      │
+│      │                                  │  database              │
 │      │                                  │                        │
 │      │  ◄────────────────────────────── │                        │
 │      │  OCSP Response:                  │                        │
 │      │  - Status: REVOKED               │                        │
 │      │  - Reason: keyCompromise         │                        │
 │      │  - Time: 03:30:00                │                        │
-│      │  - Signature: OCSP (hybride)     │                        │
+│      │  - Signature: OCSP (hybrid)      │                        │
 │      │                                  │                        │
 │      ▼                                                           │
-│    ❌ Connexion refusee (temps reel)                             │
+│    ❌ Connection refused (real-time)                             │
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
 ```
@@ -88,31 +88,31 @@ Verification en **temps reel** :
 
 ## CRL vs OCSP
 
-| Critere | CRL | OCSP |
-|---------|-----|------|
-| **Mise a jour** | Periodique (horaire/journalier) | Temps reel |
-| **Taille** | Peut etre grosse (liste complete) | Petite (une reponse) |
-| **Disponibilite** | Fonctionne offline | Necessite reseau |
-| **Latence** | Lecture locale | Requete reseau |
-| **Fenetre vuln.** | Jusqu'a prochaine CRL | Quasi nulle |
+| Criteria | CRL | OCSP |
+|----------|-----|------|
+| **Update** | Periodic (hourly/daily) | Real-time |
+| **Size** | Can be large (full list) | Small (one response) |
+| **Availability** | Works offline | Requires network |
+| **Latency** | Local read | Network request |
+| **Vuln. window** | Until next CRL | Nearly zero |
 
-**En pratique** : On utilise les DEUX
-- OCSP pour les verifications temps reel
-- CRL comme fallback offline
-
----
-
-## Ce que tu vas faire
-
-1. **Demarrer un OCSP responder** pour ta CA hybride
-2. **Interroger le statut** d'un certificat valide
-3. **Revoquer le certificat** via la CA
-4. **Observer le changement** : status passe de "good" a "revoked"
-5. **Comparer** : CRL vs OCSP en temps reel
+**In practice**: Use BOTH
+- OCSP for real-time checks
+- CRL as offline fallback
 
 ---
 
-## Anatomie d'une reponse OCSP
+## What You'll Do
+
+1. **Start an OCSP responder** for your hybrid CA
+2. **Query the status** of a valid certificate
+3. **Revoke the certificate** via the CA
+4. **Observe the change**: status goes from "good" to "revoked"
+5. **Compare**: CRL vs OCSP in real-time
+
+---
+
+## Anatomy of an OCSP Response
 
 ```
 OCSP Response
@@ -140,16 +140,16 @@ OCSP Response
 
 ---
 
-## Ce que tu auras a la fin
+## What You'll Have at the End
 
-- OCSP responder fonctionnel
-- Reponses capturees (good / revoked)
-- Preuve du changement temps reel
-- Comprendre le workflow OCSP
+- Working OCSP responder
+- Captured responses (good / revoked)
+- Proof of real-time change
+- Understanding of OCSP workflow
 
 ---
 
-## Lancer la mission
+## Run the Mission
 
 ```bash
 ./demo.sh
@@ -157,6 +157,6 @@ OCSP Response
 
 ---
 
-## Prochaine mission
+## Next Mission
 
-→ **Mission 8 : "Rotate Without Breaking"** (Crypto-Agility)
+→ **Mission 8: "Rotate Without Breaking"** (Crypto-Agility)

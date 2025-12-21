@@ -1,108 +1,108 @@
-# Niveau 1 : PQC Basics
+# Level 1: PQC Basics
 
-## Pourquoi cette section ?
+## Why this section?
 
-Tu as cree une PKI classique dans le Quick Start. Tu as compris la menace SNDL.
+You created a classical PKI in the Quick Start. You understood the SNDL threat.
 
-Maintenant tu vas **transformer ta PKI en post-quantique**.
+Now you'll **transform your PKI to post-quantum**.
 
 ---
 
-## Ce que tu vas apprendre
+## What you'll learn
 
-### ML-DSA : L'algorithme de signature post-quantique
+### ML-DSA: The post-quantum signature algorithm
 
-ML-DSA (Module Lattice Digital Signature Algorithm) remplace RSA et ECDSA.
+ML-DSA (Module Lattice Digital Signature Algorithm) replaces RSA and ECDSA.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  ECDSA (classique)              ML-DSA (post-quantique)        │
-│  ─────────────────              ─────────────────────          │
+│  ECDSA (classical)              ML-DSA (post-quantum)           │
+│  ─────────────────              ─────────────────────           │
 │                                                                 │
-│  Cle publique : 64 bytes        Cle publique : 1952 bytes      │
-│  Signature : 64 bytes           Signature : 3293 bytes         │
-│  Securite : 128 bits            Securite : 192 bits (niveau 3) │
+│  Public key: 64 bytes           Public key: 1952 bytes          │
+│  Signature: 64 bytes            Signature: 3293 bytes           │
+│  Security: 128 bits             Security: 192 bits (level 3)    │
 │                                                                 │
-│  Vulnerable au quantique        Resistant au quantique          │
+│  Vulnerable to quantum          Resistant to quantum            │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-**Les signatures sont plus grandes, mais la PKI fonctionne exactement pareil.**
+**Signatures are larger, but the PKI works exactly the same.**
 
-### Hierarchie CA
+### CA Hierarchy
 
-Une PKI professionnelle a une hierarchie :
+A professional PKI has a hierarchy:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                                                                 │
-│                    ROOT CA (ML-DSA-87)                         │
-│                    ══════════════════                          │
-│                    Niveau de securite maximal                   │
-│                    Cle gardee offline                          │
+│                    ROOT CA (ML-DSA-87)                          │
+│                    ══════════════════                           │
+│                    Maximum security level                       │
+│                    Key kept offline                             │
 │                           │                                     │
 │                           ▼                                     │
-│                    ISSUING CA (ML-DSA-65)                      │
-│                    ═════════════════════                       │
-│                    Signe les certificats                       │
-│                    Cle accessible (protegee)                   │
+│                    ISSUING CA (ML-DSA-65)                       │
+│                    ═════════════════════                        │
+│                    Signs certificates                           │
+│                    Key accessible (protected)                   │
 │                           │                                     │
-│              ┌────────────┼────────────┐                       │
-│              ▼            ▼            ▼                       │
-│          [Serveur]    [Client]    [Code Signing]               │
+│              ┌────────────┼────────────┐                        │
+│              ▼            ▼            ▼                        │
+│          [Server]    [Client]    [Code Signing]                 │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Hybride : Le meilleur des deux mondes
+### Hybrid: Best of both worlds
 
-Pendant la transition, tu peux avoir les DEUX algorithmes dans un certificat :
+During transition, you can have BOTH algorithms in one certificate:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  CERTIFICAT HYBRIDE (Catalyst)                                 │
-│  ════════════════════════════                                  │
+│  HYBRID CERTIFICATE (Catalyst)                                  │
+│  ════════════════════════════                                   │
 │                                                                 │
-│  Cle principale : ECDSA P-384 (classique)                      │
-│  Extension PQC  : ML-DSA-65 (post-quantique)                   │
+│  Primary key: ECDSA P-384 (classical)                           │
+│  PQC extension: ML-DSA-65 (post-quantum)                        │
 │                                                                 │
-│  → Les clients legacy utilisent ECDSA                          │
-│  → Les clients modernes utilisent ML-DSA                       │
-│  → Si un algo est casse, l'autre protege                       │
+│  → Legacy clients use ECDSA                                     │
+│  → Modern clients use ML-DSA                                    │
+│  → If one algo is broken, the other protects                    │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Prerequis
+## Prerequisites
 
-- Quick Start termine (tu as une CA classique fonctionnelle)
-- Revelation terminee (tu comprends pourquoi migrer)
+- Quick Start completed (you have a working classical CA)
+- Revelation completed (you understand why to migrate)
 
 ---
 
-## Les missions
+## Missions
 
-### Mission 1 : "Build Your Quantum-Safe Foundation"
+### Mission 1: "Build Your Quantum-Safe Foundation"
 
-Creer une chaine PKI 100% post-quantique.
+Create a 100% post-quantum PKI chain.
 
-**Le probleme** : Ta CA classique sera cassable par un ordinateur quantique.
+**The problem**: Your classical CA will be breakable by a quantum computer.
 
-**La solution** : Creer une nouvelle hierarchie avec ML-DSA.
+**The solution**: Create a new hierarchy with ML-DSA.
 
 ```bash
 ./01-full-chain/demo.sh
 ```
 
-### Mission 2 : "Best of Both Worlds"
+### Mission 2: "Best of Both Worlds"
 
-Creer des certificats hybrides compatibles legacy ET quantum-safe.
+Create hybrid certificates compatible with legacy AND quantum-safe.
 
-**Le probleme** : Tu ne peux pas migrer tous tes clients d'un coup.
+**The problem**: You can't migrate all your clients at once.
 
-**La solution** : Les certificats hybrides sont compatibles avec les deux mondes.
+**The solution**: Hybrid certificates work with both worlds.
 
 ```bash
 ./02-hybrid/demo.sh
@@ -110,26 +110,26 @@ Creer des certificats hybrides compatibles legacy ET quantum-safe.
 
 ---
 
-## Ce que tu auras a la fin
+## What you'll have at the end
 
 ```
 workspace/niveau-1/
-├── pqc-root-ca/           # CA racine ML-DSA-87
+├── pqc-root-ca/           # Root CA ML-DSA-87
 │   ├── ca.crt
 │   └── ca.key
-├── pqc-issuing-ca/        # CA intermediaire ML-DSA-65
+├── pqc-issuing-ca/        # Issuing CA ML-DSA-65
 │   ├── ca.crt
 │   └── ca.key
-├── hybrid-ca/             # CA hybride ECDSA + ML-DSA
+├── hybrid-ca/             # Hybrid CA ECDSA + ML-DSA
 │   ├── ca.crt
 │   └── ca.key
-└── *.crt                  # Certificats emis
+└── *.crt                  # Issued certificates
 ```
 
 ---
 
-## Prochaine etape
+## Next step
 
-→ **Niveau 2 : Applications**
+→ **Level 2: Applications**
 
-Tu vas utiliser ta PKI PQC pour des cas reels : mTLS, signature de code, horodatage.
+You'll use your PQC PKI for real use cases: mTLS, code signing, timestamping.
