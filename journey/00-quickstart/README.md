@@ -34,7 +34,7 @@ Short answer: **No.** The PKI workflow is identical. Only the algorithm name cha
 cd workspace/quickstart
 ```
 
-> **Profiles:** [`profiles/`](../../profiles/) — customize validity, extensions, or subject DN
+> **Profiles:** See `profiles/` at project root to customize validity, extensions, or subject DN
 
 ### Step 1: Classical (ECDSA P-384)
 
