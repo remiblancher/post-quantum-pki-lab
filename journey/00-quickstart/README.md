@@ -23,7 +23,7 @@ Short answer: **No.** The PKI workflow is identical. Only the algorithm name cha
 ## Run the Demo
 
 ```bash
-./quickstart/demo.sh
+./journey/00-quickstart/demo.sh
 ```
 
 **Duration:** 10 minutes
@@ -34,7 +34,7 @@ Short answer: **No.** The PKI workflow is identical. Only the algorithm name cha
 cd workspace/quickstart
 ```
 
-> **Profiles:** [`pki/profiles/`](../pki/profiles/) — customize validity, extensions, or subject DN
+> **Profiles:** [`pki/profiles/`](../../pki/profiles/) — customize validity, extensions, or subject DN
 
 ### Step 1: Classical (ECDSA P-384)
 
@@ -120,4 +120,4 @@ pki info pq-server.crt
 
 ---
 
-← [Home](../README.md) | [Next: The Revelation →](../journey/00-revelation/)
+← [Home](../../README.md) | [Next: The Revelation →](../01-revelation/)

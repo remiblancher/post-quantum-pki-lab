@@ -225,7 +225,7 @@ La protection long terme est maintenant garantie."
     echo -e "${BOLD}Prochaine étape :${NC} Niveau 3 - Ops & Lifecycle"
     echo "  Gestion du cycle de vie : révocation, OCSP, crypto-agilité"
     echo ""
-    echo -e "    ${CYAN}./journey/03-ops-lifecycle/01-revocation/demo.sh${NC}"
+    echo -e "    ${CYAN}./journey/04-ops-lifecycle/01-revocation/demo.sh${NC}"
     echo ""
 }
 

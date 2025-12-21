@@ -273,7 +273,7 @@ Avec PQC, c'est résistant aux attaques quantiques."
     echo -e "${BOLD}Prochaine mission :${NC} Code Signing"
     echo "  Signer du code avec ML-DSA"
     echo ""
-    echo -e "    ${CYAN}./journey/02-applications/02-code-signing/demo.sh${NC}"
+    echo -e "    ${CYAN}./journey/03-applications/02-code-signing/demo.sh${NC}"
     echo ""
 }
 

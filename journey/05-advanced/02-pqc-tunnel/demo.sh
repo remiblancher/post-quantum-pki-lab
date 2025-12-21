@@ -197,7 +197,7 @@ Pour un tunnel sécurisé, tu as besoin des deux."
 
     echo ""
     echo -e "${BOLD}Prochaine mission :${NC} CMS Encryption"
-    echo -e "    ${CYAN}./journey/04-advanced/03-cms-encryption/demo.sh${NC}"
+    echo -e "    ${CYAN}./journey/05-advanced/03-cms-encryption/demo.sh${NC}"
     echo ""
 }
 

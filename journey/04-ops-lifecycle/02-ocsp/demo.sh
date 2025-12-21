@@ -222,7 +222,7 @@ Seule la taille des signatures change."
 
     echo ""
     echo -e "${BOLD}Prochaine mission :${NC} Crypto-Agility"
-    echo -e "    ${CYAN}./journey/03-ops-lifecycle/03-crypto-agility/demo.sh${NC}"
+    echo -e "    ${CYAN}./journey/04-ops-lifecycle/03-crypto-agility/demo.sh${NC}"
     echo ""
 }
 

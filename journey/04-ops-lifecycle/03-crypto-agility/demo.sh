@@ -229,7 +229,7 @@ Tu peux migrer progressivement, client par client."
     echo -e "${BOLD}Prochaine étape :${NC} Niveau 4 - Advanced"
     echo "  LTV Signatures, PQC Tunnel, CMS Encryption"
     echo ""
-    echo -e "    ${CYAN}./journey/04-advanced/01-ltv-signatures/demo.sh${NC}"
+    echo -e "    ${CYAN}./journey/05-advanced/01-ltv-signatures/demo.sh${NC}"
     echo ""
 }
 

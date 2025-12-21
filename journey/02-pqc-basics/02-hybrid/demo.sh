@@ -307,7 +307,7 @@ Empile-les. C'est la ceinture ET les bretelles."
     echo "  Prochaine étape : Niveau 2 - Applications"
     echo "    Utilise tes CA pour des cas réels (mTLS, Code Signing, Timestamping)"
     echo ""
-    echo -e "    ${CYAN}./journey/02-applications/01-mtls/demo.sh${NC}"
+    echo -e "    ${CYAN}./journey/03-applications/01-mtls/demo.sh${NC}"
     echo ""
 }
 
