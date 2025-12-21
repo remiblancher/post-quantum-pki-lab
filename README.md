@@ -1,62 +1,85 @@
 # Post-Quantum PKI Lab
 
-> **"La PKI ne change pas. Seul l'algorithme change."**
+> **"The PKI is the tool for transition — post-quantum is an engineering problem, not magic."**
 
-Apprends la cryptographie post-quantique en pratiquant. Un parcours interactif de ~2h où tu construis ta propre PKI quantum-safe.
+Educational demonstrations for transitioning to Post-Quantum Cryptography using a real PKI implementation.
 
 ---
 
-## La menace quantique en 30 secondes
+## Why This Matters
 
-Les ordinateurs quantiques vont casser RSA et ECDSA. Pas demain, mais dans **10-15 ans**.
+Quantum computers will eventually break RSA and ECC cryptography. The question isn't *if*, but *when*. Organizations need to prepare now — not panic, but plan.
 
-Le problème ? Les adversaires **capturent ton trafic chiffré aujourd'hui** pour le déchiffrer quand ils auront un ordinateur quantique. C'est le **"Store Now, Decrypt Later"** (SNDL).
+This lab demonstrates:
+- **Classical and post-quantum PKI work the same way**
+- **Hybrid certificates provide a safe migration path**
+- **The PKI model is algorithm-agnostic**
+
+---
+
+## The Threat: Store Now, Decrypt Later
+
+Adversaries **capture your encrypted traffic today** to decrypt it when they have a quantum computer. This is **"Store Now, Decrypt Later"** (SNDL).
 
 ```
-AUJOURD'HUI                           DANS 10-15 ANS
-───────────                           ──────────────
-    Adversaire                            Adversaire
+TODAY                                 IN 10-15 YEARS
+─────                                 ──────────────
+    Adversary                             Adversary
         │                                     │
-        │  Capture le trafic chiffré          │  Déchiffre tout
+        │  Captures encrypted traffic         │  Decrypts everything
         ▼                                     ▼
-   [████████████]  ──────────────────►   [Données en clair]
-    Ton trafic TLS                        Mots de passe, secrets,
-    (RSA/ECDSA)                           propriété intellectuelle
+   [████████████]  ──────────────────►   [Plaintext data]
+    Your TLS traffic                      Passwords, secrets,
+    (RSA/ECDSA)                           intellectual property
 ```
 
-**Si tes données doivent rester confidentielles 10+ ans, tu dois agir maintenant.**
+**If your data must remain confidential for 10+ years, you must act now.**
 
 ---
 
-## Ce que tu vas apprendre
+## Use Cases
 
-| Compétence | Mission | Ce que ça résout |
-|------------|---------|-----------------|
-| Créer une PKI | Quick Start | "Je ne sais pas par où commencer" |
-| Comprendre l'urgence | Révélation + Mosca | "Pourquoi maintenant ?" |
-| Passer au PQC | Full PQC Chain | "Comment migrer ?" |
-| Garder la compatibilité | Hybrid Catalyst | "Je ne peux pas tout casser" |
-| Authentifier des clients | mTLS | "Qui se connecte à mon serveur ?" |
-| Signer du code | Code Signing | "Comment prouver l'intégrité ?" |
-| Horodater | Timestamping | "Quand cette signature a été faite ?" |
-| Gérer les incidents | Revocation + OCSP | "Ce certificat est-il encore valide ?" |
-| Préparer la transition | Crypto-Agility | "Comment migrer sans tout casser ?" |
-| Archiver long terme | LTV Signatures | "Valide dans 30 ans ?" |
+### 📚 PKI Fundamentals
+| Use Case | Description |
+|----------|-------------|
+| [**PKI Hierarchy**](reference/usecases/pki/03-full-pqc-chain/) | Build Root CA → Issuing CA → End-entity certificates |
+| [**Hybrid Certificates**](reference/usecases/pki/04-hybrid-catalyst/) | Dual-key certs (ECDSA + ML-DSA) for backward compatibility |
+
+### 🔧 Applications
+| Use Case | Description |
+|----------|-------------|
+| [**mTLS Authentication**](reference/usecases/applications/03-mtls-authentication/) | Mutual client/server authentication with PQC |
+| [**Code Signing**](reference/usecases/applications/01-pqc-code-signing/) | Sign firmware and releases with ML-DSA |
+| [**Timestamping**](reference/usecases/applications/02-pqc-timestamping/) | Cryptographic proof of existence at a point in time |
+
+### ⚙️ Ops & Lifecycle
+| Use Case | Description |
+|----------|-------------|
+| [**Revocation (CRL)**](reference/usecases/pki/05-revocation-crl/) | Revoke compromised certificates |
+| [**OCSP Responder**](reference/usecases/applications/04-ocsp-responder/) | Real-time certificate status verification |
+| [**Crypto-Agility**](reference/usecases/applications/05-crypto-agility/) | Migrate from classic → hybrid → full PQC |
+
+### 🎯 Advanced
+| Use Case | Description |
+|----------|-------------|
+| [**LTV Signatures**](reference/usecases/applications/07-ltv-document-signing/) | Long-term validation for 30+ year archives |
+| [**TLS Tunnel**](reference/usecases/applications/06-tls-tunnel/) | ML-KEM key exchange for secure tunnels |
+| [**CMS Encryption**](journey/04-advanced/03-cms-encryption/) | Encrypt documents with hybrid ML-KEM |
 
 ---
 
-## Démarrage rapide
+## Quick Start
 
 ```bash
-# 1. Cloner et installer
+# 1. Clone and install
 git clone https://github.com/remiblancher/post-quantum-pki-lab.git
 cd post-quantum-pki-lab
 ./tooling/install.sh
 
-# 2. Lancer le menu
+# 2. Launch menu
 ./start.sh
 
-# 3. Ou directement le Quick Start (10 min)
+# 3. Or directly the Quick Start (10 min)
 ./quickstart/demo.sh
 ```
 
@@ -110,79 +133,79 @@ You've managed 12 certificates. In production, you have 10,000. → [QentriQ](ht
 
 ---
 
-## Glossaire
+## Glossary
 
-### Algorithmes
+### Algorithms
 
-| Terme | Signification | Usage |
-|-------|---------------|-------|
-| **ML-DSA** | Module Lattice Digital Signature Algorithm (FIPS 204) | Signatures post-quantiques |
-| **ML-KEM** | Module Lattice Key Encapsulation Mechanism (FIPS 203) | Échange de clés post-quantique |
+| Term | Meaning | Usage |
+|------|---------|-------|
+| **ML-DSA** | Module Lattice Digital Signature Algorithm (FIPS 204) | Post-quantum signatures |
+| **ML-KEM** | Module Lattice Key Encapsulation Mechanism (FIPS 203) | Post-quantum key exchange |
 | **SLH-DSA** | Stateless Hash-Based Digital Signature Algorithm | Signatures (alternative) |
-| **Hybride** | Certificat avec 2 clés (classique + PQC) | Transition en douceur |
-| **Catalyst** | Standard ITU-T X.509 Section 9.8 pour hybride | Format des certificats hybrides |
+| **Hybrid** | Certificate with 2 keys (classic + PQC) | Smooth transition |
+| **Catalyst** | ITU-T X.509 Section 9.8 standard for hybrid | Hybrid certificate format |
 
 ### Concepts
 
-| Terme | Signification |
-|-------|---------------|
-| **PQC** | Post-Quantum Cryptography — résiste aux ordinateurs quantiques |
-| **SNDL** | Store Now, Decrypt Later — capturer maintenant, déchiffrer plus tard |
-| **Mosca** | Inégalité pour calculer l'urgence de migration |
-| **LTV** | Long-Term Validation — signatures valides 30+ ans |
-| **mTLS** | Mutual TLS — authentification bidirectionnelle |
-| **CRL** | Certificate Revocation List — liste des certificats révoqués |
-| **OCSP** | Online Certificate Status Protocol — vérification en temps réel |
+| Term | Meaning |
+|------|---------|
+| **PQC** | Post-Quantum Cryptography — resists quantum computers |
+| **SNDL** | Store Now, Decrypt Later — capture now, decrypt later |
+| **Mosca** | Inequality to calculate migration urgency |
+| **LTV** | Long-Term Validation — signatures valid 30+ years |
+| **mTLS** | Mutual TLS — bidirectional authentication |
+| **CRL** | Certificate Revocation List — list of revoked certificates |
+| **OCSP** | Online Certificate Status Protocol — real-time verification |
 
-### L'inégalité de Mosca
+### Mosca's Inequality
 
 ```
-Si X + Y > Z  →  Tu dois agir MAINTENANT
+If X + Y > Z  →  You must act NOW
 
-X = Années avant qu'un ordinateur quantique soit disponible (10-15 ans)
-Y = Temps pour migrer tes systèmes (2-5 ans typiquement)
-Z = Durée de confidentialité requise de tes données
+X = Years until a quantum computer is available (10-15 years)
+Y = Time to migrate your systems (typically 2-5 years)
+Z = Required confidentiality duration of your data
 
-Exemple :
-  - X = 12 ans (ordinateur quantique en 2037)
-  - Y = 3 ans (migration de ton infra)
-  - Z = 20 ans (données médicales)
+Example:
+  - X = 12 years (quantum computer in 2037)
+  - Y = 3 years (your infra migration)
+  - Z = 20 years (medical data)
 
-  X + Y = 15 ans < Z = 20 ans  →  TU ES EN RETARD !
+  X + Y = 15 years < Z = 20 years  →  YOU'RE ALREADY LATE!
 ```
 
 ---
 
-## Structure du projet
+## Project Structure
 
 ```
 post-quantum-pki-lab/
-├── start.sh                    # Menu principal
+├── start.sh                    # Main menu
 ├── quickstart/                 # Quick Start (10 min)
 │   ├── demo.sh
 │   └── README.md
-├── journey/                    # Parcours guidé
+├── journey/                    # Guided journey
 │   ├── 00-revelation/          # "Store Now, Decrypt Later"
 │   ├── 01-pqc-basics/          # "Build Your Foundation" + "Best of Both"
 │   ├── 02-applications/        # mTLS, Code Signing, Timestamping
 │   ├── 03-ops-lifecycle/       # Revocation, OCSP, Crypto-Agility
 │   └── 04-advanced/            # LTV, PQC Tunnel, CMS
-├── workspace/                  # Tes artefacts (persistants)
-│   ├── quickstart/             # CA classique
-│   ├── niveau-1/               # CA PQC + CA Hybride
+├── workspace/                  # Your artifacts (persistent)
+│   ├── quickstart/             # Classic CA
+│   ├── niveau-1/               # PQC CA + Hybrid CA
 │   ├── niveau-2/               # Signatures, timestamps
 │   ├── niveau-3/               # CRL, OCSP
 │   └── niveau-4/               # LTV, tunnels
-├── reference/usecases/         # Documentation de référence
-├── lib/                        # Helpers shell
-└── bin/pki                     # Outil PKI (Go)
+├── reference/usecases/         # Reference documentation
+├── lib/                        # Shell helpers
+└── bin/pki                     # PKI tool (Go)
 ```
 
 ---
 
-## Algorithmes supportés
+## Supported Algorithms
 
-### Classique
+### Classic
 - ECDSA P-256, P-384, P-521
 - RSA 2048, 4096
 - Ed25519
@@ -190,63 +213,63 @@ post-quantum-pki-lab/
 ### Post-Quantum (NIST FIPS 2024)
 - **ML-DSA-44, ML-DSA-65, ML-DSA-87** — Signatures
 - **ML-KEM-512, ML-KEM-768, ML-KEM-1024** — Key encapsulation
-- **SLH-DSA** — Signatures hash-based
+- **SLH-DSA** — Hash-based signatures
 
-### Hybride (Catalyst ITU-T X.509 9.8)
+### Hybrid (Catalyst ITU-T X.509 9.8)
 - ECDSA P-384 + ML-DSA-65
 - X25519 + ML-KEM-768
 
 ---
 
-## Prérequis
+## Prerequisites
 
-- **Go 1.21+** (pour compiler l'outil PKI)
-- **OpenSSL 3.x** (pour les vérifications)
+- **Go 1.21+** (to compile the PKI tool)
+- **OpenSSL 3.x** (for verifications)
 - **Bash 4+**
 
 ---
 
-## Mode interactif
+## Interactive Mode
 
-Ce lab utilise un mode interactif où tu tapes les commandes importantes :
+This lab uses an interactive mode where you type the important commands:
 
 ```bash
 ┌─────────────────────────────────────────────────────────────────┐
-│  MISSION 1 : Créer ta CA                                       │
+│  MISSION 1: Create your CA                                      │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
-│  Une CA (Certificate Authority) est le point de confiance.     │
-│  C'est elle qui signe tous tes certificats.                    │
+│  A CA (Certificate Authority) is the trust anchor.             │
+│  It signs all your certificates.                                │
 │                                                                 │
-│  >>> Tape cette commande :                                      │
+│  >>> Type this command:                                         │
 │                                                                 │
-│      pki init-ca --name "Ma CA" --algorithm ml-dsa-65          │
+│      pki init-ca --name "My CA" --algorithm ml-dsa-65          │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 
-$ pki init-ca --name "Ma CA" --algorithm ml-dsa-65
-✓ CA créée : ca.crt (ML-DSA-65)
+$ pki init-ca --name "My CA" --algorithm ml-dsa-65
+✓ CA created: ca.crt (ML-DSA-65)
 ```
 
-Les commandes complexes sont exécutées automatiquement avec explication.
+Complex commands are executed automatically with explanation.
 
 ---
 
-## Workspace persistant
+## Persistent Workspace
 
-Chaque niveau a son propre workspace. Tes CA et certificats sont conservés entre les sessions :
+Each level has its own workspace. Your CAs and certificates are preserved between sessions:
 
 ```bash
-# Voir le statut des workspaces
-./start.sh  # puis option "s"
+# View workspace status
+./start.sh  # then option "s"
 
-# Réinitialiser un niveau
-./start.sh  # puis option "r"
+# Reset a level
+./start.sh  # then option "r"
 ```
 
 ---
 
-## Liens utiles
+## Useful Links
 
 - [NIST Post-Quantum Cryptography](https://csrc.nist.gov/projects/post-quantum-cryptography)
 - [FIPS 203 (ML-KEM)](https://csrc.nist.gov/pubs/fips/203/final)
@@ -255,4 +278,4 @@ Chaque niveau a son propre workspace. Tes CA et certificats sont conservés entr
 
 ---
 
-Créé par [QentriQ](https://qentriq.com) — Licence Apache 2.0
+Created by [QentriQ](https://qentriq.com) — Apache 2.0 License
