@@ -81,22 +81,22 @@ pki info pq-server.crt
 | Metric | Classical (ECDSA P-384) | Post-Quantum (ML-DSA-65) | Ratio |
 |--------|-------------------------|--------------------------|-------|
 | Public key | ~97 bytes | ~1,952 bytes | ~20x |
-| Signature | ~96 bytes | ~3,293 bytes | ~34x |
+| Signature | ~96 bytes | ~3,309 bytes | ~34x |
 | Certificate | ~1 KB | ~6 KB | ~6x |
 
 *Approximate ratios. Actual sizes depend on certificate extensions and metadata.*
 
-### Performance Comparison
+### Performance Comparison*
 
 | Operation | Classical | Post-Quantum | Notes |
 |-----------|-----------|--------------|-------|
-| Key generation | fast | fast | Similar order of magnitude |
-| Sign | fast | fast | ML-DSA slightly slower |
-| Verify | fast | fast | ML-DSA faster than ECDSA |
+| Key generation | fast | slower | ML-DSA slower by design |
+| Sign | fast | ~2x faster | ML-DSA outperforms ECDSA |
+| Verify | fast | faster | ML-DSA significantly faster |
 
-*Performance varies by hardware. Run `demo.sh` for real measurements on your machine.*
+*\* Source: [ML-DSA Benchmark](https://medium.com/@moeghifar/post-quantum-digital-signatures-the-benchmark-of-ml-dsa-against-ecdsa-and-eddsa-d4406a5918d9). Performance varies by hardware.*
 
-**The trade-off is clear:** Larger sizes in exchange for quantum resistance.
+**The trade-off:** Larger sizes, but faster operations and quantum resistance.
 
 ## What You Learned
 

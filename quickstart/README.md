@@ -64,17 +64,27 @@ pki issue --ca-dir ./pqc-ca \
 
 ## Expected Results
 
-### Size Comparison
+### Size Comparison*
 
-| Metric | Classical (ECDSA) | Post-Quantum (ML-DSA) | Ratio |
-|--------|-------------------|----------------------|-------|
-| CA Certificate | ~800 B | ~3 KB | ~4x |
-| Server Certificate | ~1 KB | ~5 KB | ~5x |
-| Private Key | ~300 B | ~4 KB | ~13x |
+| Metric | Classical (ECDSA P-384) | Post-Quantum (ML-DSA-65) | Ratio |
+|--------|-------------------------|--------------------------|-------|
+| Public key | 97 bytes | 1,952 bytes | 20x |
+| Signature | 96 bytes | 3,309 bytes | 34x |
+| Certificate | ~1 KB | ~6 KB | ~6x |
 
-*Actual sizes depend on certificate extensions.*
+*\* Source: [NIST FIPS 204](https://csrc.nist.gov/pubs/fips/204/final), Table 2. Certificate sizes depend on extensions.*
 
-**The trade-off:** Larger sizes in exchange for quantum resistance.
+### Performance Comparison**
+
+| Operation | Classical | Post-Quantum | Notes |
+|-----------|-----------|--------------|-------|
+| Key generation | fast | slower | ML-DSA slower by design |
+| Sign | fast | ~2x faster | ML-DSA outperforms ECDSA |
+| Verify | fast | faster | ML-DSA significantly faster |
+
+*\*\* Source: [ML-DSA Benchmark](https://medium.com/@moeghifar/post-quantum-digital-signatures-the-benchmark-of-ml-dsa-against-ecdsa-and-eddsa-d4406a5918d9). Performance varies by hardware.*
+
+**The trade-off:** Larger sizes, but faster operations and quantum resistance.
 
 ## What You Learned
 
