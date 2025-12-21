@@ -1,20 +1,20 @@
-# Mission 2 : "Best of Both Worlds"
+# Mission 2: "Best of Both Worlds"
 
-## Hybrid Catalyst avec ECDSA + ML-DSA
+## Hybrid Catalyst with ECDSA + ML-DSA
 
-### Le probleme
+### The Problem
 
-Tu as une PKI PQC. Mais certains de tes clients ne supportent pas encore ML-DSA.
+You have a PQC PKI. But some of your clients don't support ML-DSA yet.
 
 ```
 ┌──────────────────┐                    ┌──────────────────┐
-│  Client LEGACY   │                    │  Client MODERNE  │
-│  ──────────────  │                    │  ───────────────  │
+│  LEGACY Client   │                    │  MODERN Client   │
+│  ──────────────  │                    │  ─────────────   │
 │  OpenSSL 1.x     │                    │  OpenSSL 3.x     │
 │  Java 8          │                    │  Go 1.23+        │
-│  Vieux navigateur│                    │  Chrome 2024+    │
+│  Old browser     │                    │  Chrome 2024+    │
 │                  │                    │                  │
-│  Comprend:       │                    │  Comprend:       │
+│  Understands:    │                    │  Understands:    │
 │  ✓ RSA           │                    │  ✓ RSA           │
 │  ✓ ECDSA         │                    │  ✓ ECDSA         │
 │  ✗ ML-DSA        │                    │  ✓ ML-DSA        │
@@ -24,80 +24,80 @@ Tu as une PKI PQC. Mais certains de tes clients ne supportent pas encore ML-DSA.
          └───────────────┬───────────────────────┘
                          │
                          ▼
-              Comment servir les deux ?
+              How to serve both?
 ```
 
-### La solution : Certificat Hybride
+### The Solution: Hybrid Certificate
 
-Un certificat hybride contient **deux cles** :
+A hybrid certificate contains **two keys**:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  CERTIFICAT HYBRIDE (Catalyst)                                 │
-│  ════════════════════════════                                  │
+│  HYBRID CERTIFICATE (Catalyst)                                  │
+│  ════════════════════════════                                   │
 │                                                                 │
 │  ┌─────────────────────────────────────────────────────────┐   │
-│  │  CLE PRINCIPALE : ECDSA P-384                           │   │
-│  │  ────────────────────────────                           │   │
-│  │  - Compatible avec TOUS les clients                     │   │
-│  │  - Utilisee par les clients legacy                      │   │
+│  │  PRIMARY KEY: ECDSA P-384                               │   │
+│  │  ────────────────────────                               │   │
+│  │  - Compatible with ALL clients                          │   │
+│  │  - Used by legacy clients                               │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │                                                                 │
 │  ┌─────────────────────────────────────────────────────────┐   │
-│  │  EXTENSION PQC : ML-DSA-65                              │   │
+│  │  PQC EXTENSION: ML-DSA-65                               │   │
 │  │  ─────────────────────────                              │   │
-│  │  - Dans une extension X.509                             │   │
-│  │  - Utilisee par les clients modernes                    │   │
-│  │  - Invisible pour les clients legacy                    │   │
+│  │  - In an X.509 extension                                │   │
+│  │  - Used by modern clients                               │   │
+│  │  - Invisible to legacy clients                          │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-**Standard** : ITU-T X.509 Section 9.8 (Catalyst)
+**Standard**: ITU-T X.509 Section 9.8 (Catalyst)
 
 ---
 
-## Comment ca marche ?
+## How Does It Work?
 
 ```
 ┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
-│  Client LEGACY   │     │  CERTIFICAT      │     │  Client MODERNE  │
-│                  │     │  HYBRIDE         │     │                  │
-│  Verifie avec    │────►│                  │◄────│  Verifie avec    │
+│  LEGACY Client   │     │  HYBRID          │     │  MODERN Client   │
+│                  │     │  CERTIFICATE     │     │                  │
+│  Verifies with   │────►│                  │◄────│  Verifies with   │
 │  ECDSA           │     │  ECDSA + ML-DSA  │     │  ML-DSA          │
 │                  │     │                  │     │                  │
-│  ✓ Fonctionne    │     │                  │     │  ✓ Fonctionne    │
+│  ✓ Works         │     │                  │     │  ✓ Works         │
 └──────────────────┘     └──────────────────┘     └──────────────────┘
 ```
 
-**Avantages** :
-- Compatibilite retroactive
-- Protection post-quantique pour les clients modernes
-- Migration progressive
-- Si un algo est compromis, l'autre protege
+**Advantages**:
+- Backward compatibility
+- Post-quantum protection for modern clients
+- Progressive migration
+- If one algo is compromised, the other protects
 
 ---
 
-## Ce que tu vas faire
+## What You'll Do
 
-1. **Creer une CA hybride** (ECDSA P-384 + ML-DSA-65)
-2. **Emettre un certificat hybride** pour un serveur
-3. **Tester avec OpenSSL** (voit ECDSA)
-4. **Tester avec pki** (verifie ECDSA ET ML-DSA)
-
----
-
-## Ce que tu auras a la fin
-
-- CA hybride (double signature)
-- Certificat serveur hybride
-- Preuve de compatibilite legacy
-- Preuve de verification PQC
+1. **Create a hybrid CA** (ECDSA P-384 + ML-DSA-65)
+2. **Issue a hybrid certificate** for a server
+3. **Test with OpenSSL** (sees ECDSA)
+4. **Test with pki** (verifies BOTH ECDSA AND ML-DSA)
 
 ---
 
-## Lancer la mission
+## What You'll Have at the End
+
+- Hybrid CA (dual signature)
+- Hybrid server certificate
+- Proof of legacy compatibility
+- Proof of PQC verification
+
+---
+
+## Run the Mission
 
 ```bash
 ./demo.sh
@@ -105,8 +105,8 @@ Un certificat hybride contient **deux cles** :
 
 ---
 
-## Prochaine etape
+## Next Step
 
-→ **Niveau 2 : Applications**
+→ **Level 2: Applications**
 
-Tu vas utiliser ta PKI pour des cas reels.
+You'll use your PKI for real-world use cases.

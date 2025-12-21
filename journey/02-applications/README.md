@@ -1,127 +1,127 @@
-# Niveau 2 : Applications
+# Level 2: Applications
 
-## Pourquoi cette section ?
+## Why this section?
 
-Tu as une PKI post-quantique. Maintenant, il faut l'**utiliser**.
+You have a post-quantum PKI. Now you need to **use it**.
 
-Une PKI ne sert a rien toute seule. Elle existe pour securiser des **applications** :
-- Authentifier des clients et serveurs (mTLS)
-- Signer du code (firmware, releases)
-- Horodater des documents (preuve temporelle)
+A PKI is useless on its own. It exists to secure **applications**:
+- Authenticate clients and servers (mTLS)
+- Sign code (firmware, releases)
+- Timestamp documents (proof of time)
 
 ---
 
-## Ce que tu vas apprendre
+## What you'll learn
 
-### mTLS : Authentification mutuelle
+### mTLS: Mutual Authentication
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                                                                 │
-│  HTTPS CLASSIQUE                   mTLS                        │
-│  ───────────────                   ────                        │
+│  STANDARD HTTPS                    mTLS                         │
+│  ──────────────                    ────                         │
 │                                                                 │
-│  Client ──────► Serveur            Client ◄────► Serveur       │
+│  Client ──────► Server            Client ◄────► Server          │
 │                                                                 │
-│  "Je verifie que                   "On verifie                 │
-│   le serveur est                    TOUS LES DEUX              │
-│   authentique"                      qu'on est authentiques"    │
+│  "I verify that                   "We BOTH verify               │
+│   the server is                    that we're                   │
+│   authentic"                       authentic"                   │
 │                                                                 │
-│  Serveur prouve                    Serveur prouve              │
-│  son identite                      son identite                │
-│                                    + Client prouve             │
-│                                      son identite              │
+│  Server proves                    Server proves                 │
+│  its identity                     its identity                  │
+│                                   + Client proves               │
+│                                     its identity                │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-**Cas d'usage** : APIs securisees, microservices, IoT, zero-trust
+**Use cases**: Secure APIs, microservices, IoT, zero-trust
 
-### Code Signing : Signature de code
+### Code Signing: Sign your code
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                                                                 │
-│  SANS SIGNATURE                    AVEC SIGNATURE              │
-│  ──────────────                    ───────────────             │
+│  WITHOUT SIGNATURE                 WITH SIGNATURE               │
+│  ─────────────────                 ──────────────               │
 │                                                                 │
-│  firmware.bin                      firmware.bin                │
-│  (vient d'ou ?)                    + signature ML-DSA          │
-│                                    + certificat                │
+│  firmware.bin                      firmware.bin                 │
+│  (where from?)                     + ML-DSA signature           │
+│                                    + certificate                │
 │                                                                 │
-│  "Quelqu'un l'a                    "Signe par Acme Corp       │
-│   peut-etre modifie"                le 15 dec 2024"           │
+│  "Someone might                    "Signed by Acme Corp         │
+│   have modified it"                 on Dec 15, 2024"            │
 │                                                                 │
-│  ❌ Aucune garantie                ✓ Integrite                 │
-│                                    ✓ Authenticite              │
-│                                    ✓ Non-repudiation           │
+│  ❌ No guarantee                   ✓ Integrity                  │
+│                                    ✓ Authenticity               │
+│                                    ✓ Non-repudiation            │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-**Cas d'usage** : Firmware updates, releases logicielles, scripts
+**Use cases**: Firmware updates, software releases, scripts
 
-### Timestamping : Horodatage cryptographique
+### Timestamping: Cryptographic timestamping
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                                                                 │
-│  PROBLEME                          SOLUTION                    │
-│  ────────                          ────────                    │
+│  PROBLEM                           SOLUTION                     │
+│  ───────                           ────────                     │
 │                                                                 │
-│  Document signe                    Document signe              │
-│  le 15 dec 2024                    + Timestamp TSA             │
+│  Document signed                   Document signed              │
+│  on Dec 15, 2024                   + TSA Timestamp              │
 │                                                                 │
-│  Certificat expire                 Meme si le certificat       │
-│  le 15 dec 2025                    expire, on PROUVE           │
-│                                    que la signature            │
-│  "La signature                     existait AVANT              │
-│   est-elle encore                  l'expiration                │
-│   valide ?"                                                    │
-│                                    ✓ Signature valide          │
-│                                      indefiniment              │
+│  Certificate expires               Even if the certificate      │
+│  on Dec 15, 2025                   expires, we PROVE            │
+│                                    the signature                │
+│  "Is the signature                 existed BEFORE               │
+│   still valid?"                    expiration                   │
+│                                                                 │
+│                                    ✓ Signature valid            │
+│                                      indefinitely               │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-**Cas d'usage** : Contrats, factures, archivage legal
+**Use cases**: Contracts, invoices, legal archiving
 
 ---
 
-## Prerequis
+## Prerequisites
 
-- Niveau 1 termine (tu as une CA PQC fonctionnelle)
-- Concepts : certificats, chaine de confiance
+- Level 1 completed (you have a working PQC CA)
+- Concepts: certificates, chain of trust
 
 ---
 
-## Les missions
+## Missions
 
-### Mission 3 : "Show Me Your Badge" (mTLS)
+### Mission 3: "Show Me Your Badge" (mTLS)
 
-Authentifier des clients avec ta CA PQC.
+Authenticate clients with your PQC CA.
 
-**Le probleme** : Comment savoir que c'est vraiment Alice qui se connecte ?
+**The problem**: How do you know it's really Alice connecting?
 
 ```bash
 ./01-mtls/demo.sh
 ```
 
-### Mission 4 : "Secure Your Releases" (Code Signing)
+### Mission 4: "Secure Your Releases" (Code Signing)
 
-Signer du code avec ML-DSA.
+Sign code with ML-DSA.
 
-**Le probleme** : Comment garantir que le firmware n'a pas ete modifie ?
+**The problem**: How do you guarantee the firmware hasn't been modified?
 
 ```bash
 ./02-code-signing/demo.sh
 ```
 
-### Mission 5 : "Trust Now, Verify Forever" (Timestamping)
+### Mission 5: "Trust Now, Verify Forever" (Timestamping)
 
-Horodater des documents pour preuve legale.
+Timestamp documents for legal proof.
 
-**Le probleme** : Comment prouver qu'un document existait a une date precise ?
+**The problem**: How do you prove a document existed at a specific date?
 
 ```bash
 ./03-timestamping/demo.sh
@@ -129,28 +129,28 @@ Horodater des documents pour preuve legale.
 
 ---
 
-## Ce que tu auras a la fin
+## What you'll have at the end
 
 ```
 workspace/niveau-2/
 ├── mtls/
-│   ├── server.crt          # Certificat serveur ML-DSA
-│   ├── alice.crt           # Certificat client Alice
-│   └── bob.crt             # Certificat client Bob
+│   ├── server.crt          # Server certificate ML-DSA
+│   ├── alice.crt           # Client certificate Alice
+│   └── bob.crt             # Client certificate Bob
 ├── code-signing/
-│   ├── signing.crt         # Certificat de signature
-│   ├── firmware.bin        # Fichier signe
-│   └── firmware.bin.sig    # Signature ML-DSA
+│   ├── signing.crt         # Signing certificate
+│   ├── firmware.bin        # Signed file
+│   └── firmware.bin.sig    # ML-DSA signature
 └── timestamping/
-    ├── tsa.crt             # Certificat TSA
-    ├── document.txt        # Document horodate
+    ├── tsa.crt             # TSA certificate
+    ├── document.txt        # Timestamped document
     └── document.tsr        # Timestamp response
 ```
 
 ---
 
-## Prochaine etape
+## Next step
 
-→ **Niveau 3 : Ops & Lifecycle**
+→ **Level 3: Ops & Lifecycle**
 
-Tu vas apprendre a gerer le cycle de vie : revocation, OCSP, rotation d'algorithmes.
+You'll learn to manage the lifecycle: revocation, OCSP, algorithm rotation.

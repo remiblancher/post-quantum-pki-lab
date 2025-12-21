@@ -1,154 +1,154 @@
-# Mission 4 : "Secure Your Releases"
+# Mission 4: "Secure Your Releases"
 
-## Code Signing avec ML-DSA
+## Code Signing with ML-DSA
 
-### Le probleme
+### The Problem
 
-Tu distribues un firmware a tes clients. Comment ils savent que c'est vraiment toi qui l'as cree ?
+You distribute firmware to your clients. How do they know you really created it?
 
 ```
-SANS CODE SIGNING
-─────────────────
+WITHOUT CODE SIGNING
+────────────────────
 
-   Developpeur                    Attaquant                    Client
+   Developer                    Attacker                    Client
        │                              │                           │
        │  firmware.bin                │                           │
        │  ────────────────────────────┼──────────────────────────►│
        │                              │                           │
-       │                              │  firmware.bin (modifie)   │
+       │                              │  firmware.bin (modified)  │
        │                              │  ──────────────────────►  │
        │                              │                           │
        │                              │                           ▼
        │                              │                    ┌──────────────┐
-       │                              │                    │  Lequel est  │
-       │                              │                    │  le vrai ?   │
+       │                              │                    │  Which one   │
+       │                              │                    │  is real?    │
        │                              │                    └──────────────┘
 ```
 
-### La menace
+### The Threat
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
-│  SUPPLY CHAIN ATTACK : Modifier le code en transit              │
+│  SUPPLY CHAIN ATTACK: Modify code in transit                    │
 │                                                                  │
 │                                                                  │
-│    Developpeur                                                   │
+│    Developer                                                     │
 │        │                                                         │
 │        │  firmware.bin (original)                                │
 │        ▼                                                         │
 │    ┌──────────┐                                                  │
-│    │  Mirror  │ ◄──── Attaquant injecte du malware              │
+│    │  Mirror  │ ◄──── Attacker injects malware                  │
 │    │  Server  │                                                  │
 │    └──────────┘                                                  │
 │        │                                                         │
-│        │  firmware.bin (compromis)                               │
+│        │  firmware.bin (compromised)                             │
 │        ▼                                                         │
 │    ┌──────────┐                                                  │
-│    │  Client  │  Installe le firmware                           │
-│    │          │  sans savoir qu'il                              │
-│    │          │  est modifie                                    │
+│    │  Client  │  Installs the firmware                          │
+│    │          │  without knowing it's                           │
+│    │          │  been modified                                  │
 │    └──────────┘                                                  │
 │                                                                  │
-│  Exemples reels :                                                │
-│  - SolarWinds (2020) : malware injecte dans une mise a jour    │
-│  - CodeCov (2021) : script de build compromis                   │
-│  - 3CX (2023) : supply chain d'une supply chain                 │
+│  Real-world examples:                                            │
+│  - SolarWinds (2020): malware injected in an update             │
+│  - CodeCov (2021): build script compromised                     │
+│  - 3CX (2023): supply chain of a supply chain                   │
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
-### La solution : Code Signing
+### The Solution: Code Signing
 
-Signer le code AVANT de le distribuer :
+Sign the code BEFORE distributing it:
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
-│  AVEC CODE SIGNING                                               │
+│  WITH CODE SIGNING                                               │
 │                                                                  │
-│    Developpeur                                                   │
+│    Developer                                                     │
 │        │                                                         │
-│        │  1. Signe firmware.bin avec ML-DSA                      │
+│        │  1. Signs firmware.bin with ML-DSA                      │
 │        ▼                                                         │
 │    ┌─────────────────────────────────┐                          │
 │    │  firmware.bin                   │                          │
 │    │  + firmware.bin.sig (signature) │                          │
-│    │  + signing.crt (certificat)     │                          │
+│    │  + signing.crt (certificate)    │                          │
 │    └─────────────────────────────────┘                          │
 │        │                                                         │
 │        ▼                                                         │
 │    ┌──────────┐                                                  │
-│    │  Client  │  2. Verifie la signature                        │
+│    │  Client  │  2. Verifies the signature                      │
 │    │          │                                                  │
-│    │          │  ✓ Hash correspond                              │
-│    │          │  ✓ Signature valide                             │
-│    │          │  ✓ Certificat dans la chaine                    │
+│    │          │  ✓ Hash matches                                 │
+│    │          │  ✓ Signature valid                              │
+│    │          │  ✓ Certificate in the chain                     │
 │    │          │                                                  │
-│    │          │  → Installation autorisee                       │
+│    │          │  → Installation authorized                      │
 │    └──────────┘                                                  │
 │                                                                  │
-│  Si le firmware est modifie :                                    │
-│  ❌ Hash ne correspond plus → Signature invalide → REJET        │
+│  If the firmware is modified:                                    │
+│  ❌ Hash doesn't match → Signature invalid → REJECTED           │
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Ce que garantit une signature
+## What a Signature Guarantees
 
-| Propriete | Signification |
-|-----------|---------------|
-| **Integrite** | Le fichier n'a pas ete modifie |
-| **Authenticite** | Il vient bien de l'editeur |
-| **Non-repudiation** | L'editeur ne peut pas nier l'avoir signe |
-
----
-
-## Ce que tu vas faire
-
-1. **Creer un certificat code-signing** avec ML-DSA-65
-2. **Signer un "firmware"** (fichier binaire)
-3. **Verifier la signature** : integrite + authenticite
-4. **Modifier le fichier** et voir la verification echouer
+| Property | Meaning |
+|----------|---------|
+| **Integrity** | The file hasn't been modified |
+| **Authenticity** | It really comes from the publisher |
+| **Non-repudiation** | The publisher can't deny signing it |
 
 ---
 
-## Anatomie d'une signature
+## What You'll Do
+
+1. **Create a code-signing certificate** with ML-DSA-65
+2. **Sign a "firmware"** (binary file)
+3. **Verify the signature**: integrity + authenticity
+4. **Modify the file** and see the verification fail
+
+---
+
+## Anatomy of a Signature
 
 ```
 firmware.bin.sig
 ────────────────
 
 ┌─────────────────────────────────────────────────────────────┐
-│  Signature ML-DSA-65                                        │
+│  ML-DSA-65 Signature                                        │
 │  ─────────────────────                                      │
 │                                                              │
-│  Hash du fichier : SHA-512(firmware.bin)                    │
-│  Signature       : ML-DSA.Sign(hash, cle_privee)           │
-│  Taille          : ~3293 bytes                              │
+│  File hash     : SHA-512(firmware.bin)                      │
+│  Signature     : ML-DSA.Sign(hash, private_key)             │
+│  Size          : ~3293 bytes                                │
 │                                                              │
-│  Verification :                                              │
-│  1. Recalculer le hash du fichier                           │
-│  2. Verifier avec la cle publique du certificat            │
-│  3. Verifier que le certificat est dans la chaine CA       │
+│  Verification:                                               │
+│  1. Recalculate the file hash                               │
+│  2. Verify with the certificate's public key                │
+│  3. Verify the certificate is in the CA chain               │
 │                                                              │
 └─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Ce que tu auras a la fin
+## What You'll Have at the End
 
-- Certificat de signature ML-DSA-65
-- Fichier firmware.bin
-- Signature firmware.bin.sig
-- Preuve de verification (valide / invalide si modifie)
+- ML-DSA-65 signing certificate
+- firmware.bin file
+- firmware.bin.sig signature
+- Verification proof (valid / invalid if modified)
 
 ---
 
-## Lancer la mission
+## Run the Mission
 
 ```bash
 ./demo.sh
@@ -156,6 +156,6 @@ firmware.bin.sig
 
 ---
 
-## Prochaine mission
+## Next Mission
 
-→ **Mission 5 : "Trust Now, Verify Forever"** (Timestamping)
+→ **Mission 5: "Trust Now, Verify Forever"** (Timestamping)

@@ -1,106 +1,106 @@
-# Mission 5 : "Trust Now, Verify Forever"
+# Mission 5: "Trust Now, Verify Forever"
 
-## Timestamping avec ML-DSA
+## Timestamping with ML-DSA
 
-### Le probleme
+### The Problem
 
-Tu signes un contrat aujourd'hui. Dans 5 ans, ton certificat a expire.
+You sign a contract today. In 5 years, your certificate has expired.
 
-La signature est-elle encore valide ?
+Is the signature still valid?
 
 ```
-AUJOURD'HUI                          DANS 5 ANS
-───────────                          ──────────
+TODAY                                IN 5 YEARS
+─────                                ──────────
 
-  Contrat.pdf                        Contrat.pdf
+  Contract.pdf                       Contract.pdf
   + Signature                        + Signature
-  ✓ Certificat valide                ❌ Certificat expire
+  ✓ Certificate valid                ❌ Certificate expired
 
-  "Ce contrat a ete                  "Ce contrat a-t-il
-   signe le 15/12/2024"               vraiment ete signe
-                                       AVANT l'expiration ?"
+  "This contract was                 "Was this contract
+   signed on 12/15/2024"              really signed
+                                      BEFORE expiration?"
 ```
 
-### La menace
+### The Threat
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
-│  PROBLEME : La date de signature n'est pas prouvee              │
+│  PROBLEM: The signature date is not proven                      │
 │                                                                  │
 │                                                                  │
 │    2024                              2029                        │
 │      │                                 │                         │
-│      │  Signature creee               │  Certificat expire      │
+│      │  Signature created              │  Certificate expired   │
 │      │                                 │                         │
 │      ▼                                 ▼                         │
 │    ┌─────────┐                      ┌─────────┐                 │
-│    │ Contrat │                      │ Contrat │                 │
-│    │ signe   │                      │ signe   │                 │
+│    │ Contract│                      │ Contract│                 │
+│    │ signed  │                      │ signed  │                 │
 │    │         │                      │         │                 │
 │    │ ✓ Valid │  ────────────────►   │ ? Valid │                 │
 │    └─────────┘                      └─────────┘                 │
 │                                                                  │
-│    Sans horodatage, impossible de prouver que la signature      │
-│    a ete creee AVANT l'expiration du certificat.                │
+│    Without timestamping, impossible to prove that the signature │
+│    was created BEFORE the certificate expiration.               │
 │                                                                  │
-│    Un attaquant pourrait :                                       │
-│    - Antidater une signature (fraude)                           │
-│    - Contester la validite d'un contrat                         │
+│    An attacker could:                                            │
+│    - Backdate a signature (fraud)                               │
+│    - Contest the validity of a contract                         │
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
-### La solution : Horodatage cryptographique (TSA)
+### The Solution: Cryptographic Timestamping (TSA)
 
-Une autorite de confiance (TSA) prouve quand la signature a ete creee :
+A trusted authority (TSA) proves when the signature was created:
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
-│  AVEC HORODATAGE TSA                                             │
+│  WITH TSA TIMESTAMPING                                           │
 │                                                                  │
-│    1. Tu signes le document                                      │
+│    1. You sign the document                                      │
 │                                                                  │
-│       Contrat.pdf                                                │
-│       + Ta signature                                             │
+│       Contract.pdf                                               │
+│       + Your signature                                           │
 │           │                                                      │
-│           │  2. Tu demandes un timestamp                         │
+│           │  2. You request a timestamp                          │
 │           ▼                                                      │
 │       ┌───────────────────────────────────────────┐             │
 │       │  TSA (Timestamp Authority)                │             │
 │       │  ─────────────────────────                │             │
 │       │                                           │             │
-│       │  "Je certifie que ce hash existait       │             │
-│       │   le 15/12/2024 a 14:32:05 UTC"          │             │
+│       │  "I certify that this hash existed       │             │
+│       │   on 12/15/2024 at 14:32:05 UTC"         │             │
 │       │                                           │             │
-│       │  + Signature TSA (ML-DSA-65)             │             │
-│       │  + Horloge certifiee                     │             │
+│       │  + TSA Signature (ML-DSA-65)             │             │
+│       │  + Certified clock                       │             │
 │       └───────────────────────────────────────────┘             │
 │           │                                                      │
 │           ▼                                                      │
-│    3. Le timestamp est ajoute au document                       │
+│    3. The timestamp is added to the document                    │
 │                                                                  │
-│       Contrat.pdf                                                │
-│       + Ta signature                                             │
-│       + Timestamp TSA                                            │
+│       Contract.pdf                                               │
+│       + Your signature                                           │
+│       + TSA timestamp                                            │
 │                                                                  │
-│    VERIFICATION EN 2029 :                                        │
-│    ✓ La signature existait le 15/12/2024                        │
-│    ✓ C'etait AVANT l'expiration du certificat                   │
-│    ✓ Le document est toujours valide                            │
+│    VERIFICATION IN 2029:                                         │
+│    ✓ The signature existed on 12/15/2024                        │
+│    ✓ It was BEFORE the certificate expiration                   │
+│    ✓ The document is still valid                                │
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Comment ca marche techniquement
+## How It Works Technically
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                                                                 │
-│  WORKFLOW TIMESTAMPING (RFC 3161)                              │
+│  TIMESTAMPING WORKFLOW (RFC 3161)                              │
 │                                                                 │
 │  1. CLIENT                                                      │
 │     ────────                                                    │
@@ -109,16 +109,16 @@ Une autorite de confiance (TSA) prouve quand la signature a ete creee :
 │                                                                 │
 │  2. TSA                                                         │
 │     ────                                                        │
-│     horloge = temps_certifie()                                  │
+│     clock = certified_time()                                    │
 │     token = {                                                   │
-│       hash: hash_recu,                                          │
+│       hash: received_hash,                                      │
 │       time: "2024-12-15T14:32:05Z",                            │
 │       tsa: "TSA Acme Corp",                                     │
 │       serial: 123456                                            │
 │     }                                                           │
 │     signature = ML-DSA.Sign(token, tsa_key)                     │
 │                                                                 │
-│  3. RESULTAT                                                    │
+│  3. RESULT                                                      │
 │     ─────────                                                   │
 │     TimeStampResp = token + signature                           │
 │                                                                 │
@@ -127,37 +127,37 @@ Une autorite de confiance (TSA) prouve quand la signature a ete creee :
 
 ---
 
-## Cas d'usage
+## Use Cases
 
-| Domaine | Besoin | Duree de conservation |
-|---------|--------|----------------------|
-| Contrats | Preuve de signature | 10-30 ans |
-| Factures | Conformite fiscale | 10 ans |
-| Brevets | Preuve d'anteriorite | 20+ ans |
-| Medical | Dossiers patients | 50+ ans |
-| Legal | Preuves juridiques | Indefini |
-
----
-
-## Ce que tu vas faire
-
-1. **Creer une TSA** (Timestamp Authority) avec ML-DSA-65
-2. **Horodater un document** via le protocole RFC 3161
-3. **Verifier le timestamp** : horloge, hash, signature TSA
-4. **Simuler le futur** : verifier en 2055
+| Domain | Need | Retention period |
+|--------|------|-----------------|
+| Contracts | Proof of signature | 10-30 years |
+| Invoices | Tax compliance | 10 years |
+| Patents | Proof of priority | 20+ years |
+| Medical | Patient records | 50+ years |
+| Legal | Legal evidence | Indefinite |
 
 ---
 
-## Ce que tu auras a la fin
+## What You'll Do
 
-- Certificat TSA ML-DSA-65
-- Document horodate (timestamp token)
-- Preuve de verification
-- Confiance jusqu'en 2055+
+1. **Create a TSA** (Timestamp Authority) with ML-DSA-65
+2. **Timestamp a document** via the RFC 3161 protocol
+3. **Verify the timestamp**: clock, hash, TSA signature
+4. **Simulate the future**: verify in 2055
 
 ---
 
-## Lancer la mission
+## What You'll Have at the End
+
+- TSA certificate ML-DSA-65
+- Timestamped document (timestamp token)
+- Verification proof
+- Trust until 2055+
+
+---
+
+## Run the Mission
 
 ```bash
 ./demo.sh
@@ -165,8 +165,8 @@ Une autorite de confiance (TSA) prouve quand la signature a ete creee :
 
 ---
 
-## Prochaine etape
+## Next Step
 
-→ **Niveau 3 : Ops & Lifecycle**
+→ **Level 3: Ops & Lifecycle**
 
-Tu vas apprendre a gerer le cycle de vie : revocation, OCSP, rotation.
+You'll learn to manage the lifecycle: revocation, OCSP, rotation.

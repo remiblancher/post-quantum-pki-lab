@@ -1,121 +1,121 @@
-# Mission 3 : "Show Me Your Badge"
+# Mission 3: "Show Me Your Badge"
 
-## mTLS Authentication avec ML-DSA
+## mTLS Authentication with ML-DSA
 
-### Le probleme
+### The Problem
 
-Tu as un serveur. Des clients veulent s'y connecter.
-Comment tu sais que c'est vraiment Alice et pas un imposteur ?
+You have a server. Clients want to connect to it.
+How do you know it's really Alice and not an impostor?
 
 ```
-HTTPS classique = Une seule verification
-────────────────────────────────────────
+Classic HTTPS = One-way verification
+────────────────────────────────────
 
-   Client                              Serveur
+   Client                              Server
      │                                    │
      │  ────────────────────────────────► │
-     │     "Prouve-moi qui tu es"         │
+     │     "Prove who you are"            │
      │                                    │
      │  ◄──────────────────────────────── │
-     │     Certificat serveur ✓           │
+     │     Server certificate ✓           │
      │                                    │
 
-     Le serveur est verifie.
-     Mais le client ? N'importe qui peut se connecter.
+     The server is verified.
+     But the client? Anyone can connect.
 ```
 
-### La menace
+### The Threat
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
-│    HTTPS classique : Le client n'est pas authentifie            │
+│    Classic HTTPS: The client is not authenticated               │
 │                                                                  │
-│       Attaquant                                                  │
+│       Attacker                                                   │
 │          │                                                       │
-│          │  "Je suis Alice"                                      │
+│          │  "I am Alice"                                         │
 │          ▼                                                       │
 │    ┌──────────┐         ┌──────────┐                            │
-│    │  Client  │────────►│  Serveur │                            │
-│    │  (qui?)  │         │          │                            │
+│    │  Client  │────────►│  Server  │                            │
+│    │  (who?)  │         │          │                            │
 │    └──────────┘         └──────────┘                            │
 │                                                                  │
-│    Le serveur ne sait pas si c'est vraiment Alice.              │
-│    Il fait confiance a n'importe qui.                           │
+│    The server doesn't know if it's really Alice.                │
+│    It trusts anyone.                                            │
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
-**Risques** :
-- Usurpation d'identite
-- Acces non autorise aux APIs
-- Attaque man-in-the-middle
+**Risks**:
+- Identity theft
+- Unauthorized API access
+- Man-in-the-middle attack
 
-### La solution : mTLS (mutual TLS)
+### The Solution: mTLS (mutual TLS)
 
-Avec mTLS, les **DEUX** parties prouvent leur identite :
+With mTLS, **BOTH** parties prove their identity:
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
-│    mTLS : Verification mutuelle                                 │
+│    mTLS: Mutual verification                                    │
 │                                                                  │
 │    ┌──────────┐                           ┌──────────┐          │
-│    │  Alice   │◄─────────────────────────►│  Serveur │          │
+│    │  Alice   │◄─────────────────────────►│  Server  │          │
 │    │          │                           │          │          │
-│    │  Cert    │   1. Serveur → Client     │  Cert    │          │
-│    │  ML-DSA  │      "Voici mon cert"     │  ML-DSA  │          │
+│    │  Cert    │   1. Server → Client      │  Cert    │          │
+│    │  ML-DSA  │      "Here's my cert"     │  ML-DSA  │          │
 │    │          │                           │          │          │
-│    │          │   2. Client → Serveur     │          │          │
-│    │          │      "Voici mon cert"     │          │          │
+│    │          │   2. Client → Server      │          │          │
+│    │          │      "Here's my cert"     │          │          │
 │    │          │                           │          │          │
-│    │    ✓     │   3. Verification         │    ✓     │          │
-│    │  Valide  │      mutuelle             │  Valide  │          │
+│    │    ✓     │   3. Mutual               │    ✓     │          │
+│    │  Valid   │      verification         │  Valid   │          │
 │    └──────────┘                           └──────────┘          │
 │                                                                  │
-│    Les deux parties sont authentifiees.                         │
-│    L'attaquant ne peut plus usurper Alice.                      │
+│    Both parties are authenticated.                              │
+│    The attacker can no longer impersonate Alice.                │
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
-**Avantages** :
-- Zero-trust : ne jamais faire confiance par defaut
-- Pas de mots de passe a gerer
-- Quantum-safe avec ML-DSA
+**Advantages**:
+- Zero-trust: never trust by default
+- No passwords to manage
+- Quantum-safe with ML-DSA
 
 ---
 
-## Ce que tu vas faire
+## What You'll Do
 
-1. **Creer un certificat serveur** avec ML-DSA-65 et SAN
-2. **Creer des certificats clients** pour Alice et Bob
-3. **Verifier l'authentification** : Alice OK, inconnu rejete
-4. **Tester la chaine de confiance** : tous signent par la meme CA
-
----
-
-## Cas d'usage reels
-
-| Scenario | Pourquoi mTLS ? |
-|----------|-----------------|
-| API microservices | Chaque service s'authentifie aupres des autres |
-| IoT devices | Chaque device prouve son identite au backend |
-| Zero-trust network | Aucune confiance implicite, tout est verifie |
-| CI/CD pipelines | Les runners s'authentifient aupres des registries |
+1. **Create a server certificate** with ML-DSA-65 and SAN
+2. **Create client certificates** for Alice and Bob
+3. **Verify authentication**: Alice OK, unknown rejected
+4. **Test the chain of trust**: all signed by the same CA
 
 ---
 
-## Ce que tu auras a la fin
+## Real-World Use Cases
 
-- Certificat serveur ML-DSA avec SAN
-- 2 certificats clients (Alice, Bob)
-- Preuve que mTLS fonctionne avec PQC
-- Verification croisee reussie
+| Scenario | Why mTLS? |
+|----------|-----------|
+| Microservices API | Each service authenticates to others |
+| IoT devices | Each device proves its identity to backend |
+| Zero-trust network | No implicit trust, everything is verified |
+| CI/CD pipelines | Runners authenticate to registries |
 
 ---
 
-## Lancer la mission
+## What You'll Have at the End
+
+- Server certificate ML-DSA with SAN
+- 2 client certificates (Alice, Bob)
+- Proof that mTLS works with PQC
+- Successful cross-verification
+
+---
+
+## Run the Mission
 
 ```bash
 ./demo.sh
@@ -123,6 +123,6 @@ Avec mTLS, les **DEUX** parties prouvent leur identite :
 
 ---
 
-## Prochaine mission
+## Next Mission
 
-→ **Mission 4 : "Secure Your Releases"** (Code Signing)
+→ **Mission 4: "Secure Your Releases"** (Code Signing)
