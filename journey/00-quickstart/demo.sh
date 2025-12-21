@@ -25,31 +25,25 @@ PQC_CA="$DEMO_TMP/pqc-ca"
 # Introduction
 # =============================================================================
 
-echo -e "${BOLD}Classical vs Post-Quantum: Same PKI, Different Crypto${NC}"
-echo ""
-echo -e "${DIM}Key Message: The PKI doesn't change. Only the algorithm changes.${NC}"
-echo ""
-
 echo -e "${BOLD}SCENARIO:${NC}"
 echo "  \"I want to issue post-quantum certificates."
 echo "   Does it change my PKI workflow?\""
 echo ""
-echo -e "  Short answer: ${GREEN}No.${NC} The workflow is identical."
-echo "  Only the algorithm name changes."
-echo ""
+
+init_steps 5
 
 echo -e "${BOLD}WHAT WE'LL DO:${NC}"
+echo "  1. Create a classical Root CA using profile 'ec/root-ca'"
+echo "  2. Issue a TLS certificate using profile 'ec/tls-server'"
+echo "  3. Create a post-quantum Root CA using profile 'ml-dsa/root-ca'"
+echo "  4. Issue a TLS certificate using profile 'ml-dsa/tls-server'"
+echo "  5. Compare sizes"
 echo ""
-printf "  %-12s %-20s %-20s\n" "Step" "Classical" "Post-Quantum"
-echo "  ──────────────────────────────────────────────────────"
-printf "  %-12s %-20s %-20s\n" "Create CA" "ECDSA P-384" "ML-DSA-65"
-printf "  %-12s %-20s %-20s\n" "Issue cert" "Same workflow" "Same workflow"
-printf "  %-12s %-20s %-20s\n" "Result" "Vulnerable" "Quantum-resistant"
+
+echo -e "${DIM}A profile defines: algorithm + validity + X.509 extensions${NC}"
 echo ""
 
 pause "Press Enter to start..."
-
-init_steps 5
 
 # =============================================================================
 # Step 1: Create Classical CA
@@ -152,23 +146,6 @@ echo ""
 
 show_lesson "Switching to post-quantum is a profile change, not an architecture change.
 Your PKI workflow stays exactly the same."
-
-# =============================================================================
-# Teaser
-# =============================================================================
-
-echo ""
-echo -e "${BOLD}${YELLOW}But wait...${NC}"
-echo ""
-echo "  This classical PKI works perfectly today."
-echo "  The question is: ${BOLD}for how long?${NC}"
-echo ""
-echo "  Your ECDSA certificates are being harvested right now."
-echo "  When quantum computers arrive, they'll be decrypted."
-echo ""
-echo -e "  ${CYAN}Next mission:${NC} ./journey/01-revelation/demo.sh"
-echo -e "  ${DIM}Discover the \"Store Now, Decrypt Later\" threat.${NC}"
-echo ""
 
 echo -e "${DIM}Explore artifacts: $DEMO_TMP${NC}"
 echo ""
