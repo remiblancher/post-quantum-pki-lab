@@ -6,25 +6,6 @@ Educational demonstrations for transitioning to Post-Quantum Cryptography using 
 
 ---
 
-## TL;DR
-
-- A hands-on lab to learn post-quantum PKI
-- You type commands, you build your PKI
-- ~2h interactive, minimum path 18 min
-- Goal: understand and practice ML-DSA / ML-KEM
-
-→ Start here: `./start.sh`
-
----
-
-## Who is this for?
-
-This lab is designed for **developers, DevOps, SREs, and security engineers**.
-
-No prior PKI expertise required, but familiarity with command line and basic security concepts is assumed.
-
----
-
 ## Why This Matters
 
 Quantum computers will eventually break RSA and ECC cryptography. The question isn't *if*, but *when*. Organizations need to prepare now — not panic, but plan.
