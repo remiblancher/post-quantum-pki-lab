@@ -1,54 +1,156 @@
 # Niveau 2 : Applications
 
-**Duree :** 25 minutes
-**Algorithme :** ML-DSA-65
+## Pourquoi cette section ?
 
-## Objectif
+Tu as une PKI post-quantique. Maintenant, il faut l'**utiliser**.
 
-Utiliser votre PKI post-quantique pour des cas d'usage reels : mTLS, signature de code, horodatage.
+Une PKI ne sert a rien toute seule. Elle existe pour securiser des **applications** :
+- Authentifier des clients et serveurs (mTLS)
+- Signer du code (firmware, releases)
+- Horodater des documents (preuve temporelle)
+
+---
+
+## Ce que tu vas apprendre
+
+### mTLS : Authentification mutuelle
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                                                                 │
+│  HTTPS CLASSIQUE                   mTLS                        │
+│  ───────────────                   ────                        │
+│                                                                 │
+│  Client ──────► Serveur            Client ◄────► Serveur       │
+│                                                                 │
+│  "Je verifie que                   "On verifie                 │
+│   le serveur est                    TOUS LES DEUX              │
+│   authentique"                      qu'on est authentiques"    │
+│                                                                 │
+│  Serveur prouve                    Serveur prouve              │
+│  son identite                      son identite                │
+│                                    + Client prouve             │
+│                                      son identite              │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Cas d'usage** : APIs securisees, microservices, IoT, zero-trust
+
+### Code Signing : Signature de code
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                                                                 │
+│  SANS SIGNATURE                    AVEC SIGNATURE              │
+│  ──────────────                    ───────────────             │
+│                                                                 │
+│  firmware.bin                      firmware.bin                │
+│  (vient d'ou ?)                    + signature ML-DSA          │
+│                                    + certificat                │
+│                                                                 │
+│  "Quelqu'un l'a                    "Signe par Acme Corp       │
+│   peut-etre modifie"                le 15 dec 2024"           │
+│                                                                 │
+│  ❌ Aucune garantie                ✓ Integrite                 │
+│                                    ✓ Authenticite              │
+│                                    ✓ Non-repudiation           │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Cas d'usage** : Firmware updates, releases logicielles, scripts
+
+### Timestamping : Horodatage cryptographique
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                                                                 │
+│  PROBLEME                          SOLUTION                    │
+│  ────────                          ────────                    │
+│                                                                 │
+│  Document signe                    Document signe              │
+│  le 15 dec 2024                    + Timestamp TSA             │
+│                                                                 │
+│  Certificat expire                 Meme si le certificat       │
+│  le 15 dec 2025                    expire, on PROUVE           │
+│                                    que la signature            │
+│  "La signature                     existait AVANT              │
+│   est-elle encore                  l'expiration                │
+│   valide ?"                                                    │
+│                                    ✓ Signature valide          │
+│                                      indefiniment              │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Cas d'usage** : Contrats, factures, archivage legal
+
+---
 
 ## Prerequis
 
-Niveau 1 complete (CA PQC disponible dans `workspace/niveau-1/`)
+- Niveau 1 termine (tu as une CA PQC fonctionnelle)
+- Concepts : certificats, chaine de confiance
 
-## Missions
+---
 
-### Mission 3 : mTLS Authentication
-Authentification mutuelle client/serveur avec ML-DSA :
-- Certificat serveur avec SAN
-- Certificats clients (Alice, Bob)
-- Verification croisee
+## Les missions
 
-```bash
-./journey/02-applications/01-mtls/demo.sh
-```
+### Mission 3 : "Show Me Your Badge" (mTLS)
 
-### Mission 4 : Code Signing
-Signer du code/firmware pour garantir l'integrite :
-- Profil code-signing ML-DSA-65
-- Signature CMS/PKCS#7
-- Verification de l'integrite
+Authentifier des clients avec ta CA PQC.
+
+**Le probleme** : Comment savoir que c'est vraiment Alice qui se connecte ?
 
 ```bash
-./journey/02-applications/02-code-signing/demo.sh
+./01-mtls/demo.sh
 ```
 
-### Mission 5 : Timestamping
-Horodatage cryptographique pour preuves legales :
-- TSA (Timestamp Authority) ML-DSA-65
-- Horodatage RFC 3161
-- Validite jusqu'en 2055+
+### Mission 4 : "Secure Your Releases" (Code Signing)
+
+Signer du code avec ML-DSA.
+
+**Le probleme** : Comment garantir que le firmware n'a pas ete modifie ?
 
 ```bash
-./journey/02-applications/03-timestamping/demo.sh
+./02-code-signing/demo.sh
 ```
 
-## Workspace
+### Mission 5 : "Trust Now, Verify Forever" (Timestamping)
 
-Les artefacts sont sauvegardes dans `workspace/niveau-2/`
+Horodater des documents pour preuve legale.
 
-## Ce que vous apprendrez
+**Le probleme** : Comment prouver qu'un document existait a une date precise ?
 
-- mTLS avec PQC (zero-trust)
-- Signature de code quantum-safe
-- Horodatage pour archivage long terme
+```bash
+./03-timestamping/demo.sh
+```
+
+---
+
+## Ce que tu auras a la fin
+
+```
+workspace/niveau-2/
+├── mtls/
+│   ├── server.crt          # Certificat serveur ML-DSA
+│   ├── alice.crt           # Certificat client Alice
+│   └── bob.crt             # Certificat client Bob
+├── code-signing/
+│   ├── signing.crt         # Certificat de signature
+│   ├── firmware.bin        # Fichier signe
+│   └── firmware.bin.sig    # Signature ML-DSA
+└── timestamping/
+    ├── tsa.crt             # Certificat TSA
+    ├── document.txt        # Document horodate
+    └── document.tsr        # Timestamp response
+```
+
+---
+
+## Prochaine etape
+
+→ **Niveau 3 : Ops & Lifecycle**
+
+Tu vas apprendre a gerer le cycle de vie : revocation, OCSP, rotation d'algorithmes.
