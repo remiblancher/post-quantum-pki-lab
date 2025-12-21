@@ -1,150 +1,152 @@
-# Niveau 4 : Advanced
+# Level 4: Advanced (Optional)
 
-## Pourquoi cette section ?
+> These missions are optional and exploratory. You can stop at Level 3 without losing the main thread.
 
-Tu maitrises les bases de la PKI PQC. Voici les cas **avances** :
-- Signatures valides 30+ ans (archivage legal)
-- Echange de cles post-quantique (ML-KEM)
-- Chiffrement de documents (CMS)
+## Why this section?
+
+You've mastered PQC PKI basics. Here are **advanced** use cases:
+- Signatures valid 30+ years (legal archiving)
+- Post-quantum key exchange (ML-KEM)
+- Document encryption (CMS)
 
 ---
 
-## Ce que tu vas apprendre
+## What you'll learn
 
-### LTV : Signatures a Long Terme
+### LTV: Long-Term Validation
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                                                                 │
-│  PROBLEME : Signature classique                                │
+│  PROBLEM: Classical signature                                   │
 │                                                                 │
-│  2024          2025          2030          2050                │
+│  2024          2025          2030          2050                 │
 │    │             │             │             │                  │
 │    ▼             ▼             ▼             ▼                  │
-│  Signature    Cert expire   OCSP down    Verification ?        │
-│  creee                                                          │
+│  Signature    Cert expires  OCSP down    Verification?          │
+│  created                                                        │
 │                                                                 │
-│  Sans LTV, impossible de verifier apres expiration.            │
+│  Without LTV, impossible to verify after expiration.            │
 │                                                                 │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
-│  SOLUTION : LTV (Long-Term Validation)                         │
+│  SOLUTION: LTV (Long-Term Validation)                           │
 │                                                                 │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │  Document signe                                          │   │
-│  │  + Signature                                             │   │
-│  │  + Timestamp TSA                                         │   │
-│  │  + Reponse OCSP                                          │   │
-│  │  + Chaine de certificats complete                        │   │
-│  └─────────────────────────────────────────────────────────┘   │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │  Signed document                                         │    │
+│  │  + Signature                                             │    │
+│  │  + TSA Timestamp                                         │    │
+│  │  + OCSP Response                                         │    │
+│  │  + Complete certificate chain                            │    │
+│  └─────────────────────────────────────────────────────────┘    │
 │                                                                 │
-│  Tout est embarque = verification OFFLINE en 2050.             │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-### ML-KEM : Echange de cles post-quantique
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                                                                 │
-│  ML-DSA vs ML-KEM                                              │
-│  ────────────────                                              │
-│                                                                 │
-│  ML-DSA                            ML-KEM                      │
-│  ──────                            ──────                      │
-│  Signature                         Encapsulation de cle        │
-│  AUTHENTIFICATION                  CONFIDENTIALITE             │
-│                                                                 │
-│  "Ce message vient                 "Ce message est             │
-│   vraiment d'Alice"                 lisible SEULEMENT          │
-│                                     par Bob"                   │
-│                                                                 │
-│  ┌───────┐                         ┌───────┐                   │
-│  │ Signe │                         │Encaps │                   │
-│  │  ───► │                         │  ───► │ Ciphertext        │
-│  │  ◄─── │                         │  ◄─── │ Shared key        │
-│  │Verify │                         │Decaps │                   │
-│  └───────┘                         └───────┘                   │
+│  Everything embedded = OFFLINE verification in 2050.            │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### CMS : Chiffrement de documents
+### ML-KEM: Post-quantum key exchange
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                                                                 │
-│  CMS (Cryptographic Message Syntax)                            │
+│  ML-DSA vs ML-KEM                                               │
+│  ────────────────                                               │
 │                                                                 │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │                                                          │   │
-│  │  Document original                                       │   │
-│  │       │                                                  │   │
-│  │       ▼                                                  │   │
-│  │  ┌──────────────┐                                       │   │
-│  │  │ Cle AES-256  │ ◄── Generee aleatoirement            │   │
-│  │  └──────────────┘                                       │   │
-│  │       │                                                  │   │
-│  │       ├──────────────────┐                              │   │
-│  │       ▼                  ▼                              │   │
-│  │  Document chiffre   Cle encapsulee                      │   │
-│  │  (AES-256-GCM)      avec ML-KEM                         │   │
-│  │                      (destinataire)                     │   │
-│  │                                                          │   │
-│  └─────────────────────────────────────────────────────────┘   │
+│  ML-DSA                            ML-KEM                       │
+│  ──────                            ──────                       │
+│  Signature                         Key encapsulation            │
+│  AUTHENTICATION                    CONFIDENTIALITY              │
 │                                                                 │
-│  Format standard S/MIME compatible.                            │
+│  "This message really              "This message is             │
+│   comes from Alice"                 readable ONLY                │
+│                                     by Bob"                     │
+│                                                                 │
+│  ┌───────┐                         ┌───────┐                    │
+│  │ Sign  │                         │Encaps │                    │
+│  │  ───► │                         │  ───► │ Ciphertext         │
+│  │  ◄─── │                         │  ◄─── │ Shared key         │
+│  │Verify │                         │Decaps │                    │
+│  └───────┘                         └───────┘                    │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### CMS: Document encryption
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                                                                 │
+│  CMS (Cryptographic Message Syntax)                             │
+│                                                                 │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │                                                          │    │
+│  │  Original document                                       │    │
+│  │       │                                                  │    │
+│  │       ▼                                                  │    │
+│  │  ┌──────────────┐                                        │    │
+│  │  │ AES-256 key  │ ◄── Randomly generated                 │    │
+│  │  └──────────────┘                                        │    │
+│  │       │                                                  │    │
+│  │       ├──────────────────┐                               │    │
+│  │       ▼                  ▼                               │    │
+│  │  Encrypted document  Key encapsulated                    │    │
+│  │  (AES-256-GCM)       with ML-KEM                         │    │
+│  │                      (recipient)                         │    │
+│  │                                                          │    │
+│  └─────────────────────────────────────────────────────────┘    │
+│                                                                 │
+│  Standard S/MIME compatible format.                             │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Algorithmes utilises
+## Algorithms used
 
 | Mission | Signature | Encryption |
 |---------|-----------|------------|
-| LTV Signatures | ECDSA + ML-DSA (hybride) | - |
+| LTV Signatures | ECDSA + ML-DSA (hybrid) | - |
 | PQC Tunnel | ML-DSA-65 | X25519 + ML-KEM-768 |
 | CMS Encryption | ML-DSA-65 | ML-KEM-768 |
 
 ---
 
-## Prerequis
+## Prerequisites
 
-- Niveau 3 termine (revocation, OCSP, crypto-agility)
-- Concepts avances : timestamp, OCSP, hybride
+- Level 3 completed (revocation, OCSP, crypto-agility)
+- Advanced concepts: timestamp, OCSP, hybrid
 
 ---
 
-## Les missions
+## Missions
 
-### Mission 9 : "Sign Today, Verify in 30 Years" (LTV)
+### Mission 9: "Sign Today, Verify in 30 Years" (LTV)
 
-Creer des signatures valides pour l'archivage legal.
+Create signatures valid for legal archiving.
 
-**Le probleme** : Comment verifier en 2055 une signature de 2024 ?
+**The problem**: How do you verify in 2055 a signature from 2024?
 
 ```bash
 ./01-ltv-signatures/demo.sh
 ```
 
-### Mission 10 : "Secure the Tunnel" (ML-KEM)
+### Mission 10: "Secure the Tunnel" (ML-KEM)
 
-Comprendre l'echange de cles post-quantique.
+Understand post-quantum key exchange. This is a **demonstration** of ML-KEM key encapsulation, not a production VPN.
 
-**Le probleme** : Comment etablir un secret partage quantum-safe ?
+**The problem**: How do you establish a quantum-safe shared secret?
 
 ```bash
 ./02-pqc-tunnel/demo.sh
 ```
 
-### Mission 11 : "Encrypt for Their Eyes Only" (CMS)
+### Mission 11: "Encrypt for Their Eyes Only" (CMS)
 
-Chiffrer des documents avec ML-KEM.
+Encrypt documents with ML-KEM.
 
-**Le probleme** : Comment envoyer un document lisible uniquement par Bob ?
+**The problem**: How do you send a document readable only by Bob?
 
 ```bash
 ./03-cms-encryption/demo.sh
@@ -152,28 +154,28 @@ Chiffrer des documents avec ML-KEM.
 
 ---
 
-## Ce que tu auras a la fin
+## What you'll have at the end
 
 ```
 workspace/niveau-4/
 ├── ltv/
-│   ├── document-signed.pdf   # Document avec LTV
-│   ├── ltv-data.der          # Donnees LTV embarquees
-│   └── verify-2055.log       # Preuve de verification
+│   ├── document-signed.pdf   # Document with LTV
+│   ├── ltv-data.der          # Embedded LTV data
+│   └── verify-2055.log       # Verification proof
 ├── pqc-tunnel/
-│   ├── kem.crt               # Certificat ML-KEM
-│   ├── encapsulated.bin      # Cle encapsulee
-│   └── shared-secret.hex     # Secret partage
+│   ├── kem.crt               # ML-KEM certificate
+│   ├── encapsulated.bin      # Encapsulated key
+│   └── shared-secret.hex     # Shared secret
 └── cms-encryption/
-    ├── encrypt.crt           # Certificat encryption
-    ├── secret.txt.p7m        # Document chiffre
-    └── decrypted.txt         # Document dechiffre
+    ├── encrypt.crt           # Encryption certificate
+    ├── secret.txt.p7m        # Encrypted document
+    └── decrypted.txt         # Decrypted document
 ```
 
 ---
 
-## Prochaine etape
+## Next step
 
-→ **Next Steps : Organiser la migration**
+→ **Next Steps: Organize migration**
 
-Tu as maitrise la PKI PQC. Maintenant, comment migrer 10 000 certificats ?
+You've mastered PQC PKI. Now, how do you migrate 10,000 certificates?

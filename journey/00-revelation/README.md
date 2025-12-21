@@ -1,153 +1,151 @@
-# La Revelation : "Store Now, Decrypt Later"
+# The Revelation: "Store Now, Decrypt Later"
 
-## Pourquoi changer d'algorithme ?
+## Why change algorithms?
 
-Tu viens de creer une PKI classique avec ECDSA. Elle fonctionne. Alors pourquoi changer ?
+You just created a classical PKI with ECDSA. It works. So why change?
 
-Parce que **les ordinateurs quantiques vont tout casser**.
+Because **quantum computers will break everything**.
 
 ---
 
-## La menace SNDL
+## The SNDL Threat
 
-**Store Now, Decrypt Later** (SNDL) : les adversaires capturent ton trafic chiffre AUJOURD'HUI pour le dechiffrer PLUS TARD.
+**Store Now, Decrypt Later** (SNDL): adversaries capture your encrypted traffic TODAY to decrypt it LATER.
 
 ```
-AUJOURD'HUI                              DANS 10-15 ANS
-───────────                              ──────────────
+TODAY                                    IN 10-15 YEARS
+─────                                    ──────────────
 
-   Toi                                      Adversaire
+   You                                       Adversary
     │                                           │
-    │  Connexion TLS                            │
+    │  TLS Connection                           │
     ▼  (RSA/ECDSA)                              │
 ┌────────┐          ┌────────┐                  │
-│ Client │◄────────►│ Serveur│                  │
+│ Client │◄────────►│ Server │                  │
 └────────┘          └────────┘                  │
     │                   │                       │
-    │    Adversaire     │                       │
-    │        │          │                       ▼
-    │        ▼          │              ┌──────────────────┐
-    │   [Capture]       │              │ Ordinateur       │
-    │   [████████]      │              │ Quantique        │
-    │   Stocke le       │              │                  │
-    │   trafic          │              │ Algorithme       │
-    │                   │              │ de Shor          │
+    │    Adversary      │                       ▼
+    │        │          │              ┌──────────────────┐
+    │        ▼          │              │ Quantum          │
+    │   [Capture]       │              │ Computer         │
+    │   [████████]      │              │                  │
+    │   Stores the      │              │ Shor's           │
+    │   traffic         │              │ Algorithm        │
     │                   │              │                  │
-    │                   │              │ Casse RSA/ECDSA  │
-    │                   │              │ en quelques      │
-    │                   │              │ heures           │
+    │                   │              │ Breaks RSA/ECDSA │
+    │                   │              │ in hours         │
     │                   │              └────────┬─────────┘
     │                   │                       │
     │                   │                       ▼
     │                   │              ┌──────────────────┐
-    │                   │              │ TOUTES tes       │
+    │                   │              │ ALL your past    │
     │                   │              │ communications   │
-    │                   │              │ passees sont     │
-    │                   │              │ lisibles         │
+    │                   │              │ are now          │
+    │                   │              │ readable         │
     │                   │              └──────────────────┘
 ```
 
 ---
 
-## Qui est concerne ?
+## Who is affected?
 
-| Type de donnees | Duree de confidentialite | Risque SNDL |
-|-----------------|--------------------------|-------------|
-| Donnees medicales | 50+ ans (vie du patient) | **CRITIQUE** |
-| Secrets gouvernementaux | 25-75 ans | **CRITIQUE** |
-| Propriete intellectuelle | 10-20 ans | **ELEVE** |
-| Donnees financieres | 7-10 ans | MODERE |
-| Communications quotidiennes | < 5 ans | FAIBLE |
+| Data Type | Confidentiality Duration | SNDL Risk |
+|-----------|--------------------------|-----------|
+| Medical records | 50+ years (patient lifetime) | **CRITICAL** |
+| Government secrets | 25-75 years | **CRITICAL** |
+| Intellectual property | 10-20 years | **HIGH** |
+| Financial data | 7-10 years | MODERATE |
+| Daily communications | < 5 years | LOW |
 
-**Si tes donnees doivent rester secretes plus de 10 ans, tu es deja en retard.**
+**If your data must remain secret for more than 10 years, you're already late.**
 
 ---
 
-## L'inegalite de Mosca
+## Mosca's Inequality
 
-Michele Mosca a formalise l'urgence de la migration :
+Michele Mosca formalized the urgency of migration:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                                                                 │
-│   Si  X + Y > Z  →  Tu dois agir MAINTENANT                    │
+│   If  X + Y > Z  →  You must act NOW                           │
 │                                                                 │
-│   X = Annees avant l'ordinateur quantique (10-15 ans)          │
-│   Y = Temps pour migrer tes systemes (2-5 ans)                 │
-│   Z = Duree de confidentialite de tes donnees                  │
+│   X = Years until quantum computer (10-15 years)               │
+│   Y = Time to migrate your systems (2-5 years)                 │
+│   Z = Required confidentiality duration of your data           │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Exemple 1 : Donnees medicales
+### Example 1: Medical data
 
 ```
-X = 12 ans  (ordinateur quantique en 2037)
-Y = 3 ans   (migration de ton infra)
-Z = 50 ans  (dossiers patients)
+X = 12 years  (quantum computer in 2037)
+Y = 3 years   (infrastructure migration)
+Z = 50 years  (patient records)
 
-X + Y = 15 ans
+X + Y = 15 years
 
-15 < 50  →  TU ES EN RETARD DE 35 ANS !
+15 < 50  →  YOU'RE 35 YEARS LATE!
 ```
 
-### Exemple 2 : E-commerce standard
+### Example 2: Standard e-commerce
 
 ```
-X = 12 ans  (ordinateur quantique en 2037)
-Y = 2 ans   (migration simple)
-Z = 5 ans   (donnees de paiement)
+X = 12 years  (quantum computer in 2037)
+Y = 2 years   (simple migration)
+Z = 5 years   (payment data)
 
-X + Y = 14 ans
+X + Y = 14 years
 
-14 > 5  →  Tu as le temps, mais commence a planifier
+14 > 5  →  You have time, but start planning
 ```
 
 ---
 
-## Ce que tu vas faire
+## What you'll do
 
-Dans cette mission, tu vas :
+In this mission, you will:
 
-1. **Comprendre le contexte PQC** : Standards NIST, nouveaux algorithmes
-2. **Voir la menace SNDL** : Visualisation de l'attaque
-3. **Calculer TON urgence** : Avec tes propres valeurs
+1. **Understand the PQC context**: NIST standards, new algorithms
+2. **See the SNDL threat**: Attack visualization
+3. **Calculate YOUR urgency**: With your own values
 
 ---
 
-## Les nouveaux standards NIST (aout 2024)
+## NIST Standards (August 2024)
 
-Le NIST a finalise 3 algorithmes post-quantiques :
+NIST finalized 3 post-quantum algorithms:
 
-| Algorithme | Standard | Usage | Remplace |
-|------------|----------|-------|----------|
+| Algorithm | Standard | Usage | Replaces |
+|-----------|----------|-------|----------|
 | **ML-DSA** | FIPS 204 | Signatures | RSA, ECDSA, Ed25519 |
-| **ML-KEM** | FIPS 203 | Echange de cles | ECDH, RSA-KEM |
-| **SLH-DSA** | FIPS 205 | Signatures (hash-based) | Alternative a ML-DSA |
+| **ML-KEM** | FIPS 203 | Key exchange | ECDH, RSA-KEM |
+| **SLH-DSA** | FIPS 205 | Signatures (hash-based) | Alternative to ML-DSA |
 
-### ML-DSA (ex-Dilithium)
+### ML-DSA (formerly Dilithium)
 
-- Base sur les **reseaux euclidiens** (lattices)
-- 3 niveaux de securite : ML-DSA-44, ML-DSA-65, ML-DSA-87
-- Signatures plus grandes (~2-4 KB) mais tres rapides
+- Based on **lattice** cryptography
+- 3 security levels: ML-DSA-44, ML-DSA-65, ML-DSA-87
+- Larger signatures (~2-4 KB) but very fast
 
-### ML-KEM (ex-Kyber)
+### ML-KEM (formerly Kyber)
 
-- Aussi base sur les **reseaux euclidiens**
-- 3 niveaux : ML-KEM-512, ML-KEM-768, ML-KEM-1024
-- Pour l'echange de cles (TLS, VPN, etc.)
-
----
-
-## Ce que tu auras a la fin
-
-- Comprehension de la menace SNDL
-- Ton score Mosca personnel
-- La motivation pour passer au PQC
+- Also based on **lattices**
+- 3 levels: ML-KEM-512, ML-KEM-768, ML-KEM-1024
+- For key exchange (TLS, VPN, etc.)
 
 ---
 
-## Lancer la mission
+## What you'll have at the end
+
+- Understanding of the SNDL threat
+- Your personal Mosca score
+- Motivation to move to PQC
+
+---
+
+## Run the mission
 
 ```bash
 ./demo.sh
@@ -155,8 +153,8 @@ Le NIST a finalise 3 algorithmes post-quantiques :
 
 ---
 
-## Prochaine etape
+## Next step
 
-→ **Niveau 1 : "Build Your Quantum-Safe Foundation"**
+→ **Level 1: "Build Your Quantum-Safe Foundation"**
 
-Tu vas creer ta premiere CA post-quantique avec ML-DSA.
+You'll create your first post-quantum CA with ML-DSA.

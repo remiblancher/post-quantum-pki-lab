@@ -6,6 +6,25 @@ Educational demonstrations for transitioning to Post-Quantum Cryptography using 
 
 ---
 
+## TL;DR
+
+- A hands-on lab to learn post-quantum PKI
+- You type commands, you build your PKI
+- ~2h interactive, minimum path 18 min
+- Goal: understand and practice ML-DSA / ML-KEM
+
+→ Start here: `./start.sh`
+
+---
+
+## Who is this for?
+
+This lab is designed for **developers, DevOps, SREs, and security engineers**.
+
+No prior PKI expertise required, but familiarity with command line and basic security concepts is assumed.
+
+---
+
 ## Why This Matters
 
 Quantum computers will eventually break RSA and ECC cryptography. The question isn't *if*, but *when*. Organizations need to prepare now — not panic, but plan.
@@ -14,57 +33,6 @@ This lab demonstrates:
 - **Classical and post-quantum PKI work the same way**
 - **Hybrid certificates provide a safe migration path**
 - **The PKI model is algorithm-agnostic**
-
----
-
-## The Threat: Store Now, Decrypt Later
-
-Adversaries **capture your encrypted traffic today** to decrypt it when they have a quantum computer. This is **"Store Now, Decrypt Later"** (SNDL).
-
-```
-TODAY                                 IN 10-15 YEARS
-─────                                 ──────────────
-    Adversary                             Adversary
-        │                                     │
-        │  Captures encrypted traffic         │  Decrypts everything
-        ▼                                     ▼
-   [████████████]  ──────────────────►   [Plaintext data]
-    Your TLS traffic                      Passwords, secrets,
-    (RSA/ECDSA)                           intellectual property
-```
-
-**If your data must remain confidential for 10+ years, you must act now.**
-
----
-
-## Use Cases
-
-### 📚 PKI Fundamentals
-| Use Case | Description |
-|----------|-------------|
-| [**PKI Hierarchy**](reference/usecases/pki/03-full-pqc-chain/) | Build Root CA → Issuing CA → End-entity certificates |
-| [**Hybrid Certificates**](reference/usecases/pki/04-hybrid-catalyst/) | Dual-key certs (ECDSA + ML-DSA) for backward compatibility |
-
-### 🔧 Applications
-| Use Case | Description |
-|----------|-------------|
-| [**mTLS Authentication**](reference/usecases/applications/03-mtls-authentication/) | Mutual client/server authentication with PQC |
-| [**Code Signing**](reference/usecases/applications/01-pqc-code-signing/) | Sign firmware and releases with ML-DSA |
-| [**Timestamping**](reference/usecases/applications/02-pqc-timestamping/) | Cryptographic proof of existence at a point in time |
-
-### ⚙️ Ops & Lifecycle
-| Use Case | Description |
-|----------|-------------|
-| [**Revocation (CRL)**](reference/usecases/pki/05-revocation-crl/) | Revoke compromised certificates |
-| [**OCSP Responder**](reference/usecases/applications/04-ocsp-responder/) | Real-time certificate status verification |
-| [**Crypto-Agility**](reference/usecases/applications/05-crypto-agility/) | Migrate from classic → hybrid → full PQC |
-
-### 🎯 Advanced
-| Use Case | Description |
-|----------|-------------|
-| [**LTV Signatures**](reference/usecases/applications/07-ltv-document-signing/) | Long-term validation for 30+ year archives |
-| [**TLS Tunnel**](reference/usecases/applications/06-tls-tunnel/) | ML-KEM key exchange for secure tunnels |
-| [**CMS Encryption**](journey/04-advanced/03-cms-encryption/) | Encrypt documents with hybrid ML-KEM |
 
 ---
 
@@ -91,41 +59,43 @@ cd post-quantum-pki-lab
 
 ### 🚀 Getting Started
 
-| # | Mission | Time | Run |
-|---|---------|------|-----|
-| 0 | **Quick Start** — My first PKI (ECDSA) | 10 min | [`./quickstart/demo.sh`](quickstart/demo.sh) |
-| 1 | **The Revelation** — Why change? (Mosca inequality) | 8 min | [`./journey/00-revelation/demo.sh`](journey/00-revelation/demo.sh) |
+| # | Mission | Use Case | Time | Run |
+|---|---------|----------|------|-----|
+| 0 | **Quick Start** — My first PKI | [PKI-02](reference/usecases/PKI-02/) | 10 min | [`./quickstart/demo.sh`](quickstart/demo.sh) |
+| 1 | **The Revelation** — Store Now, Decrypt Later | [PKI-01](reference/usecases/PKI-01/) | 8 min | [`./journey/00-revelation/demo.sh`](journey/00-revelation/demo.sh) |
 
 ### 📚 Level 1: PQC Basics
 
-| # | Mission | Time | Run |
-|---|---------|------|-----|
-| 2 | **Full PQC Chain** — 100% ML-DSA hierarchy | 10 min | [`./journey/01-pqc-basics/01-full-chain/demo.sh`](journey/01-pqc-basics/01-full-chain/demo.sh) |
-| 3 | **Hybrid Catalyst** — Dual-key ECDSA + ML-DSA | 10 min | [`./journey/01-pqc-basics/02-hybrid/demo.sh`](journey/01-pqc-basics/02-hybrid/demo.sh) |
+| # | Mission | Use Case | Time | Run |
+|---|---------|----------|------|-----|
+| 2 | **Full PQC Chain** — 100% ML-DSA hierarchy | [PKI-03](reference/usecases/PKI-03/) | 10 min | [`./journey/01-pqc-basics/01-full-chain/demo.sh`](journey/01-pqc-basics/01-full-chain/demo.sh) |
+| 3 | **Hybrid Catalyst** — ECDSA + ML-DSA dual-key | [PKI-04](reference/usecases/PKI-04/) | 10 min | [`./journey/01-pqc-basics/02-hybrid/demo.sh`](journey/01-pqc-basics/02-hybrid/demo.sh) |
 
 ### 🔧 Level 2: Applications
 
-| # | Mission | Time | Run |
-|---|---------|------|-----|
-| 4 | **mTLS** — Mutual client/server authentication | 8 min | [`./journey/02-applications/01-mtls/demo.sh`](journey/02-applications/01-mtls/demo.sh) |
-| 5 | **Code Signing** — Sign your releases | 8 min | [`./journey/02-applications/02-code-signing/demo.sh`](journey/02-applications/02-code-signing/demo.sh) |
-| 6 | **Timestamping** — Cryptographic timestamping | 8 min | [`./journey/02-applications/03-timestamping/demo.sh`](journey/02-applications/03-timestamping/demo.sh) |
+| # | Mission | Use Case | Time | Run |
+|---|---------|----------|------|-----|
+| 4 | **mTLS** — Mutual authentication | [APP-03](reference/usecases/APP-03/) | 8 min | [`./journey/02-applications/01-mtls/demo.sh`](journey/02-applications/01-mtls/demo.sh) |
+| 5 | **Code Signing** — Sign your releases | [APP-01](reference/usecases/APP-01/) | 8 min | [`./journey/02-applications/02-code-signing/demo.sh`](journey/02-applications/02-code-signing/demo.sh) |
+| 6 | **Timestamping** — Proof of existence | [APP-02](reference/usecases/APP-02/) | 8 min | [`./journey/02-applications/03-timestamping/demo.sh`](journey/02-applications/03-timestamping/demo.sh) |
 
 ### ⚙️ Level 3: Ops & Lifecycle
 
-| # | Mission | Time | Run |
-|---|---------|------|-----|
-| 7 | **Revocation** — Revoke a certificate, generate CRL | 10 min | [`./journey/03-ops-lifecycle/01-revocation/demo.sh`](journey/03-ops-lifecycle/01-revocation/demo.sh) |
-| 8 | **OCSP** — Real-time status verification | 10 min | [`./journey/03-ops-lifecycle/02-ocsp/demo.sh`](journey/03-ops-lifecycle/02-ocsp/demo.sh) |
-| 9 | **Crypto-Agility** — Migrate without breaking | 10 min | [`./journey/03-ops-lifecycle/03-crypto-agility/demo.sh`](journey/03-ops-lifecycle/03-crypto-agility/demo.sh) |
+| # | Mission | Use Case | Time | Run |
+|---|---------|----------|------|-----|
+| 7 | **Revocation** — CRL generation | [PKI-05](reference/usecases/PKI-05/) | 10 min | [`./journey/03-ops-lifecycle/01-revocation/demo.sh`](journey/03-ops-lifecycle/01-revocation/demo.sh) |
+| 8 | **OCSP** — Real-time status | [APP-04](reference/usecases/APP-04/) | 10 min | [`./journey/03-ops-lifecycle/02-ocsp/demo.sh`](journey/03-ops-lifecycle/02-ocsp/demo.sh) |
+| 9 | **Crypto-Agility** — Migrate without breaking | [APP-05](reference/usecases/APP-05/) | 10 min | [`./journey/03-ops-lifecycle/03-crypto-agility/demo.sh`](journey/03-ops-lifecycle/03-crypto-agility/demo.sh) |
 
-### 🎯 Level 4: Advanced
+### 🎯 Level 4: Advanced (Optional)
 
-| # | Mission | Time | Run |
-|---|---------|------|-----|
-| 10 | **LTV Signatures** — Valid in 30 years | 8 min | [`./journey/04-advanced/01-ltv-signatures/demo.sh`](journey/04-advanced/01-ltv-signatures/demo.sh) |
-| 11 | **PQC Tunnel** — ML-KEM key exchange | 8 min | [`./journey/04-advanced/02-pqc-tunnel/demo.sh`](journey/04-advanced/02-pqc-tunnel/demo.sh) |
-| 12 | **CMS Encryption** — Encrypt documents | 8 min | [`./journey/04-advanced/03-cms-encryption/demo.sh`](journey/04-advanced/03-cms-encryption/demo.sh) |
+> These missions are optional and exploratory. You can stop at Level 3 without losing the main thread.
+
+| # | Mission | Use Case | Time | Run |
+|---|---------|----------|------|-----|
+| 10 | **LTV Signatures** — Valid in 30 years | [APP-07](reference/usecases/APP-07/) | 8 min | [`./journey/04-advanced/01-ltv-signatures/demo.sh`](journey/04-advanced/01-ltv-signatures/demo.sh) |
+| 11 | **PQC Tunnel** — ML-KEM demo (not a production VPN) | [APP-06](reference/usecases/APP-06/) | 8 min | [`./journey/04-advanced/02-pqc-tunnel/demo.sh`](journey/04-advanced/02-pqc-tunnel/demo.sh) |
+| 12 | **CMS Encryption** — Encrypt documents | — | 8 min | [`./journey/04-advanced/03-cms-encryption/demo.sh`](journey/04-advanced/03-cms-encryption/demo.sh) |
 
 ### 🚀 Next Steps
 

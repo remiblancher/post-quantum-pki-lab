@@ -1,141 +1,141 @@
-# Niveau 3 : Ops & Lifecycle
+# Level 3: Ops & Lifecycle
 
-## Pourquoi cette section ?
+## Why this section?
 
-Tu sais creer des certificats. Mais en production, tu dois les **gerer** :
-- Que faire quand une cle est compromise ?
-- Comment verifier le statut en temps reel ?
-- Comment migrer sans casser les clients legacy ?
+You know how to create certificates. But in production, you need to **manage** them:
+- What do you do when a key is compromised?
+- How do you verify status in real-time?
+- How do you migrate without breaking legacy clients?
 
 ---
 
-## Ce que tu vas apprendre
+## What you'll learn
 
-### Revocation : Annuler un certificat
+### Revocation: Cancel a certificate
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                                                                 │
-│  PROBLEME : Cle privee volee                                   │
+│  PROBLEM: Private key stolen                                    │
 │                                                                 │
-│    Attaquant                                                    │
+│    Attacker                                                     │
 │        │                                                        │
-│        │  Vol de server.key                                     │
+│        │  Steals server.key                                     │
 │        ▼                                                        │
 │    ┌──────────┐                                                 │
-│    │ Attacker │  Peut maintenant :                             │
-│    │  Server  │  - Se faire passer pour ton serveur            │
-│    │          │  - Intercepter le trafic                       │
-│    │          │  - Signer du code malveillant                  │
+│    │ Attacker │  Can now:                                       │
+│    │  Server  │  - Impersonate your server                      │
+│    │          │  - Intercept traffic                            │
+│    │          │  - Sign malicious code                          │
 │    └──────────┘                                                 │
 │                                                                 │
-│  SOLUTION : Revoquer le certificat                             │
+│  SOLUTION: Revoke the certificate                               │
 │                                                                 │
-│    CA emet une CRL (Certificate Revocation List)               │
-│    Tous les clients voient : "Ce cert est revoque"             │
+│    CA issues a CRL (Certificate Revocation List)                │
+│    All clients see: "This cert is revoked"                      │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### OCSP : Verification en temps reel
+### OCSP: Real-time verification
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                                                                 │
-│  CRL vs OCSP                                                   │
+│  CRL vs OCSP                                                    │
 │                                                                 │
-│  CRL (offline)                     OCSP (online)               │
-│  ─────────────                     ─────────────               │
+│  CRL (offline)                     OCSP (online)                │
+│  ─────────────                     ─────────────                │
 │                                                                 │
-│  Client telecharge                 Client demande              │
-│  la liste complete                 pour UN certificat          │
-│  (peut etre grosse)                                            │
+│  Client downloads                  Client asks                  │
+│  the complete list                 for ONE certificate          │
+│  (can be large)                                                 │
 │                                                                 │
-│  Mise a jour periodique            Reponse temps reel          │
-│  (peut etre en retard)             (toujours a jour)           │
+│  Periodic updates                  Real-time response           │
+│  (can be stale)                    (always current)             │
 │                                                                 │
-│  ✓ Fonctionne offline              ✓ Leger et rapide           │
-│  ❌ Peut etre obsolete             ❌ Necessite reseau          │
+│  ✓ Works offline                   ✓ Light and fast             │
+│  ❌ Can be outdated                ❌ Requires network           │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Crypto-Agility : Migrer sans casser
+### Crypto-Agility: Migrate without breaking
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                                                                 │
-│  MIGRATION EN 3 PHASES                                          │
+│  MIGRATION IN 3 PHASES                                          │
 │                                                                 │
-│  PHASE 1 : CLASSIQUE              PHASE 2 : HYBRIDE            │
-│  ─────────────────────            ────────────────             │
+│  PHASE 1: CLASSICAL               PHASE 2: HYBRID               │
+│  ──────────────────               ───────────────               │
 │                                                                 │
-│  ┌─────────┐                      ┌─────────────────────┐      │
-│  │  ECDSA  │   ───────────────►   │  ECDSA + ML-DSA    │      │
-│  └─────────┘                      └─────────────────────┘      │
+│  ┌─────────┐                      ┌─────────────────────┐       │
+│  │  ECDSA  │   ───────────────►   │  ECDSA + ML-DSA    │       │
+│  └─────────┘                      └─────────────────────┘       │
 │                                                                 │
-│  Clients legacy OK                Legacy OK + PQC ready        │
+│  Legacy clients OK                Legacy OK + PQC ready         │
 │                                                                 │
 │                                                                 │
-│  PHASE 3 : FULL PQC                                            │
-│  ──────────────────                                            │
+│  PHASE 3: FULL PQC                                              │
+│  ─────────────────                                              │
 │                                                                 │
-│  ┌─────────┐                                                   │
-│  │  ML-DSA │   Quand tous les clients supportent PQC           │
-│  └─────────┘                                                   │
+│  ┌─────────┐                                                    │
+│  │  ML-DSA │   When all clients support PQC                     │
+│  └─────────┘                                                    │
 │                                                                 │
-│  Maximum security, clients legacy abandonnes                   │
+│  Maximum security, legacy clients deprecated                    │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Pourquoi Hybride dans ce niveau ?
+## Why Hybrid in this level?
 
-Le Niveau 3 simule un **environnement de production** ou :
-- Les clients legacy doivent pouvoir verifier (ECDSA)
-- La protection post-quantique est integree (ML-DSA)
-- CRL et OCSP doivent etre universellement lisibles
+Level 3 simulates a **production environment** where:
+- Legacy clients must be able to verify (ECDSA)
+- Post-quantum protection is integrated (ML-DSA)
+- CRL and OCSP must be universally readable
 
-L'hybride est le choix pragmatique pour la transition.
-
----
-
-## Prerequis
-
-- Niveau 2 termine (tu sais utiliser ta PKI)
-- Concepts : certificats, chaine de confiance
+Hybrid is the pragmatic choice for transition.
 
 ---
 
-## Les missions
+## Prerequisites
 
-### Mission 6 : "Oops, We Need to Revoke!" (Revocation)
+- Level 2 completed (you know how to use your PKI)
+- Concepts: certificates, chain of trust
 
-Simuler un incident et revoquer un certificat.
+---
 
-**Le probleme** : La cle privee a ete volee. Que faire ?
+## Missions
+
+### Mission 6: "Oops, We Need to Revoke!" (Revocation)
+
+Simulate an incident and revoke a certificate.
+
+**The problem**: The private key was stolen. What do you do?
 
 ```bash
 ./01-revocation/demo.sh
 ```
 
-### Mission 7 : "Is This Cert Still Good?" (OCSP)
+### Mission 7: "Is This Cert Still Good?" (OCSP)
 
-Deployer un OCSP responder en temps reel.
+Deploy an OCSP responder in real-time.
 
-**Le probleme** : Comment verifier le statut MAINTENANT ?
+**The problem**: How do you verify status RIGHT NOW?
 
 ```bash
 ./02-ocsp/demo.sh
 ```
 
-### Mission 8 : "Rotate Without Breaking" (Crypto-Agility)
+### Mission 8: "Rotate Without Breaking" (Crypto-Agility)
 
-Preparer la migration vers full PQC.
+Prepare migration to full PQC.
 
-**Le probleme** : Comment migrer sans casser les clients legacy ?
+**The problem**: How do you migrate without breaking legacy clients?
 
 ```bash
 ./03-crypto-agility/demo.sh
@@ -143,28 +143,28 @@ Preparer la migration vers full PQC.
 
 ---
 
-## Ce que tu auras a la fin
+## What you'll have at the end
 
 ```
 workspace/niveau-3/
 ├── revocation/
-│   ├── compromised.crt     # Certificat revoque
+│   ├── compromised.crt     # Revoked certificate
 │   ├── ca.crl              # Certificate Revocation List
-│   └── revocation.log      # Historique des actions
+│   └── revocation.log      # Action history
 ├── ocsp/
-│   ├── ocsp.crt            # Certificat OCSP responder
-│   ├── ocsp-response.der   # Reponse OCSP capturee
-│   └── status-*.txt        # Statuts avant/apres
+│   ├── ocsp.crt            # OCSP responder certificate
+│   ├── ocsp-response.der   # Captured OCSP response
+│   └── status-*.txt        # Before/after statuses
 └── crypto-agility/
-    ├── phase1/             # CA classique
-    ├── phase2/             # CA hybride
-    └── phase3/             # CA full PQC
+    ├── phase1/             # Classical CA
+    ├── phase2/             # Hybrid CA
+    └── phase3/             # Full PQC CA
 ```
 
 ---
 
-## Prochaine etape
+## Next step
 
-→ **Niveau 4 : Advanced**
+→ **Level 4: Advanced**
 
-Tu vas maitriser les cas avances : LTV, tunnels PQC, chiffrement CMS.
+You'll master advanced use cases: LTV, PQC tunnels, CMS encryption.

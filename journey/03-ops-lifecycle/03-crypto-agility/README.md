@@ -1,17 +1,17 @@
-# Mission 8 : "Rotate Without Breaking"
+# Mission 8: "Rotate Without Breaking"
 
-## Crypto-Agility : Migrer sans casser
+## Crypto-Agility: Migrate Without Breaking
 
-### Le probleme
+### The Problem
 
-Tu as 10 000 certificats ECDSA en production.
-Tu dois migrer vers ML-DSA.
+You have 10,000 ECDSA certificates in production.
+You need to migrate to ML-DSA.
 
-Mais tu ne peux pas tout casser d'un coup.
+But you can't break everything at once.
 
 ```
-SITUATION ACTUELLE
-──────────────────
+CURRENT SITUATION
+─────────────────
 
   ┌─────────────────────────────────────────────────────────────┐
   │                                                             │
@@ -19,98 +19,98 @@ SITUATION ACTUELLE
   │  ──────────                                                 │
   │                                                             │
   │  ┌───────────┐  ┌───────────┐  ┌───────────┐              │
-  │  │  Serveur  │  │  Serveur  │  │  Serveur  │  ... x 500   │
+  │  │  Server   │  │  Server   │  │  Server   │  ... x 500   │
   │  │  ECDSA    │  │  ECDSA    │  │  ECDSA    │              │
   │  └───────────┘  └───────────┘  └───────────┘              │
   │                                                             │
   │  ┌───────────┐  ┌───────────┐  ┌───────────┐              │
   │  │  Client   │  │  Client   │  │  Client   │  ... x 9500  │
-  │  │  Legacy   │  │  Legacy   │  │  Moderne  │              │
+  │  │  Legacy   │  │  Legacy   │  │  Modern   │              │
   │  │  (ECDSA)  │  │  (ECDSA)  │  │  (PQC OK) │              │
   │  └───────────┘  └───────────┘  └───────────┘              │
   │                                                             │
   └─────────────────────────────────────────────────────────────┘
 
-  Comment migrer sans couper le service ?
+  How to migrate without cutting service?
 ```
 
-### La menace
+### The Threat
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
-│  MIGRATION "BIG BANG" : Risque d'outage massif                  │
+│  "BIG BANG" MIGRATION: Risk of massive outage                   │
 │                                                                  │
 │                                                                  │
-│    Jour J : Migration vers ML-DSA                               │
+│    Day D: Migration to ML-DSA                                   │
 │                                                                  │
 │       ┌─────────┐         ┌─────────┐                           │
-│       │ Serveur │  ❌───► │ Client  │  Ne comprend pas ML-DSA   │
+│       │ Server  │  ❌───► │ Client  │  Doesn't understand ML-DSA│
 │       │ ML-DSA  │         │ Legacy  │                           │
 │       └─────────┘         └─────────┘                           │
 │                                                                  │
-│    Resultat :                                                    │
-│    - 80% des clients ne peuvent plus se connecter               │
-│    - Outage massif                                               │
-│    - Rollback necessaire                                         │
-│    - Migration retardee de 6 mois                               │
+│    Result:                                                       │
+│    - 80% of clients can't connect anymore                       │
+│    - Massive outage                                              │
+│    - Rollback required                                           │
+│    - Migration delayed 6 months                                 │
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
-### La solution : Migration en 3 phases
+### The Solution: 3-Phase Migration
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
-│  PHASE 1 : PREPARATION (aujourd'hui)                            │
-│  ───────────────────────────────────                            │
+│  PHASE 1: PREPARATION (today)                                   │
+│  ───────────────────────────                                    │
 │                                                                  │
 │  ┌─────────┐                                                    │
-│  │  ECDSA  │  Statut quo. Inventorier les systemes.            │
+│  │  ECDSA  │  Status quo. Inventory your systems.              │
 │  └─────────┘                                                    │
 │                                                                  │
-│  Actions :                                                       │
-│  □ Inventorier tous les certificats                             │
-│  □ Identifier les clients legacy vs modernes                    │
-│  □ Tester les outils PQC en lab                                 │
+│  Actions:                                                        │
+│  □ Inventory all certificates                                   │
+│  □ Identify legacy vs modern clients                            │
+│  □ Test PQC tools in lab                                        │
 │                                                                  │
 ├──────────────────────────────────────────────────────────────────┤
 │                                                                  │
-│  PHASE 2 : HYBRIDE (transition)                                 │
+│  PHASE 2: HYBRID (transition)                                   │
 │  ─────────────────────────────                                  │
 │                                                                  │
 │  ┌─────────────────────┐                                        │
-│  │  ECDSA + ML-DSA    │  Les deux algorithmes dans un cert.    │
+│  │  ECDSA + ML-DSA    │  Both algorithms in one cert.          │
 │  └─────────────────────┘                                        │
 │                                                                  │
-│  Comportement :                                                  │
-│  - Client legacy → Utilise ECDSA (ignore ML-DSA)                │
-│  - Client moderne → Verifie les DEUX                            │
+│  Behavior:                                                       │
+│  - Legacy client → Uses ECDSA (ignores ML-DSA)                  │
+│  - Modern client → Verifies BOTH                                 │
 │                                                                  │
-│  ✓ 100% compatibilite                                           │
-│  ✓ Protection PQC pour les clients modernes                     │
+│  ✓ 100% compatibility                                           │
+│  ✓ PQC protection for modern clients                            │
 │                                                                  │
 ├──────────────────────────────────────────────────────────────────┤
 │                                                                  │
-│  PHASE 3 : FULL PQC (apres migration clients)                   │
+│  PHASE 3: FULL PQC (after client migration)                     │
 │  ─────────────────────────────────────────────                  │
 │                                                                  │
 │  ┌─────────┐                                                    │
-│  │  ML-DSA │  Quand TOUS les clients supportent PQC.            │
+│  │  ML-DSA │  When ALL clients support PQC.                    │
 │  └─────────┘                                                    │
 │                                                                  │
-│  Prerequis :                                                     │
-│  □ Tous les clients mis a jour                                  │
-│  □ Tests de non-regression                                       │
-│  □ Plan de rollback                                              │
+│  Prerequisites:                                                  │
+│  □ All clients updated                                          │
+│  □ Regression tests passed                                      │
+│  □ Rollback plan ready                                          │
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Crypto-Agility : Definition
+## Crypto-Agility: Definition
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -118,69 +118,69 @@ SITUATION ACTUELLE
 │  CRYPTO-AGILITY                                                │
 │  ──────────────                                                │
 │                                                                 │
-│  La capacite d'un systeme a :                                  │
+│  The ability of a system to:                                   │
 │                                                                 │
-│  1. CHANGER d'algorithme                                       │
-│     → Sans redesigner l'architecture                           │
+│  1. CHANGE algorithm                                           │
+│     → Without redesigning the architecture                     │
 │                                                                 │
-│  2. SUPPORTER plusieurs algorithmes                            │
-│     → Pendant la transition                                    │
+│  2. SUPPORT multiple algorithms                                │
+│     → During transition                                        │
 │                                                                 │
-│  3. ROLLBACK rapidement                                        │
-│     → Si un probleme survient                                  │
+│  3. ROLLBACK quickly                                           │
+│     → If a problem occurs                                      │
 │                                                                 │
-│  C'est une PROPRIETE ARCHITECTURALE, pas un outil.            │
+│  It's an ARCHITECTURAL PROPERTY, not a tool.                   │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Checklist Crypto-Agility
+## Crypto-Agility Checklist
 
-| Question | Crypto-Agile | Non Crypto-Agile |
+| Question | Crypto-Agile | Not Crypto-Agile |
 |----------|--------------|------------------|
-| Les algos sont-ils configures ou hardcodes ? | Configure | Hardcode |
-| Peut-on changer l'algo sans rebuild ? | Oui | Non |
-| Les certs supportent plusieurs algos ? | Oui (hybride) | Non |
-| Peut-on rollback en < 1h ? | Oui | Non |
-| L'inventaire crypto est-il automatise ? | Oui | Manuel |
+| Are algorithms configured or hardcoded? | Configured | Hardcoded |
+| Can you change algo without rebuild? | Yes | No |
+| Do certs support multiple algos? | Yes (hybrid) | No |
+| Can you rollback in < 1h? | Yes | No |
+| Is crypto inventory automated? | Yes | Manual |
 
 ---
 
-## Ce que tu vas faire
+## What You'll Do
 
-1. **Creer une CA classique** (Phase 1 : ECDSA)
-2. **Creer une CA hybride** (Phase 2 : ECDSA + ML-DSA)
-3. **Creer une CA full PQC** (Phase 3 : ML-DSA)
-4. **Tester l'interoperabilite** : client legacy vs moderne
-5. **Simuler un rollback** : de hybride vers classique
+1. **Create a classic CA** (Phase 1: ECDSA)
+2. **Create a hybrid CA** (Phase 2: ECDSA + ML-DSA)
+3. **Create a full PQC CA** (Phase 3: ML-DSA)
+4. **Test interoperability**: legacy vs modern client
+5. **Simulate a rollback**: from hybrid to classic
 
 ---
 
-## Timeline de migration type
+## Typical Migration Timeline
 
 ```
-2024 Q4  Inventaire complet
-2025 Q1  Lab tests hybride
-2025 Q2  Deploiement hybride (5% trafic)
-2025 Q3  Deploiement hybride (100%)
-2026 Q1  Debut deprecation clients legacy
-2027     Full PQC (si tous clients migres)
+2024 Q4  Complete inventory
+2025 Q1  Hybrid lab tests
+2025 Q2  Hybrid deployment (5% traffic)
+2025 Q3  Hybrid deployment (100%)
+2026 Q1  Begin legacy client deprecation
+2027     Full PQC (if all clients migrated)
 ```
 
 ---
 
-## Ce que tu auras a la fin
+## What You'll Have at the End
 
-- 3 CA (classique, hybride, PQC)
-- Preuve d'interoperabilite
-- Plan de migration concret
-- Comprendre le rollback
+- 3 CAs (classic, hybrid, PQC)
+- Interoperability proof
+- Concrete migration plan
+- Understanding of rollback
 
 ---
 
-## Lancer la mission
+## Run the Mission
 
 ```bash
 ./demo.sh
@@ -188,8 +188,8 @@ SITUATION ACTUELLE
 
 ---
 
-## Prochaine etape
+## Next Step
 
-→ **Niveau 4 : Advanced**
+→ **Level 4: Advanced**
 
-Tu vas maitriser les cas avances : LTV, tunnels PQC, chiffrement CMS.
+You'll master advanced use cases: LTV, PQC tunnels, CMS encryption.

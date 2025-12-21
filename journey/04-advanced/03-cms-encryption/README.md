@@ -1,11 +1,11 @@
-# Mission 11 : "Encrypt for Their Eyes Only"
+# Mission 11: "Encrypt for Their Eyes Only"
 
-## CMS Encryption avec ML-KEM
+## CMS Encryption with ML-KEM
 
-### Le probleme
+### The Problem
 
-Tu veux envoyer un document confidentiel a Bob.
-Seul Bob doit pouvoir le lire.
+You want to send a confidential document to Bob.
+Only Bob should be able to read it.
 
 ```
 SITUATION
@@ -13,87 +13,87 @@ SITUATION
 
   Alice                                           Bob
     │                                               │
-    │  document-secret.pdf                          │
+    │  secret-document.pdf                          │
     │  ─────────────────────────────────────────►   │
     │                                               │
     │                                               │
     ▼                                               ▼
-  Comment s'assurer que                     Comment le lire
-  SEUL Bob peut le lire ?                   de maniere securisee ?
+  How to ensure that                         How to read it
+  ONLY Bob can read it?                      securely?
 ```
 
-### La menace
+### The Threat
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
-│  INTERCEPTION : Le document est lisible par tous                │
+│  INTERCEPTION: The document is readable by everyone             │
 │                                                                  │
 │                                                                  │
-│    Alice                    Attaquant                  Bob       │
+│    Alice                    Attacker                  Bob        │
 │      │                          │                        │       │
 │      │  document.pdf            │                        │       │
 │      │  ───────────────────────►│                        │       │
 │      │                          │                        │       │
 │      │                          ▼                        │       │
 │      │                    ┌──────────┐                   │       │
-│      │                    │  Copie   │                   │       │
-│      │                    │  le doc  │                   │       │
+│      │                    │  Copies  │                   │       │
+│      │                    │  the doc │                   │       │
 │      │                    └──────────┘                   │       │
 │      │                          │                        │       │
 │      │                          │  document.pdf          │       │
 │      │                          │────────────────────────│       │
 │      │                                                   ▼       │
 │                                                                  │
-│    L'attaquant a une copie du document.                         │
-│    Il peut le lire, le modifier, le redistribuer.               │
+│    The attacker has a copy of the document.                     │
+│    They can read it, modify it, redistribute it.                │
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
-### La solution : Chiffrement CMS
+### The Solution: CMS Encryption
 
-Chiffrer le document avec la cle publique de Bob :
+Encrypt the document with Bob's public key:
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
-│  CMS ENCRYPTION : Seul Bob peut dechiffrer                      │
+│  CMS ENCRYPTION: Only Bob can decrypt                           │
 │                                                                  │
 │                                                                  │
-│  1. ALICE CHIFFRE                                                │
+│  1. ALICE ENCRYPTS                                               │
 │                                                                  │
 │     document.pdf                                                 │
 │          │                                                       │
 │          ▼                                                       │
 │     ┌──────────────────────────────────────────────────────┐    │
-│     │  Generer cle AES-256 aleatoire                       │    │
+│     │  Generate random AES-256 key                         │    │
 │     │       │                                               │    │
 │     │       ├────────────────────────┐                     │    │
 │     │       ▼                        ▼                     │    │
-│     │  Chiffrer document        Encapsuler cle AES         │    │
-│     │  avec AES-256-GCM         avec ML-KEM (Bob)          │    │
+│     │  Encrypt document         Encapsulate AES key        │    │
+│     │  with AES-256-GCM         with ML-KEM (Bob)          │    │
 │     │       │                        │                     │    │
 │     │       ▼                        ▼                     │    │
-│     │  Document chiffre         Cle encapsulee             │    │
+│     │  Encrypted document       Encapsulated key           │    │
 │     └──────────────────────────────────────────────────────┘    │
 │          │                           │                           │
 │          └─────────┬─────────────────┘                          │
 │                    ▼                                             │
 │          ┌──────────────────┐                                   │
-│          │  document.p7m    │  ←── Fichier CMS                  │
+│          │  document.p7m    │  ←── CMS file                     │
 │          └──────────────────┘                                   │
 │                                                                  │
-│  2. BOB DECHIFFRE                                                │
+│  2. BOB DECRYPTS                                                 │
 │                                                                  │
 │     document.p7m                                                 │
 │          │                                                       │
 │          ▼                                                       │
 │     ┌──────────────────────────────────────────────────────┐    │
-│     │  Decapsuler cle AES avec sk_bob (ML-KEM)             │    │
+│     │  Decapsulate AES key with sk_bob (ML-KEM)            │    │
 │     │       │                                               │    │
 │     │       ▼                                               │    │
-│     │  Dechiffrer document avec AES-256-GCM                │    │
+│     │  Decrypt document with AES-256-GCM                   │    │
 │     │       │                                               │    │
 │     │       ▼                                               │    │
 │     │  document.pdf (original)                              │    │
@@ -104,23 +104,23 @@ Chiffrer le document avec la cle publique de Bob :
 
 ---
 
-## Pourquoi AES + ML-KEM ?
+## Why AES + ML-KEM?
 
-On ne chiffre pas directement avec ML-KEM car :
-- ML-KEM est **lent** pour de gros fichiers
-- ML-KEM produit des **ciphertexts volumineux**
+We don't encrypt directly with ML-KEM because:
+- ML-KEM is **slow** for large files
+- ML-KEM produces **large ciphertexts**
 
-On utilise le **schema hybride** :
-1. AES-256 pour le contenu (rapide)
-2. ML-KEM pour proteger la cle AES (quantum-safe)
+We use the **hybrid scheme**:
+1. AES-256 for content (fast)
+2. ML-KEM to protect the AES key (quantum-safe)
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                                                                 │
-│  Chiffrement "enveloppe"                                       │
+│  "Envelope" encryption                                         │
 │                                                                 │
 │  ┌───────────────────────────────────────────────────────┐     │
-│  │  Fichier CMS (.p7m)                                    │     │
+│  │  CMS file (.p7m)                                       │     │
 │  │  ──────────────────                                    │     │
 │  │                                                        │     │
 │  │  ┌─────────────────────────────────────────────────┐  │     │
@@ -129,11 +129,11 @@ On utilise le **schema hybride** :
 │  │  │                                                  │  │     │
 │  │  │  RecipientInfo:                                  │  │     │
 │  │  │    - Algo: ML-KEM-768                           │  │     │
-│  │  │    - EncryptedKey: (cle AES encapsulee)         │  │     │
+│  │  │    - EncryptedKey: (encapsulated AES key)       │  │     │
 │  │  │                                                  │  │     │
 │  │  │  EncryptedContent:                               │  │     │
 │  │  │    - Algo: AES-256-GCM                          │  │     │
-│  │  │    - Data: (document chiffre)                   │  │     │
+│  │  │    - Data: (encrypted document)                 │  │     │
 │  │  │                                                  │  │     │
 │  │  └─────────────────────────────────────────────────┘  │     │
 │  │                                                        │     │
@@ -144,47 +144,47 @@ On utilise le **schema hybride** :
 
 ---
 
-## CMS : Standard S/MIME
+## CMS: S/MIME Standard
 
-CMS (RFC 5652) est le format utilise par :
-- **S/MIME** : Emails chiffres (Outlook, Apple Mail, Thunderbird)
-- **PKCS#7** : Signatures et chiffrement
-- **Archivage** : Documents confidentiels
-
----
-
-## Ce que tu vas faire
-
-1. **Creer un certificat encryption** pour Bob (ML-KEM-768)
-2. **Preparer un document** secret.txt
-3. **Chiffrer** le document en CMS avec la cle publique de Bob
-4. **Dechiffrer** avec la cle privee de Bob
-5. **Verifier** que le contenu est identique
+CMS (RFC 5652) is the format used by:
+- **S/MIME**: Encrypted emails (Outlook, Apple Mail, Thunderbird)
+- **PKCS#7**: Signatures and encryption
+- **Archiving**: Confidential documents
 
 ---
 
-## Cas d'usage
+## What You'll Do
 
-| Scenario | Pourquoi CMS ? |
-|----------|----------------|
-| Emails confidentiels | S/MIME standard |
-| Documents RH | Salaires, evaluations |
-| Donnees medicales | Secret medical |
-| Contrats | Avant signature |
-| Backup chiffre | Protection offline |
+1. **Create an encryption certificate** for Bob (ML-KEM-768)
+2. **Prepare a document** secret.txt
+3. **Encrypt** the document in CMS with Bob's public key
+4. **Decrypt** with Bob's private key
+5. **Verify** the content is identical
 
 ---
 
-## Ce que tu auras a la fin
+## Use Cases
 
-- Certificat encryption ML-KEM-768
-- Document chiffre (secret.txt.p7m)
-- Document dechiffre (identique a l'original)
-- Comprendre le workflow CMS
+| Scenario | Why CMS? |
+|----------|----------|
+| Confidential emails | S/MIME standard |
+| HR documents | Salaries, evaluations |
+| Medical data | Medical confidentiality |
+| Contracts | Before signing |
+| Encrypted backup | Offline protection |
 
 ---
 
-## Lancer la mission
+## What You'll Have at the End
+
+- Encryption certificate ML-KEM-768
+- Encrypted document (secret.txt.p7m)
+- Decrypted document (identical to original)
+- Understanding of CMS workflow
+
+---
+
+## Run the Mission
 
 ```bash
 ./demo.sh
@@ -192,16 +192,16 @@ CMS (RFC 5652) est le format utilise par :
 
 ---
 
-## Fin du parcours
+## End of Journey
 
-Tu as complete le parcours Post-Quantum PKI Lab !
+You've completed the Post-Quantum PKI Lab!
 
-Tu maitrises maintenant :
-- ✓ PKI classique et post-quantique
-- ✓ Signatures ML-DSA
-- ✓ Certificats hybrides
+You now master:
+- ✓ Classic and post-quantum PKI
+- ✓ ML-DSA signatures
+- ✓ Hybrid certificates
 - ✓ mTLS, Code Signing, Timestamping
 - ✓ Revocation, OCSP, Crypto-Agility
 - ✓ LTV, ML-KEM, CMS Encryption
 
-→ **Next Steps** : Comment migrer 10 000 certificats en production ?
+→ **Next Steps**: How to migrate 10,000 certificates in production?

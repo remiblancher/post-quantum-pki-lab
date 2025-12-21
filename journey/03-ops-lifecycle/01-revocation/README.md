@@ -1,139 +1,139 @@
-# Mission 6 : "Oops, We Need to Revoke!"
+# Mission 6: "Oops, We Need to Revoke!"
 
-## Revocation & CRL avec Hybride
+## Revocation & CRL with Hybrid
 
-### Le probleme
+### The Problem
 
-C'est 3h du matin. Tu recois une alerte :
+It's 3 AM. You receive an alert:
 
 ```
-🚨 ALERTE SECURITE
-   La cle privee de server.example.com
-   a ete detectee sur GitHub.
+🚨 SECURITY ALERT
+   The private key for server.example.com
+   was detected on GitHub.
 ```
 
-Qu'est-ce que tu fais ?
+What do you do?
 
-### La menace
+### The Threat
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
-│  CLE PRIVEE COMPROMISE : L'attaquant peut tout faire            │
+│  COMPROMISED PRIVATE KEY: The attacker can do anything          │
 │                                                                  │
 │                                                                  │
-│    Attaquant                                                     │
+│    Attacker                                                      │
 │        │                                                         │
-│        │  server.key (volee)                                     │
+│        │  server.key (stolen)                                    │
 │        ▼                                                         │
 │    ┌──────────┐                                                  │
-│    │ Faux     │  L'attaquant peut maintenant :                  │
-│    │ Serveur  │                                                  │
-│    │          │  1. Se faire passer pour server.example.com     │
-│    │          │  2. Intercepter le trafic des clients           │
-│    │          │  3. Signer du code malveillant                  │
-│    │          │  4. Voler des donnees en transit                │
+│    │ Fake     │  The attacker can now:                          │
+│    │ Server   │                                                  │
+│    │          │  1. Impersonate server.example.com              │
+│    │          │  2. Intercept client traffic                    │
+│    │          │  3. Sign malicious code                         │
+│    │          │  4. Steal data in transit                       │
 │    └──────────┘                                                  │
 │                                                                  │
-│    Le certificat est toujours "valide" techniquement.           │
-│    Les clients font confiance a l'attaquant.                    │
+│    The certificate is still technically "valid".                │
+│    Clients trust the attacker.                                  │
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
-**Impact** :
+**Impact**:
 - Man-in-the-middle
-- Vol de credentials
-- Injection de malware
-- Reputation detruite
+- Credential theft
+- Malware injection
+- Destroyed reputation
 
-### La solution : Revoquer immediatement
+### The Solution: Revoke Immediately
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
-│  REVOCATION : Annuler la confiance dans un certificat           │
+│  REVOCATION: Invalidate trust in a certificate                  │
 │                                                                  │
 │                                                                  │
-│    1. CA ajoute le certificat a la CRL                          │
+│    1. CA adds the certificate to the CRL                        │
 │                                                                  │
 │       ┌─────────────────────────────────────────┐               │
 │       │  CRL (Certificate Revocation List)      │               │
 │       │  ─────────────────────────────────      │               │
 │       │                                         │               │
 │       │  Serial: 12345                          │               │
-│       │  Raison: keyCompromise                  │               │
+│       │  Reason: keyCompromise                  │               │
 │       │  Date: 2024-12-15T03:45:00Z            │               │
 │       │                                         │               │
 │       │  Signature: CA (ECDSA + ML-DSA)        │               │
 │       └─────────────────────────────────────────┘               │
 │                                                                  │
-│    2. Les clients verifient la CRL                              │
+│    2. Clients check the CRL                                     │
 │                                                                  │
 │       Client                         CRL                         │
 │         │                             │                          │
-│         │  "Ce cert est valide ?"     │                          │
+│         │  "Is this cert valid?"      │                          │
 │         │  ─────────────────────────► │                          │
 │         │                             │                          │
 │         │  ◄───────────────────────── │                          │
-│         │  "Non, revoque pour         │                          │
+│         │  "No, revoked for           │                          │
 │         │   keyCompromise"            │                          │
 │         │                             │                          │
 │         ▼                                                        │
-│       ❌ Connexion refusee                                       │
+│       ❌ Connection refused                                      │
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Les raisons de revocation
+## Revocation Reasons
 
-| Code | Raison | Quand l'utiliser |
-|------|--------|------------------|
-| `keyCompromise` | Cle volee | Fuite sur GitHub, piratage |
-| `caCompromise` | CA compromise | Incident majeur |
-| `affiliationChanged` | Changement d'affiliation | Employe quitte l'entreprise |
-| `superseded` | Remplace | Nouveau certificat emis |
-| `cessationOfOperation` | Fin d'activite | Service arrete |
-| `certificateHold` | Suspension temporaire | Investigation en cours |
-
----
-
-## Ce que tu vas faire
-
-1. **Emettre un certificat** avec ta CA hybride
-2. **Simuler une compromission** : la cle est volee
-3. **Revoquer le certificat** avec raison `keyCompromise`
-4. **Generer une CRL** signee hybride
-5. **Verifier** : le certificat est maintenant rejete
+| Code | Reason | When to use |
+|------|--------|-------------|
+| `keyCompromise` | Key stolen | Leak on GitHub, hacking |
+| `caCompromise` | CA compromised | Major incident |
+| `affiliationChanged` | Affiliation changed | Employee leaves company |
+| `superseded` | Superseded | New certificate issued |
+| `cessationOfOperation` | Cessation of operation | Service stopped |
+| `certificateHold` | Temporary suspension | Investigation in progress |
 
 ---
 
-## Timeline d'un incident reel
+## What You'll Do
+
+1. **Issue a certificate** with your hybrid CA
+2. **Simulate a compromise**: the key is stolen
+3. **Revoke the certificate** with reason `keyCompromise`
+4. **Generate a CRL** signed hybrid
+5. **Verify**: the certificate is now rejected
+
+---
+
+## Timeline of a Real Incident
 
 ```
-03:00  Alerte : cle detectee sur GitHub
-03:05  Identification du certificat concerne
-03:10  Revocation via la CA
-03:15  CRL mise a jour et publiee
-03:20  Clients commencent a rejeter le cert
-03:30  Nouveau certificat emis (nouvelle cle)
-03:35  Incident clos
+03:00  Alert: key detected on GitHub
+03:05  Identify the affected certificate
+03:10  Revocation via CA
+03:15  CRL updated and published
+03:20  Clients start rejecting the cert
+03:30  New certificate issued (new key)
+03:35  Incident closed
 ```
 
 ---
 
-## Ce que tu auras a la fin
+## What You'll Have at the End
 
-- Certificat revoque
-- CRL signee (ECDSA + ML-DSA)
-- Preuve de verification : cert rejete
-- Comprendre le workflow d'incident
+- Revoked certificate
+- Signed CRL (ECDSA + ML-DSA)
+- Verification proof: cert rejected
+- Understanding of the incident workflow
 
 ---
 
-## Lancer la mission
+## Run the Mission
 
 ```bash
 ./demo.sh
@@ -141,6 +141,6 @@ Qu'est-ce que tu fais ?
 
 ---
 
-## Prochaine mission
+## Next Mission
 
-→ **Mission 7 : "Is This Cert Still Good?"** (OCSP)
+→ **Mission 7: "Is This Cert Still Good?"** (OCSP)
