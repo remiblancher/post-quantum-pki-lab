@@ -62,74 +62,51 @@ cd post-quantum-pki-lab
 
 ---
 
-## Le parcours complet
+## Learning Path
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                                                                             │
-│   QUICK START (10 min)                                                      │
-│   ════════════════════                                                      │
-│   "Ma première PKI"                                                         │
-│                                                                             │
-│   Tu crées ta première CA et ton premier certificat.                        │
-│   Algo: ECDSA P-384 (classique, pour comprendre les bases)                 │
-│                                                                             │
-└───────────────────────────────────┬─────────────────────────────────────────┘
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                                                                             │
-│   LA RÉVÉLATION (8 min)                                                     │
-│   ═════════════════════                                                     │
-│   "Store Now, Decrypt Later"                                                │
-│                                                                             │
-│   Ta CA classique sera cassable. Quand ? Calcule-le avec Mosca.            │
-│   Tu comprends POURQUOI migrer vers le post-quantique.                      │
-│                                                                             │
-└───────────────────────────────────┬─────────────────────────────────────────┘
-                                    │
-        ┌───────────────────────────┼───────────────────────────┐
-        │                           │                           │
-        ▼                           ▼                           ▼
-┌───────────────────┐   ┌───────────────────┐   ┌───────────────────┐
-│                   │   │                   │   │                   │
-│  NIVEAU 1 (20min) │   │  NIVEAU 2 (25min) │   │  NIVEAU 3 (30min) │
-│  ═══════════════  │   │  ═══════════════  │   │  ═══════════════  │
-│  PQC Basics       │   │  Applications     │   │  Ops & Lifecycle  │
-│                   │   │                   │   │                   │
-│  • "Build Your    │──▶│  • "Show Me Your  │──▶│  • "Oops, We Need │
-│    Foundation"    │   │    Badge" (mTLS)  │   │    to Revoke!"    │
-│  • "Best of Both  │   │  • "Secure Your   │   │  • "Is This Cert  │
-│    Worlds"        │   │    Releases"      │   │    Still Good?"   │
-│                   │   │  • "Trust Now,    │   │  • "Rotate Without│
-│  Algo: ML-DSA     │   │    Verify Forever"│   │    Breaking"      │
-│                   │   │                   │   │                   │
-│                   │   │  Algo: ML-DSA     │   │  Algo: HYBRIDE    │
-└───────────────────┘   └───────────────────┘   └───────────────────┘
-                                    │
-                    ┌───────────────┴───────────────┐
-                    │                               │
-                    ▼                               ▼
-        ┌───────────────────┐           ┌───────────────────┐
-        │                   │           │                   │
-        │  NIVEAU 4 (20min) │           │   NEXT STEPS      │
-        │  ═══════════════  │           │   ══════════════  │
-        │  Advanced         │           │                   │
-        │                   │           │   Tu as géré 10   │
-        │  • "Sign Today,   │           │   certificats.    │
-        │    Verify in 30   │           │   En production,  │
-        │    Years"         │           │   tu en as 10000. │
-        │  • "Build a PQC   │           │                   │
-        │    Tunnel"        │           │   → QentriQ       │
-        │  • "Encrypt       │           │                   │
-        │    Documents"     │           │                   │
-        │                   │           │                   │
-        │  Algo: ML-KEM     │           │                   │
-        └───────────────────┘           └───────────────────┘
-```
+**Total time: ~2h** | **Minimum path: 18 min** (Quick Start + Revelation)
 
-**Temps total : ~2h (interactif)**
-**Parcours minimum : 18 min** (Quick Start + Révélation)
+### 🚀 Getting Started
+
+| # | Mission | Time | Run |
+|---|---------|------|-----|
+| 0 | **Quick Start** — My first PKI (ECDSA) | 10 min | [`./quickstart/demo.sh`](quickstart/demo.sh) |
+| 1 | **The Revelation** — Why change? (Mosca inequality) | 8 min | [`./journey/00-revelation/demo.sh`](journey/00-revelation/demo.sh) |
+
+### 📚 Level 1: PQC Basics
+
+| # | Mission | Time | Run |
+|---|---------|------|-----|
+| 2 | **Full PQC Chain** — 100% ML-DSA hierarchy | 10 min | [`./journey/01-pqc-basics/01-full-chain/demo.sh`](journey/01-pqc-basics/01-full-chain/demo.sh) |
+| 3 | **Hybrid Catalyst** — Dual-key ECDSA + ML-DSA | 10 min | [`./journey/01-pqc-basics/02-hybrid/demo.sh`](journey/01-pqc-basics/02-hybrid/demo.sh) |
+
+### 🔧 Level 2: Applications
+
+| # | Mission | Time | Run |
+|---|---------|------|-----|
+| 4 | **mTLS** — Mutual client/server authentication | 8 min | [`./journey/02-applications/01-mtls/demo.sh`](journey/02-applications/01-mtls/demo.sh) |
+| 5 | **Code Signing** — Sign your releases | 8 min | [`./journey/02-applications/02-code-signing/demo.sh`](journey/02-applications/02-code-signing/demo.sh) |
+| 6 | **Timestamping** — Cryptographic timestamping | 8 min | [`./journey/02-applications/03-timestamping/demo.sh`](journey/02-applications/03-timestamping/demo.sh) |
+
+### ⚙️ Level 3: Ops & Lifecycle
+
+| # | Mission | Time | Run |
+|---|---------|------|-----|
+| 7 | **Revocation** — Revoke a certificate, generate CRL | 10 min | [`./journey/03-ops-lifecycle/01-revocation/demo.sh`](journey/03-ops-lifecycle/01-revocation/demo.sh) |
+| 8 | **OCSP** — Real-time status verification | 10 min | [`./journey/03-ops-lifecycle/02-ocsp/demo.sh`](journey/03-ops-lifecycle/02-ocsp/demo.sh) |
+| 9 | **Crypto-Agility** — Migrate without breaking | 10 min | [`./journey/03-ops-lifecycle/03-crypto-agility/demo.sh`](journey/03-ops-lifecycle/03-crypto-agility/demo.sh) |
+
+### 🎯 Level 4: Advanced
+
+| # | Mission | Time | Run |
+|---|---------|------|-----|
+| 10 | **LTV Signatures** — Valid in 30 years | 8 min | [`./journey/04-advanced/01-ltv-signatures/demo.sh`](journey/04-advanced/01-ltv-signatures/demo.sh) |
+| 11 | **PQC Tunnel** — ML-KEM key exchange | 8 min | [`./journey/04-advanced/02-pqc-tunnel/demo.sh`](journey/04-advanced/02-pqc-tunnel/demo.sh) |
+| 12 | **CMS Encryption** — Encrypt documents | 8 min | [`./journey/04-advanced/03-cms-encryption/demo.sh`](journey/04-advanced/03-cms-encryption/demo.sh) |
+
+### 🚀 Next Steps
+
+You've managed 12 certificates. In production, you have 10,000. → [QentriQ](https://qentriq.com)
 
 ---
 
@@ -173,47 +150,6 @@ Exemple :
 
   X + Y = 15 ans < Z = 20 ans  →  TU ES EN RETARD !
 ```
-
----
-
-## Détail des missions
-
-### Quick Start : "Ma première PKI"
-Tu crées une CA classique et un certificat TLS. En 10 minutes, tu comprends les bases de la PKI avant de passer au post-quantique.
-
-### La Révélation : "Store Now, Decrypt Later"
-Tu calcules ton urgence de migration avec l'inégalité de Mosca. Tu comprends pourquoi ta CA classique sera cassable.
-
-### Niveau 1 : PQC Basics
-
-| Mission | Titre | Ce que tu fais |
-|---------|-------|----------------|
-| 1 | "Build Your Quantum-Safe Foundation" | Créer une hiérarchie CA 100% ML-DSA |
-| 2 | "Best of Both Worlds" | Créer des certificats hybrides (ECDSA + ML-DSA) |
-
-### Niveau 2 : Applications
-
-| Mission | Titre | Ce que tu fais |
-|---------|-------|----------------|
-| 3 | "Show Me Your Badge" | Authentification mTLS avec ML-DSA |
-| 4 | "Secure Your Releases" | Signer du code/firmware |
-| 5 | "Trust Now, Verify Forever" | Horodater un document pour 2055 |
-
-### Niveau 3 : Ops & Lifecycle
-
-| Mission | Titre | Ce que tu fais |
-|---------|-------|----------------|
-| 6 | "Oops, We Need to Revoke!" | Simuler une compromission, révoquer, générer CRL |
-| 7 | "Is This Cert Still Good?" | Déployer un OCSP responder en temps réel |
-| 8 | "Rotate Without Breaking" | Préparer la migration hybride → full PQC |
-
-### Niveau 4 : Advanced
-
-| Mission | Titre | Ce que tu fais |
-|---------|-------|----------------|
-| 9 | "Sign Today, Verify in 30 Years" | Signatures LTV pour archivage légal |
-| 10 | "Build a PQC Tunnel" | Key encapsulation avec ML-KEM |
-| 11 | "Encrypt Documents" | Chiffrement CMS avec ML-KEM |
 
 ---
 
