@@ -179,7 +179,7 @@ Pas de formation supplémentaire pour les équipes ops."
 
     echo ""
     echo -e "${BOLD}Prochaine mission :${NC} OCSP Live"
-    echo -e "    ${CYAN}./journey/03-ops-lifecycle/02-ocsp/demo.sh${NC}"
+    echo -e "    ${CYAN}./journey/04-ops-lifecycle/02-ocsp/demo.sh${NC}"
     echo ""
 }
 

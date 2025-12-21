@@ -299,7 +299,7 @@ Seuls les algorithmes changent. Et ils sont plus gros."
     echo -e "${BOLD}Prochaine mission :${NC} Hybrid Catalyst"
     echo "  Découvre les certificats hybrides (classique + PQC)"
     echo ""
-    echo -e "    ${CYAN}./journey/01-pqc-basics/02-hybrid/demo.sh${NC}"
+    echo -e "    ${CYAN}./journey/02-pqc-basics/02-hybrid/demo.sh${NC}"
     echo ""
 }
 

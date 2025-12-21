@@ -25,7 +25,7 @@ cd post-quantum-pki-lab
 ./tooling/install.sh
 ```
 
-Then start with: `./quickstart/demo.sh`
+Then start with: `./journey/00-quickstart/demo.sh`
 
 ---
 
@@ -37,31 +37,31 @@ Then start with: `./quickstart/demo.sh`
 
 | # | Mission | Time |
 |---|---------|------|
-| 0 | [**Quick Start**](quickstart/) — Create your first CA (ECDSA) | 10 min |
-| 1 | [**The Revelation**](journey/00-revelation/) — Why PQC matters (SNDL threat) | 8 min |
+| 0 | [**Quick Start**](journey/00-quickstart/) — Create your first CA (ECDSA) | 10 min |
+| 1 | [**The Revelation**](journey/01-revelation/) — Why PQC matters (SNDL threat) | 8 min |
 
 ### 📚 Level 1: PQC Basics
 
 | # | Mission | Time |
 |---|---------|------|
-| 2 | [**Full PQC Chain**](journey/01-pqc-basics/01-full-chain/) — Root → Issuing → TLS (ML-DSA) | 10 min |
-| 3 | [**Hybrid Catalyst**](journey/01-pqc-basics/02-hybrid/) — Dual-key certificate (ECDSA + ML-DSA) | 10 min |
+| 2 | [**Full PQC Chain**](journey/02-pqc-basics/01-full-chain/) — Root → Issuing → TLS (ML-DSA) | 10 min |
+| 3 | [**Hybrid Catalyst**](journey/02-pqc-basics/02-hybrid/) — Dual-key certificate (ECDSA + ML-DSA) | 10 min |
 
 ### 🔧 Level 2: Applications
 
 | # | Mission | Time |
 |---|---------|------|
-| 4 | [**mTLS**](journey/02-applications/01-mtls/) — Mutual authentication (ML-DSA) | 8 min |
-| 5 | [**Code Signing**](journey/02-applications/02-code-signing/) — Sign your releases (ML-DSA) | 8 min |
-| 6 | [**Timestamping**](journey/02-applications/03-timestamping/) — Proof of existence (ML-DSA) | 8 min |
+| 4 | [**mTLS**](journey/03-applications/01-mtls/) — Mutual authentication (ML-DSA) | 8 min |
+| 5 | [**Code Signing**](journey/03-applications/02-code-signing/) — Sign your releases (ML-DSA) | 8 min |
+| 6 | [**Timestamping**](journey/03-applications/03-timestamping/) — Proof of existence (ML-DSA) | 8 min |
 
 ### ⚙️ Level 3: Ops & Lifecycle
 
 | # | Mission | Time |
 |---|---------|------|
-| 7 | [**Revocation**](journey/03-ops-lifecycle/01-revocation/) — CRL generation (Hybrid) | 10 min |
-| 8 | [**OCSP**](journey/03-ops-lifecycle/02-ocsp/) — Real-time status (Hybrid) | 10 min |
-| 9 | [**Crypto-Agility**](journey/03-ops-lifecycle/03-crypto-agility/) — Migrate ECDSA → ML-DSA | 10 min |
+| 7 | [**Revocation**](journey/04-ops-lifecycle/01-revocation/) — CRL generation (Hybrid) | 10 min |
+| 8 | [**OCSP**](journey/04-ops-lifecycle/02-ocsp/) — Real-time status (Hybrid) | 10 min |
+| 9 | [**Crypto-Agility**](journey/04-ops-lifecycle/03-crypto-agility/) — Migrate ECDSA → ML-DSA | 10 min |
 
 ### 🎯 Level 4: Advanced (Optional)
 
@@ -69,9 +69,9 @@ Then start with: `./quickstart/demo.sh`
 
 | # | Mission | Time |
 |---|---------|------|
-| 10 | [**LTV Signatures**](journey/04-advanced/01-ltv-signatures/) — Valid in 30 years (Hybrid) | 8 min |
-| 11 | [**PQC Tunnel**](journey/04-advanced/02-pqc-tunnel/) — Key exchange demo (ML-KEM) | 8 min |
-| 12 | [**CMS Encryption**](journey/04-advanced/03-cms-encryption/) — Encrypt documents (ML-KEM) | 8 min |
+| 10 | [**LTV Signatures**](journey/05-advanced/01-ltv-signatures/) — Valid in 30 years (Hybrid) | 8 min |
+| 11 | [**PQC Tunnel**](journey/05-advanced/02-pqc-tunnel/) — Key exchange demo (ML-KEM) | 8 min |
+| 12 | [**CMS Encryption**](journey/05-advanced/03-cms-encryption/) — Encrypt documents (ML-KEM) | 8 min |
 
 ---
 
@@ -80,15 +80,13 @@ Then start with: `./quickstart/demo.sh`
 ```
 post-quantum-pki-lab/
 ├── reset.sh                    # Reset workspaces
-├── quickstart/                 # Quick Start (10 min)
-│   ├── demo.sh
-│   └── README.md
 ├── journey/                    # Guided journey
-│   ├── 00-revelation/          # "Store Now, Decrypt Later"
-│   ├── 01-pqc-basics/          # "Build Your Foundation" + "Best of Both"
-│   ├── 02-applications/        # mTLS, Code Signing, Timestamping
-│   ├── 03-ops-lifecycle/       # Revocation, OCSP, Crypto-Agility
-│   └── 04-advanced/            # LTV, PQC Tunnel, CMS
+│   ├── 00-quickstart/          # Quick Start (10 min)
+│   ├── 01-revelation/          # "Store Now, Decrypt Later"
+│   ├── 02-pqc-basics/          # "Build Your Foundation" + "Best of Both"
+│   ├── 03-applications/        # mTLS, Code Signing, Timestamping
+│   ├── 04-ops-lifecycle/       # Revocation, OCSP, Crypto-Agility
+│   └── 05-advanced/            # LTV, PQC Tunnel, CMS
 ├── workspace/                  # Your artifacts (persistent)
 │   ├── quickstart/             # Classic CA
 │   ├── level-1/                # PQC CA + Hybrid CA

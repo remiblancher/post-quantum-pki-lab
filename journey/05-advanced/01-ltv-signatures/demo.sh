@@ -201,7 +201,7 @@ même quand les ordinateurs quantiques existeront."
 
     echo ""
     echo -e "${BOLD}Prochaine mission :${NC} PQC Tunnel"
-    echo -e "    ${CYAN}./journey/04-advanced/02-pqc-tunnel/demo.sh${NC}"
+    echo -e "    ${CYAN}./journey/05-advanced/02-pqc-tunnel/demo.sh${NC}"
     echo ""
 }
 
