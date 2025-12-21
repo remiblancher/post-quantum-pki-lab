@@ -181,7 +181,7 @@ ML-DSA garantit qu'elles ne peuvent pas être forgées, même par des ordinateur
 
     echo ""
     echo -e "${BOLD}Prochaine mission :${NC} Timestamping"
-    echo -e "    ${CYAN}./journey/02-applications/03-timestamping/demo.sh${NC}"
+    echo -e "    ${CYAN}./journey/03-applications/03-timestamping/demo.sh${NC}"
     echo ""
 }
 

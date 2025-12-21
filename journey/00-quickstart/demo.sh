@@ -10,7 +10,7 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/../lib/common.sh"
+source "$SCRIPT_DIR/../../lib/common.sh"
 
 # =============================================================================
 # Demo Setup
@@ -166,7 +166,7 @@ echo ""
 echo "  Your ECDSA certificates are being harvested right now."
 echo "  When quantum computers arrive, they'll be decrypted."
 echo ""
-echo -e "  ${CYAN}Next mission:${NC} ./journey/00-revelation/demo.sh"
+echo -e "  ${CYAN}Next mission:${NC} ./journey/01-revelation/demo.sh"
 echo -e "  ${DIM}Discover the \"Store Now, Decrypt Later\" threat.${NC}"
 echo ""
 
