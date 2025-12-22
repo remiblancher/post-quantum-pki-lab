@@ -171,19 +171,27 @@ ML-DSA (Module Lattice Digital Signature Algorithm) provides quantum-resistant d
 
 ### Why Hybrid?
 
-During transition, combine **classical + PQC** algorithms:
+During the transition period, the recommended approach is to combine **classical + PQC** algorithms. This is the "belt and suspenders" strategy:
 
-- Hybrid Key Exchange: X25519 + ML-KEM-768
-- Hybrid Signature: ECDSA + ML-DSA-65
+```
+Hybrid Key Exchange:  X25519 + ML-KEM-768
+Hybrid Signature:     ECDSA + ML-DSA-65
+```
 
-**Why not pure PQC?**
-- PQC algorithms are new — less cryptanalysis history
-- Classical algorithms are battle-tested but quantum-vulnerable
+**Why not pure PQC right now?**
 
-**Benefits:**
-- If classical breaks → PQC protects
-- If PQC has unknown weakness → classical protects
-- Maintains backwards compatibility
+PQC algorithms are mathematically sound, but they're new. Classical algorithms like ECDSA have decades of cryptanalysis — researchers worldwide have tried (and failed) to break them. PQC algorithms don't have this track record yet. A hybrid approach hedges against the unknown.
+
+**The security guarantee:**
+
+| Scenario | Classical | PQC | Hybrid Result |
+|----------|-----------|-----|---------------|
+| No quantum computer | ✓ Secure | ✓ Secure | ✓ Secure |
+| Quantum computer exists | ✗ Broken | ✓ Secure | ✓ Secure |
+| PQC weakness discovered | ✓ Secure | ✗ Broken | ✓ Secure |
+| Both fail | ✗ Broken | ✗ Broken | ✗ Broken |
+
+**Result:** Hybrid fails only if BOTH algorithms fail simultaneously — an extremely unlikely scenario.
 
 ---
 
