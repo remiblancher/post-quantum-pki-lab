@@ -4,6 +4,14 @@
 
 > **Visual diagrams:** See [`diagram.txt`](diagram.txt) for detailed ASCII diagrams of the SNDL attack, Mosca's inequality, and ML-KEM comparison.
 
+## Why Change Algorithms?
+
+You just created a classical PKI with ECDSA. It works. So why change?
+
+Because **quantum computers will break everything**.
+
+---
+
 ## The Scenario
 
 *"Our sensitive data is encrypted. Why should I worry about quantum computers that don't exist yet?"*
@@ -43,7 +51,7 @@ TODAY                           FUTURE (5-15 years?)
 
 *\*But what about the content? User actions, exchanged data, and browsing patterns may remain sensitive long after the session ends.*
 
-**Rule of thumb:** If your data needs to stay secret for more than 10 years, you need PQC encryption **now**.
+**If your data must remain secret for more than 10 years, you're already late.**
 
 ---
 
