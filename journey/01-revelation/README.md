@@ -22,7 +22,7 @@ Quantum computers will break both **encryption** and **signatures**:
 
 ### SNDL: Store Now, Decrypt Later
 
-Adversaries are **recording your encrypted traffic today**. When quantum computers arrive, they'll decrypt it all.
+Adversaries are **recording your encrypted traffic today**. When quantum computers arrive, they'll decrypt it all. This is called **Store Now, Decrypt Later (SNDL)** — also known as **Harvest Now, Decrypt Later (HNDL)**.
 
 ```
 TODAY                           FUTURE (5-15 years?)
@@ -46,7 +46,7 @@ TODAY                           FUTURE (5-15 years?)
 
 ### TNFL: Trust Now, Forge Later
 
-Signatures you trust today can be **forged** once quantum computers arrive. A forged signature is instant and undetectable — malicious firmware signed with a forged key installs without question.
+Signatures you trust today can be **forged** once quantum computers arrive. This is called **Trust Now, Forge Later (TNFL)** — also known as **Sign Today, Forge Tomorrow (STFT)**. A forged signature is instant and undetectable — malicious firmware signed with a forged key installs without question.
 
 ```
 TODAY                           FUTURE (5-15 years?)
