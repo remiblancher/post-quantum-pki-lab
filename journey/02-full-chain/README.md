@@ -63,42 +63,40 @@ This demo shows a production-ready 3-level PKI hierarchy using only post-quantum
 
 ```bash
 # Initialize the root CA with highest security level
-pki init-ca --name "PQC Root CA" \
-    --org "Demo Organization" \
-    --algorithm ml-dsa-87 \
-    --dir ./pqc-root-ca
+pki init-ca --profile profiles/pqc-root-ca.yaml \
+    --name "PQC Root CA" \
+    --dir output/pqc-root-ca
 
 # Inspect
-pki info ./pqc-root-ca/ca.crt
+pki info output/pqc-root-ca/ca.crt
 ```
 
 ### Step 2: Create Issuing CA (ML-DSA-65)
 
 ```bash
 # Create issuing CA signed by root
-pki init-ca --name "PQC Issuing CA" \
-    --org "Demo Organization" \
-    --algorithm ml-dsa-65 \
-    --parent ./pqc-root-ca \
-    --dir ./pqc-issuing-ca
+pki init-ca --profile profiles/pqc-issuing-ca.yaml \
+    --name "PQC Issuing CA" \
+    --parent output/pqc-root-ca \
+    --dir output/pqc-issuing-ca
 
 # Inspect
-pki info ./pqc-issuing-ca/ca.crt
+pki info output/pqc-issuing-ca/ca.crt
 ```
 
 ### Step 3: Issue TLS Server Certificate
 
 ```bash
 # Issue end-entity certificate for TLS server
-pki issue --ca-dir ./pqc-issuing-ca \
-    --profile tls-server \
+pki issue --ca-dir output/pqc-issuing-ca \
+    --profile profiles/pqc-tls-server.yaml \
     --cn server.example.com \
     --dns server.example.com \
-    --out server.crt \
-    --key-out server.key
+    --out output/server.crt \
+    --key-out output/server.key
 
 # Inspect
-pki info server.crt
+pki info output/server.crt
 ```
 
 > **Tip:** For detailed ASN.1 output, use `openssl x509 -in <cert> -text -noout`
@@ -168,7 +166,7 @@ Use SLH-DSA when:
 
 - [NIST FIPS 204: ML-DSA Standard](https://csrc.nist.gov/pubs/fips/204/final)
 - [NIST FIPS 205: SLH-DSA Standard](https://csrc.nist.gov/pubs/fips/205/final)
-- [NSA CNSA 2.0 Guidelines](https://media.defense.gov/2022/Sep/07/2003071834/-1/-1/0/CSA_CNSA_2.0_ALGORITHMS_.PDF)
+- [NSA CNSA 2.0 Guidelines](https://media.defense.gov/2025/May/30/2003728741/-1/-1/0/CSA_CNSA_2.0_ALGORITHMS.PDF)
 
 ---
 
