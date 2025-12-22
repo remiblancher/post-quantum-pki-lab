@@ -1,6 +1,6 @@
-# Hybrid Certificates (Catalyst)
+# Hybrid PQC: Best of Both Worlds
 
-## Best of Both Worlds: Classical + Post-Quantum
+## Hybrid Certificates: Classical + Post-Quantum
 
 > **Key Message:** You don't choose between classical and PQC. You stack them.
 
