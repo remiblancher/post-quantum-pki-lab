@@ -157,23 +157,32 @@ A Catalyst certificate (ITU-T X.509 Section 9.8) contains dual keys:
 
 ## Catalyst vs Composite
 
-Two approaches to hybrid certificates exist:
+Two approaches to implement hybrid certificates:
 
 | Approach | Description | Standard |
 |----------|-------------|----------|
-| **Catalyst** | Single cert, dual keys in extensions | ITU-T X.509 9.8 |
-| **Composite** | Two separate certs, linked | IETF draft |
+| **Catalyst** | Single cert, dual keys in extensions (separate) | ITU-T X.509 9.8 |
+| **Composite** | Single cert, fused algorithm (combined OID) | IETF draft |
+
+```
+CATALYST                              COMPOSITE
+────────                              ─────────
+PublicKey: ECDSA (primary)            PublicKey: ECDSA-ML-DSA (composite)
+Extension: AltKey (ML-DSA)              └─ both keys fused
+Signature: ECDSA (primary)            Signature: composite
+Extension: AltSig (ML-DSA)              └─ both sigs fused
+```
 
 This demo uses **Catalyst** because:
-- Single certificate simplifies deployment
+- Clear separation of classical and PQC
+- Better backwards compatibility (legacy ignores extensions)
 - Works with existing certificate management
-- Better backwards compatibility
 
 ---
 
 ## What You Learned
 
-1. **Hybrid = both:** Classical + PQC in one certificate
+1. **Hybrid:** The capability to combine classical + PQC cryptography
 2. **Zero breaking changes:** Legacy clients work unchanged
 3. **Defense in depth:** If one algorithm fails, the other protects
 4. **Smooth migration:** No "flag day" required
