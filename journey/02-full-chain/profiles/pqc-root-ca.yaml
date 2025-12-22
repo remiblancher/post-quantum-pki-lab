@@ -1,0 +1,28 @@
+# Post-Quantum Root CA - ML-DSA-87
+# Maximum security for long-lived root CA
+# NIST Level 5 (~256-bit classical equivalent)
+
+name: pqc-root-ca
+description: "Root CA ML-DSA-87 (FIPS 204)"
+
+subject:
+  fixed:
+    c: "FR"
+    o: "Demo Organization"
+
+validity: 7300d  # 20 years
+
+signature:
+  algorithms:
+    - ml-dsa-87
+
+extensions:
+  basicConstraints:
+    critical: true
+    ca: true
+    pathLen: 1
+  keyUsage:
+    critical: true
+    values:
+      - keyCertSign
+      - cRLSign
