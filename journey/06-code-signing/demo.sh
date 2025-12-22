@@ -1,210 +1,160 @@
 #!/bin/bash
 # =============================================================================
-#  NIVEAU 2 - MISSION 4 : Code Signing PQC
+#  UC-06: Code Signing - Signatures That Outlive the Threat
 #
-#  Objectif : Signer du code avec ML-DSA pour une protection long terme.
+#  Post-quantum code signing with ML-DSA
+#  Sign binaries and verify integrity
 #
-#  Algorithme : ML-DSA-65
+#  Key Message: Software signatures must remain valid for years.
+#               PQC ensures they can't be forged by future quantum computers.
 # =============================================================================
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-LAB_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
+source "$SCRIPT_DIR/../../lib/common.sh"
 
-source "$LAB_ROOT/lib/colors.sh"
-source "$LAB_ROOT/lib/interactive.sh"
-source "$LAB_ROOT/lib/workspace.sh"
-
-PKI_BIN="$LAB_ROOT/bin/pki"
+setup_demo "PQC Code Signing"
 
 # =============================================================================
-# Bannière
+# Step 1: Create Code Signing CA
 # =============================================================================
 
-show_welcome() {
-    clear
-    echo ""
-    echo -e "${BOLD}${BLUE}"
-    echo "  ╔═══════════════════════════════════════════════════════════════╗"
-    echo "  ║                                                               ║"
-    echo "  ║   ✍️  NIVEAU 2 - MISSION 4                                    ║"
-    echo "  ║                                                               ║"
-    echo "  ║   Code Signing Post-Quantum                                   ║"
-    echo "  ║                                                               ║"
-    echo "  ╚═══════════════════════════════════════════════════════════════╝"
-    echo -e "${NC}"
-    echo ""
-    echo -e "  ${BOLD}Durée estimée :${NC} 8 minutes"
-    echo -e "  ${BOLD}Algorithme    :${NC} ML-DSA-65"
-    echo ""
-    echo "  Le problème :"
-    echo "    \"Un binaire signé en 2024 sera peut-être vérifié en 2034."
-    echo "     Si les ordinateurs quantiques forgent les signatures ECDSA..."
-    echo "     Des malwares pourraient paraître légitimes.\""
-    echo ""
-    echo "  La solution : Signer avec ML-DSA (quantum-resistant)"
-    echo ""
-}
+print_step "Step 1: Create Code Signing CA"
+
+echo "  A code signing CA issues certificates for software publishers."
+echo "  We use ML-DSA-65 for quantum-resistant signatures."
+echo ""
+
+run_cmd "pki init-ca --name \"Code Signing CA\" --algorithm ml-dsa-65 --dir output/code-ca"
+
+echo ""
+
+pause
 
 # =============================================================================
-# Missions
+# Step 2: Issue Code Signing Certificate
 # =============================================================================
 
-mission_1_ca() {
-    mission_start 1 "Préparer la CA Code Signing"
+print_step "Step 2: Issue Code Signing Certificate"
 
-    local pqc_ca="$WORKSPACE_ROOT/niveau-1/pqc-issuing-ca"
+echo "  The code signing certificate has:"
+echo "    - Extended Key Usage: codeSigning"
+echo "    - Key Usage: digitalSignature"
+echo ""
 
-    if [[ -f "$pqc_ca/ca.crt" ]]; then
-        echo -e "  ${GREEN}[OK]${NC} Réutilisation de ta CA PQC du Niveau 1"
-        CODE_CA="$pqc_ca"
-    else
-        CODE_CA="$LEVEL_WORKSPACE/code-signing-ca"
-        if [[ ! -f "$CODE_CA/ca.crt" ]]; then
-            teach_cmd "pki init-ca --name \"Code Signing CA\" --algorithm ml-dsa-65 --dir $CODE_CA" \
-                      "CA dédiée à la signature de code"
-        fi
-    fi
+run_cmd "pki issue --ca-dir output/code-ca --profile ml-dsa-kem/code-signing --cn \"ACME Software\" --out output/code-signing.crt --key-out output/code-signing.key"
 
-    validate_file "$CODE_CA/ca.crt" "CA Code Signing"
-    mission_complete "CA Code Signing prête"
-}
+echo ""
 
-mission_2_cert() {
-    mission_start 2 "Émettre un certificat Code Signing"
+# Show certificate info
+if [[ -f "output/code-signing.crt" ]]; then
+    cert_size=$(wc -c < "output/code-signing.crt" | tr -d ' ')
+    echo -e "  ${CYAN}Certificate size:${NC} $cert_size bytes"
+fi
 
-    local cert="$LEVEL_WORKSPACE/code-signing.crt"
-    local key="$LEVEL_WORKSPACE/code-signing.key"
+echo ""
 
-    echo "  Profil : ml-dsa/code-signing"
-    echo "    - Extended Key Usage : codeSigning"
-    echo "    - Valide pour signer des binaires, scripts, firmware"
-    echo ""
-
-    if [[ -f "$cert" ]]; then
-        echo -e "${YELLOW}[INFO]${NC} Le certificat existe déjà !"
-    else
-        teach_cmd "pki issue --ca-dir $CODE_CA --profile ml-dsa/code-signing --cn \"ACME Software\" --out $cert --key-out $key" \
-                  "Certificat pour signer du code avec ML-DSA-65"
-    fi
-
-    validate_file "$cert" "Certificat Code Signing"
-    mission_complete "Certificat Code Signing émis"
-}
-
-mission_3_sign() {
-    mission_start 3 "Signer un binaire"
-
-    local cert="$LEVEL_WORKSPACE/code-signing.crt"
-    local key="$LEVEL_WORKSPACE/code-signing.key"
-    local firmware="$LEVEL_WORKSPACE/firmware-v1.0.bin"
-    local signature="$LEVEL_WORKSPACE/firmware-v1.0.p7s"
-
-    # Créer un faux firmware
-    if [[ ! -f "$firmware" ]]; then
-        echo "  Création d'un firmware de test (100 KB)..."
-        dd if=/dev/urandom of="$firmware" bs=1024 count=100 2>/dev/null
-    fi
-
-    echo ""
-    echo "  Format de signature : CMS/PKCS#7 (standard industrie)"
-    echo ""
-
-    if [[ -f "$signature" ]]; then
-        echo -e "${YELLOW}[INFO]${NC} La signature existe déjà !"
-    else
-        teach_cmd "pki cms sign --data $firmware --cert $cert --key $key -o $signature" \
-                  "Signature CMS détachée du firmware"
-    fi
-
-    validate_file "$signature" "Signature CMS (.p7s)"
-
-    local sig_size=$(wc -c < "$signature" | tr -d ' ')
-    echo ""
-    echo -e "  ${CYAN}Taille de la signature :${NC} $sig_size bytes"
-    echo -e "  ${DIM}(La signature ML-DSA fait ~3300 bytes)${NC}"
-
-    mission_complete "Firmware signé avec ML-DSA-65"
-}
-
-mission_4_verify() {
-    mission_start 4 "Vérifier la signature"
-
-    local firmware="$LEVEL_WORKSPACE/firmware-v1.0.bin"
-    local signature="$LEVEL_WORKSPACE/firmware-v1.0.p7s"
-
-    echo "  Simulation de vérification côté client..."
-    echo ""
-
-    demo_cmd "$PKI_BIN cms verify --signature $signature --data $firmware --ca $CODE_CA/ca.crt" \
-             "Vérification de la signature CMS..."
-
-    if "$PKI_BIN" cms verify --signature "$signature" --data "$firmware" --ca "$CODE_CA/ca.crt" > /dev/null 2>&1; then
-        echo ""
-        echo -e "  ${GREEN}✓${NC} Signature valide !"
-        echo -e "  ${GREEN}✓${NC} Le firmware n'a pas été modifié"
-        echo -e "  ${GREEN}✓${NC} Signé par un certificat de confiance"
-    fi
-
-    echo ""
-    echo "  Cette signature restera valide même quand les ordinateurs"
-    echo "  quantiques pourront forger des signatures ECDSA."
-
-    mission_complete "Signature vérifiée"
-}
+pause
 
 # =============================================================================
-# Récapitulatif
+# Step 3: Sign a Binary
 # =============================================================================
 
-show_recap_final() {
-    echo ""
-    echo -e "${BOLD}${BG_GREEN}${WHITE} MISSION 4 TERMINÉE ! ${NC}"
-    echo ""
+print_step "Step 3: Sign a Binary"
 
-    show_recap "Ce que tu as accompli :" \
-        "Certificat Code Signing avec ML-DSA-65" \
-        "Signature CMS d'un firmware" \
-        "Vérification de l'intégrité"
+echo "  Creating a test firmware (100 KB)..."
+echo ""
 
-    echo -e "  ${BOLD}Durée de vie des logiciels signés :${NC}"
-    echo ""
-    echo "    Firmware IoT         : 10-20 ans  → ${RED}PQC maintenant${NC}"
-    echo "    Systèmes industriels : 15-30 ans  → ${RED}PQC maintenant${NC}"
-    echo "    Dispositifs médicaux : 10-15 ans  → ${RED}PQC maintenant${NC}"
-    echo "    Logiciels desktop    : 5-10 ans   → ${YELLOW}Planifier PQC${NC}"
-    echo ""
+dd if=/dev/urandom of=output/firmware.bin bs=1024 count=100 2>/dev/null
 
-    show_lesson "Les signatures de code doivent rester valides pendant des années.
-ML-DSA garantit qu'elles ne peuvent pas être forgées, même par des ordinateurs quantiques."
+firmware_size=$(wc -c < "output/firmware.bin" | tr -d ' ')
+echo -e "  ${CYAN}Firmware size:${NC} $firmware_size bytes"
+echo ""
 
-    echo ""
-    echo -e "${BOLD}Prochaine mission :${NC} Timestamping"
-    echo -e "    ${CYAN}./journey/03-applications/03-timestamping/demo.sh${NC}"
-    echo ""
-}
+echo "  Signing with CMS/PKCS#7 format (industry standard)..."
+echo ""
+
+run_cmd "pki cms sign --data output/firmware.bin --cert output/code-signing.crt --key output/code-signing.key -o output/firmware.p7s"
+
+echo ""
+
+if [[ -f "output/firmware.p7s" ]]; then
+    sig_size=$(wc -c < "output/firmware.p7s" | tr -d ' ')
+    echo -e "  ${CYAN}Signature size:${NC} $sig_size bytes"
+    echo -e "  ${DIM}(ML-DSA-65 signature is ~3,293 bytes)${NC}"
+fi
+
+echo ""
+
+pause
 
 # =============================================================================
-# Main
+# Step 4: Verify the Signature
 # =============================================================================
 
-main() {
-    [[ -x "$PKI_BIN" ]] || { echo "PKI non installé"; exit 1; }
-    init_workspace "niveau-2"
+print_step "Step 4: Verify the Signature"
 
-    show_welcome
-    wait_enter "Appuie sur Entrée pour commencer..."
+echo "  Simulating client-side verification..."
+echo ""
 
-    mission_1_ca
-    wait_enter
-    mission_2_cert
-    wait_enter
-    mission_3_sign
-    wait_enter
-    mission_4_verify
+run_cmd "pki cms verify --signature output/firmware.p7s --data output/firmware.bin"
 
-    show_recap_final
-}
+echo ""
+echo -e "  ${GREEN}✓${NC} Signature valid!"
+echo -e "  ${GREEN}✓${NC} Firmware has not been modified"
+echo -e "  ${GREEN}✓${NC} Signed by ACME Software (code signing certificate)"
+echo ""
 
-main "$@"
+pause
+
+# =============================================================================
+# Step 5: Tamper and Verify Again
+# =============================================================================
+
+print_step "Step 5: Tamper and Verify Again"
+
+echo -e "  ${RED}Simulating malware injection...${NC}"
+echo ""
+
+echo "MALWARE_PAYLOAD" >> output/firmware.bin
+
+echo -e "  ${DIM}$ echo \"MALWARE_PAYLOAD\" >> output/firmware.bin${NC}"
+echo ""
+
+echo "  Verifying the tampered firmware..."
+echo ""
+
+echo -e "  ${DIM}$ pki cms verify --signature output/firmware.p7s --data output/firmware.bin${NC}"
+echo ""
+
+if pki cms verify --signature output/firmware.p7s --data output/firmware.bin > /dev/null 2>&1; then
+    echo -e "  ${GREEN}✓${NC} Signature valid"
+else
+    echo -e "  ${RED}✗${NC} Signature verification FAILED!"
+    echo -e "  ${RED}✗${NC} Firmware has been modified"
+fi
+
+echo ""
+echo "  ┌─────────────────────────────────────────────────────────────────┐"
+echo "  │  SIGNATURE VERIFICATION COMPARISON                             │"
+echo "  ├─────────────────────────────────────────────────────────────────┤"
+echo -e "  │  BEFORE tampering  →  ${GREEN}VALID${NC}   (integrity confirmed)          │"
+echo -e "  │  AFTER tampering   →  ${RED}INVALID${NC} (modification detected)        │"
+echo "  │                                                                 │"
+echo "  │  The signature protects against supply chain attacks!          │"
+echo "  └─────────────────────────────────────────────────────────────────┘"
+echo ""
+
+# =============================================================================
+# Conclusion
+# =============================================================================
+
+print_key_message "Software signatures must remain valid for years. PQC ensures they can't be forged by future quantum computers."
+
+show_lesson "ML-DSA signatures remain unforgeable even by quantum computers.
+Code signatures are long-lived (10+ years for IoT/firmware).
+CMS/PKCS#7 format is the industry standard for code signing.
+Size overhead is negligible for binaries (~3 KB signature)."
+
+show_footer
