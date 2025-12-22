@@ -1,26 +1,21 @@
-# Mission 6: "Oops, We Need to Revoke!"
+# Certificate Revocation
 
-## Revocation & CRL with Hybrid
+## Incident Response: When Keys Are Compromised
 
-### The Problem
+> **Key Message:** Revoking a PQC certificate works exactly like revoking a classical one. Same workflow, same commands.
 
-It's 3 AM. You receive an alert:
+---
 
-```
-🚨 SECURITY ALERT
-   The private key for server.example.com
-   was detected on GitHub.
-```
+## The Scenario
 
-What do you do?
+*"We had a security incident. A private key was compromised. How do we revoke a post-quantum certificate?"*
 
-### The Threat
+The same way you revoke any certificate. PKI operations are algorithm-agnostic.
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
-│  COMPROMISED PRIVATE KEY: The attacker can do anything          │
-│                                                                  │
+│  COMPROMISED KEY: The attacker can impersonate your server      │
 │                                                                  │
 │    Attacker                                                      │
 │        │                                                         │
@@ -28,112 +23,31 @@ What do you do?
 │        ▼                                                         │
 │    ┌──────────┐                                                  │
 │    │ Fake     │  The attacker can now:                          │
-│    │ Server   │                                                  │
-│    │          │  1. Impersonate server.example.com              │
-│    │          │  2. Intercept client traffic                    │
-│    │          │  3. Sign malicious code                         │
-│    │          │  4. Steal data in transit                       │
+│    │ Server   │  - Impersonate server.example.com               │
+│    │          │  - Intercept client traffic                     │
+│    │          │  - Sign malicious content                       │
 │    └──────────┘                                                  │
 │                                                                  │
 │    The certificate is still technically "valid".                │
-│    Clients trust the attacker.                                  │
-│                                                                  │
-└──────────────────────────────────────────────────────────────────┘
-```
-
-**Impact**:
-- Man-in-the-middle
-- Credential theft
-- Malware injection
-- Destroyed reputation
-
-### The Solution: Revoke Immediately
-
-```
-┌──────────────────────────────────────────────────────────────────┐
-│                                                                  │
-│  REVOCATION: Invalidate trust in a certificate                  │
-│                                                                  │
-│                                                                  │
-│    1. CA adds the certificate to the CRL                        │
-│                                                                  │
-│       ┌─────────────────────────────────────────┐               │
-│       │  CRL (Certificate Revocation List)      │               │
-│       │  ─────────────────────────────────      │               │
-│       │                                         │               │
-│       │  Serial: 12345                          │               │
-│       │  Reason: keyCompromise                  │               │
-│       │  Date: 2024-12-15T03:45:00Z            │               │
-│       │                                         │               │
-│       │  Signature: CA (ECDSA + ML-DSA)        │               │
-│       └─────────────────────────────────────────┘               │
-│                                                                  │
-│    2. Clients check the CRL                                     │
-│                                                                  │
-│       Client                         CRL                         │
-│         │                             │                          │
-│         │  "Is this cert valid?"      │                          │
-│         │  ─────────────────────────► │                          │
-│         │                             │                          │
-│         │  ◄───────────────────────── │                          │
-│         │  "No, revoked for           │                          │
-│         │   keyCompromise"            │                          │
-│         │                             │                          │
-│         ▼                                                        │
-│       ❌ Connection refused                                      │
+│    Solution: REVOKE IT IMMEDIATELY                              │
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Revocation Reasons
+## What This Demo Shows
 
-| Code | Reason | When to use |
-|------|--------|-------------|
-| `keyCompromise` | Key stolen | Leak on GitHub, hacking |
-| `caCompromise` | CA compromised | Major incident |
-| `affiliationChanged` | Affiliation changed | Employee leaves company |
-| `superseded` | Superseded | New certificate issued |
-| `cessationOfOperation` | Cessation of operation | Service stopped |
-| `certificateHold` | Temporary suspension | Investigation in progress |
+| Operation | Classical | Post-Quantum |
+|-----------|-----------|--------------|
+| Issue certificate | Same workflow | Same workflow |
+| Revoke certificate | Same workflow | Same workflow |
+| Generate CRL | Same workflow | Same workflow |
+| Verify revocation | Same workflow | Same workflow |
 
 ---
 
-## What You'll Do
-
-1. **Issue a certificate** with your hybrid CA
-2. **Simulate a compromise**: the key is stolen
-3. **Revoke the certificate** with reason `keyCompromise`
-4. **Generate a CRL** signed hybrid
-5. **Verify**: the certificate is now rejected
-
----
-
-## Timeline of a Real Incident
-
-```
-03:00  Alert: key detected on GitHub
-03:05  Identify the affected certificate
-03:10  Revocation via CA
-03:15  CRL updated and published
-03:20  Clients start rejecting the cert
-03:30  New certificate issued (new key)
-03:35  Incident closed
-```
-
----
-
-## What You'll Have at the End
-
-- Revoked certificate
-- Signed CRL (ECDSA + ML-DSA)
-- Verification proof: cert rejected
-- Understanding of the incident workflow
-
----
-
-## Run the Mission
+## Run the Demo
 
 ```bash
 ./demo.sh
@@ -141,4 +55,111 @@ What do you do?
 
 ---
 
-← [Timestamping](../06-timestamping/) | [Next: OCSP →](../08-ocsp/)
+## The Commands
+
+### Step 1: Create CA and Issue Certificate
+
+```bash
+# Create PQC CA
+pki init-ca --profile profiles/pqc-ca.yaml \
+    --name "PQC CA" \
+    --dir output/pqc-ca
+
+# Issue TLS certificate
+pki issue --ca-dir output/pqc-ca \
+    --profile profiles/pqc-tls-server.yaml \
+    --cn server.example.com \
+    --dns server.example.com \
+    --out output/server.crt \
+    --key-out output/server.key
+
+# Get the serial number
+openssl x509 -in output/server.crt -noout -serial
+```
+
+### Step 2: Revoke Certificate
+
+```bash
+# Revoke certificate with reason
+pki revoke <serial> --ca-dir output/pqc-ca --reason keyCompromise
+
+# Generate updated CRL
+pki crl generate --ca-dir output/pqc-ca
+```
+
+### Step 3: Verify Revocation
+
+```bash
+# Verify certificate against CRL (should fail)
+pki verify --cert output/server.crt \
+    --ca output/pqc-ca/ca.crt \
+    --crl output/pqc-ca/crl/ca.crl
+```
+
+---
+
+## Revocation Reasons (RFC 5280)
+
+| Code | Reason | When to Use |
+|------|--------|-------------|
+| 0 | unspecified | Default, no specific reason |
+| 1 | keyCompromise | Private key exposed |
+| 2 | cACompromise | CA's key was compromised |
+| 3 | affiliationChanged | Subject's organization changed |
+| 4 | superseded | Replaced by new certificate |
+| 5 | cessationOfOperation | Service no longer needed |
+
+---
+
+## Incident Response Workflow
+
+```
+1. DETECT
+   └─► Key compromise discovered (leak, breach, etc.)
+
+2. ASSESS
+   └─► Identify affected certificates (serial numbers)
+
+3. REVOKE
+   └─► pki revoke <serial> --ca-dir <ca> --reason keyCompromise
+
+4. PUBLISH
+   └─► pki crl generate --ca-dir <ca>
+
+5. NOTIFY
+   └─► Inform relying parties, update distribution points
+
+6. REMEDIATE
+   └─► Issue replacement certificates with new keys
+```
+
+---
+
+## Size Comparison
+
+| Component | Classical (ECDSA) | Post-Quantum (ML-DSA) | Ratio |
+|-----------|-------------------|----------------------|-------|
+| CRL signature | ~96 bytes | ~3,293 bytes | ~34x |
+| CRL total size | ~500 bytes | ~3,800 bytes | ~7.6x |
+
+*CRLs are larger due to PQC signatures, but the protocol is unchanged.*
+
+---
+
+## What You Learned
+
+1. **Algorithm-agnostic:** Revocation workflow is identical for classical and PQC
+2. **CRLs are signed:** PQC CRLs have larger signatures
+3. **Same commands:** No new tools or procedures needed
+4. **Ops teams:** No retraining required for basic PKI operations
+
+---
+
+## References
+
+- [RFC 5280: X.509 PKI Certificate and CRL Profile](https://datatracker.ietf.org/doc/html/rfc5280)
+- [NIST SP 800-57: Key Management Guidelines](https://csrc.nist.gov/publications/detail/sp/800-57-part-1/rev-5/final)
+
+---
+
+← [Hybrid](../03-hybrid/) | [Next: OCSP →](../05-ocsp/)
