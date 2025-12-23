@@ -1,13 +1,14 @@
-# Mission 8: "Rotate Without Breaking"
+# PQC Crypto-Agility: Migrate Without Breaking
 
-## Crypto-Agility: Migrate Without Breaking
+## The 3-Phase Migration Strategy
 
-### The Problem
+> **Key Message:** Crypto-agility is the ability to change algorithms without breaking your system. Hybrid is the bridge.
 
-You have 10,000 ECDSA certificates in production.
-You need to migrate to ML-DSA.
+---
 
-But you can't break everything at once.
+## The Scenario
+
+*"We have 10,000 ECDSA certificates in production. We need to migrate to ML-DSA. But we can't break everything at once."*
 
 ```
 CURRENT SITUATION
@@ -21,7 +22,7 @@ CURRENT SITUATION
   │  ┌───────────┐  ┌───────────┐  ┌───────────┐              │
   │  │  Server   │  │  Server   │  │  Server   │  ... x 500   │
   │  │  ECDSA    │  │  ECDSA    │  │  ECDSA    │              │
-  │  └───────────┘  └───────────┘  └───────────┘              │
+  │  │  └───────────┘  └───────────┘  └───────────┘              │
   │                                                             │
   │  ┌───────────┐  ┌───────────┐  ┌───────────┐              │
   │  │  Client   │  │  Client   │  │  Client   │  ... x 9500  │
@@ -34,7 +35,9 @@ CURRENT SITUATION
   How to migrate without cutting service?
 ```
 
-### The Threat
+---
+
+## The Problem
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
@@ -58,13 +61,15 @@ CURRENT SITUATION
 └──────────────────────────────────────────────────────────────────┘
 ```
 
-### The Solution: 3-Phase Migration
+---
+
+## The Solution: 3-Phase Migration
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
-│  PHASE 1: PREPARATION (today)                                   │
-│  ───────────────────────────                                    │
+│  PHASE 1: CLASSIC (today)                                       │
+│  ────────────────────────                                       │
 │                                                                  │
 │  ┌─────────┐                                                    │
 │  │  ECDSA  │  Status quo. Inventory your systems.              │
@@ -110,7 +115,7 @@ CURRENT SITUATION
 
 ---
 
-## Crypto-Agility: Definition
+## What is Crypto-Agility?
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -148,13 +153,24 @@ CURRENT SITUATION
 
 ---
 
-## What You'll Do
+## What This Demo Shows
 
-1. **Create a classic CA** (Phase 1: ECDSA)
-2. **Create a hybrid CA** (Phase 2: ECDSA + ML-DSA)
-3. **Create a full PQC CA** (Phase 3: ML-DSA)
-4. **Test interoperability**: legacy vs modern client
-5. **Simulate a rollback**: from hybrid to classic
+| Step | What Happens | Key Concept |
+|------|--------------|-------------|
+| 1 | Explain crypto-agility | Definition and 3-phase strategy |
+| 2 | Create Classic CA (ECDSA) | Phase 1: Current state |
+| 3 | Create Hybrid CA (ECDSA + ML-DSA) | Phase 2: Transition |
+| 4 | Create Full PQC CA (ML-DSA) | Phase 3: Target state |
+| 5 | Test interoperability | OpenSSL vs pki verify |
+| 6 | Compare certificate sizes | Size growth across phases |
+
+---
+
+## Run the Demo
+
+```bash
+./demo.sh
+```
 
 ---
 
@@ -171,21 +187,34 @@ CURRENT SITUATION
 
 ---
 
-## What You'll Have at the End
+## Size Comparison
 
-- 3 CAs (classic, hybrid, PQC)
-- Interoperability proof
-- Concrete migration plan
-- Understanding of rollback
+| Phase | Algorithm | CA Cert | Server Cert | Notes |
+|-------|-----------|---------|-------------|-------|
+| Phase 1 | ECDSA P-256 | ~600 B | ~800 B | Compact |
+| Phase 2 | ECDSA + ML-DSA | ~5 KB | ~6 KB | Hybrid |
+| Phase 3 | ML-DSA-65 | ~4 KB | ~5 KB | Full PQC |
 
----
-
-## Run the Mission
-
-```bash
-./demo.sh
-```
+*Size increase is acceptable for the security benefits.*
 
 ---
 
-← [OCSP](../08-ocsp/) | [Next: LTV Signatures →](../10-ltv-signatures/)
+## What You Learned
+
+1. **Crypto-agility** is the ability to change algorithms without breaking your system
+2. **Never do "big bang"** migration - it's too risky
+3. **Hybrid certificates** provide 100% compatibility during transition
+4. **Phase 2 (Hybrid)** is the critical bridge between classic and PQC
+5. **Rollback capability** is essential for safe migration
+
+---
+
+## References
+
+- [NIST Post-Quantum Cryptography](https://csrc.nist.gov/projects/post-quantum-cryptography)
+- [NIST FIPS 204: ML-DSA Standard](https://csrc.nist.gov/pubs/fips/204/final)
+- [Catalyst Hybrid Certificates](https://www.ietf.org/archive/id/draft-ounsworth-pq-composite-sigs-13.html)
+
+---
+
+← [CMS Encryption](../09-cms-encryption/) | [Next: mTLS →](../11-mtls/)

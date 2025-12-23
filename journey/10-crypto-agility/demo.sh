@@ -1,254 +1,251 @@
 #!/bin/bash
 # =============================================================================
-#  NIVEAU 3 - MISSION 8 : Crypto-Agility
+#  UC-10: Crypto-Agility - Migrate Without Breaking
 #
-#  Objectif : Comprendre et pratiquer la rotation d'algorithmes.
+#  Demonstrate the 3-phase migration strategy:
+#  Phase 1: Classic (ECDSA) → Phase 2: Hybrid → Phase 3: Full PQC
 #
-#  Algorithme : HYBRIDE → la clé de la transition
+#  Key Message: Crypto-agility is the ability to change algorithms
+#               without breaking your system.
 # =============================================================================
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-LAB_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
+source "$SCRIPT_DIR/../../lib/common.sh"
 
-source "$LAB_ROOT/lib/colors.sh"
-source "$LAB_ROOT/lib/interactive.sh"
-source "$LAB_ROOT/lib/workspace.sh"
+setup_demo "PQC Crypto-Agility"
 
-PKI_BIN="$LAB_ROOT/bin/pki"
+# =============================================================================
+# Step 1: Understand Crypto-Agility
+# =============================================================================
 
-show_welcome() {
-    clear
-    echo ""
-    echo -e "${BOLD}${PURPLE}"
-    echo "  ╔═══════════════════════════════════════════════════════════════╗"
-    echo "  ║                                                               ║"
-    echo "  ║   🔄  NIVEAU 3 - MISSION 8                                    ║"
-    echo "  ║                                                               ║"
-    echo "  ║   Crypto-Agility : Préparer la transition                     ║"
-    echo "  ║                                                               ║"
-    echo "  ╚═══════════════════════════════════════════════════════════════╝"
-    echo -e "${NC}"
-    echo ""
-    echo "  Crypto-agility = capacité à changer d'algorithme sans tout casser."
-    echo ""
-    echo "  Pourquoi c'est crucial :"
-    echo "    - Un algorithme peut être déprécié (vulnérabilité découverte)"
-    echo "    - Les standards évoluent (SHA-1 → SHA-256 → SHA-3)"
-    echo "    - La transition PQC est la plus grande de l'histoire"
-    echo ""
-}
+print_step "Step 1: What is Crypto-Agility?"
 
-mission_1_inventory() {
-    mission_start 1 "Inventorier les algorithmes en place"
+echo "  Crypto-agility is the ability of a system to:"
+echo ""
+echo "    1. CHANGE algorithms without redesigning architecture"
+echo "    2. SUPPORT multiple algorithms during transition"
+echo "    3. ROLLBACK quickly if problems occur"
+echo ""
+echo "  ┌─────────────────────────────────────────────────────────────────┐"
+echo "  │  THE 3-PHASE MIGRATION STRATEGY                                │"
+echo "  ├─────────────────────────────────────────────────────────────────┤"
+echo "  │                                                                 │"
+echo "  │  PHASE 1: CLASSIC (today)                                      │"
+echo "  │    → ECDSA certificates                                        │"
+echo "  │    → Status quo, inventory your systems                        │"
+echo "  │                                                                 │"
+echo "  │  PHASE 2: HYBRID (transition)                                  │"
+echo "  │    → ECDSA + ML-DSA in same certificate                        │"
+echo "  │    → Legacy clients use ECDSA, modern use both                 │"
+echo "  │    → 100% compatibility                                        │"
+echo "  │                                                                 │"
+echo "  │  PHASE 3: FULL PQC (when ready)                                │"
+echo "  │    → ML-DSA only                                               │"
+echo "  │    → After ALL clients migrated                                │"
+echo "  │                                                                 │"
+echo "  └─────────────────────────────────────────────────────────────────┘"
+echo ""
 
-    echo "  Première étape : savoir ce qu'on a."
-    echo ""
-    echo "  ┌─────────────────────────────────────────────────────────────────┐"
-    echo "  │  INVENTAIRE DE TES CA                                          │"
-    echo "  ├─────────────────────────────────────────────────────────────────┤"
+pause
 
-    local count=0
+# =============================================================================
+# Step 2: Phase 1 - Create Classic CA (ECDSA)
+# =============================================================================
 
-    # Quick Start
-    local qs_ca="$WORKSPACE_ROOT/quickstart/classic-ca"
-    if [[ -f "$qs_ca/ca.crt" ]]; then
-        local algo=$(openssl x509 -in "$qs_ca/ca.crt" -noout -text 2>/dev/null | grep "Signature Algorithm" | head -1 | awk '{print $3}')
-        printf "  │  %-20s │ %-20s │ %-12s │\n" "Quick Start" "$algo" "CLASSIQUE"
-        count=$((count + 1))
-    fi
+print_step "Step 2: Phase 1 - Classic CA (ECDSA)"
 
-    # Niveau 1 - PQC Root
-    local pqc_root="$WORKSPACE_ROOT/niveau-1/pqc-root-ca"
-    if [[ -f "$pqc_root/ca.crt" ]]; then
-        printf "  │  %-20s │ %-20s │ %-12s │\n" "PQC Root CA" "ML-DSA-87" "PQC"
-        count=$((count + 1))
-    fi
+echo "  Creating a classic ECDSA CA (current state)..."
+echo ""
 
-    # Niveau 1 - PQC Issuing
-    local pqc_issuing="$WORKSPACE_ROOT/niveau-1/pqc-issuing-ca"
-    if [[ -f "$pqc_issuing/ca.crt" ]]; then
-        printf "  │  %-20s │ %-20s │ %-12s │\n" "PQC Issuing CA" "ML-DSA-65" "PQC"
-        count=$((count + 1))
-    fi
+run_cmd "pki init-ca --name \"Classic CA\" --algorithm ec-p256 --dir output/classic-ca"
 
-    # Niveau 1 - Hybrid
-    local hybrid="$WORKSPACE_ROOT/niveau-1/hybrid-ca"
-    if [[ -f "$hybrid/ca.crt" ]]; then
-        printf "  │  %-20s │ %-20s │ %-12s │\n" "Hybrid CA" "ECDSA+ML-DSA" "HYBRIDE"
-        count=$((count + 1))
-    fi
+echo ""
 
-    echo "  └─────────────────────────────────────────────────────────────────┘"
-    echo ""
+# Show certificate info
+if [[ -f "output/classic-ca/ca.crt" ]]; then
+    cert_size=$(wc -c < "output/classic-ca/ca.crt" | tr -d ' ')
+    echo -e "  ${CYAN}Certificate size:${NC} $cert_size bytes"
+    echo -e "  ${DIM}(ECDSA P-256 public key: ~91 bytes)${NC}"
+fi
 
-    if [[ $count -eq 0 ]]; then
-        echo -e "  ${YELLOW}[INFO]${NC} Aucune CA trouvée. Fais le Niveau 1 d'abord."
-    else
-        echo -e "  ${GREEN}[OK]${NC} $count CA inventoriées"
-    fi
+echo ""
+echo "  Issue a server certificate with ECDSA..."
+echo ""
 
-    mission_complete "Inventaire terminé"
-    learned "L'inventaire est la base de toute migration"
-}
+run_cmd "pki issue --ca-dir output/classic-ca --profile ec/tls-server --cn \"server.example.com\" --dns server.example.com --out output/classic-server.crt --key-out output/classic-server.key"
 
-mission_2_transition_plan() {
-    mission_start 2 "Comprendre la stratégie de transition"
+echo ""
 
-    echo "  La transition PQC se fait en 3 phases :"
-    echo ""
-    echo "  ┌─────────────────────────────────────────────────────────────────┐"
-    echo "  │                                                                 │"
-    echo "  │  PHASE 1 : HYBRIDE (maintenant)                                │"
-    echo "  │  ───────────────────────────                                   │"
-    echo "  │  → Déployer des CA hybrides (ECDSA + ML-DSA)                   │"
-    echo "  │  → Compatibilité legacy préservée                              │"
-    echo "  │  → Protection PQC pour clients modernes                        │"
-    echo "  │                                                                 │"
-    echo "  ├─────────────────────────────────────────────────────────────────┤"
-    echo "  │                                                                 │"
-    echo "  │  PHASE 2 : MIGRATION (2-5 ans)                                 │"
-    echo "  │  ────────────────────────────                                  │"
-    echo "  │  → Mettre à jour les clients pour supporter PQC                │"
-    echo "  │  → Réémettre les certificats en hybride                        │"
-    echo "  │  → Tester la compatibilité                                     │"
-    echo "  │                                                                 │"
-    echo "  ├─────────────────────────────────────────────────────────────────┤"
-    echo "  │                                                                 │"
-    echo "  │  PHASE 3 : FULL PQC (quand prêt)                               │"
-    echo "  │  ─────────────────────────────                                 │"
-    echo "  │  → Déprécier les algorithmes classiques                        │"
-    echo "  │  → Basculer vers full PQC                                      │"
-    echo "  │  → Révoquer les anciennes CA                                   │"
-    echo "  │                                                                 │"
-    echo "  └─────────────────────────────────────────────────────────────────┘"
-    echo ""
+pause
 
-    mission_complete "Stratégie comprise"
-    learned "Hybride = pont vers le full PQC"
-}
+# =============================================================================
+# Step 3: Phase 2 - Create Hybrid CA (ECDSA + ML-DSA)
+# =============================================================================
 
-mission_3_fallback() {
-    mission_start 3 "Tester le fallback"
+print_step "Step 3: Phase 2 - Hybrid CA (ECDSA + ML-DSA)"
 
-    echo "  Le fallback permet de revenir en arrière si problème."
-    echo ""
-    echo "  Avec l'hybride :"
-    echo "    - Les clients legacy utilisent ECDSA"
-    echo "    - Les clients modernes utilisent ML-DSA"
-    echo "    - Si ML-DSA pose problème → ECDSA toujours disponible"
-    echo ""
+echo "  Creating a hybrid CA with Catalyst mode..."
+echo "  Both ECDSA and ML-DSA signatures in one certificate."
+echo ""
 
-    local hybrid_ca="$WORKSPACE_ROOT/niveau-1/hybrid-ca"
-    local hybrid_cert="$WORKSPACE_ROOT/niveau-1/hybrid-server.crt"
+run_cmd "pki init-ca --name \"Hybrid CA\" --algorithm ec-p256 --hybrid-algorithm ml-dsa-65 --dir output/hybrid-ca"
 
-    if [[ -f "$hybrid_cert" ]]; then
-        echo -e "  ${BOLD}Test avec ton certificat hybride :${NC}"
-        echo ""
+echo ""
 
-        # Vérification OpenSSL (classique)
-        echo "  Test 1 : Vérification OpenSSL (classique seulement)"
-        if openssl verify -CAfile "$hybrid_ca/ca.crt" "$hybrid_cert" > /dev/null 2>&1; then
-            echo -e "    ${GREEN}✓${NC} OpenSSL : OK (utilise ECDSA, ignore PQC)"
-        fi
+if [[ -f "output/hybrid-ca/ca.crt" ]]; then
+    cert_size=$(wc -c < "output/hybrid-ca/ca.crt" | tr -d ' ')
+    echo -e "  ${CYAN}Certificate size:${NC} $cert_size bytes"
+    echo -e "  ${DIM}(Contains BOTH ECDSA and ML-DSA-65 signatures)${NC}"
+fi
 
-        echo ""
+echo ""
+echo "  Issue a hybrid server certificate..."
+echo ""
 
-        # Vérification pki (PQC-aware)
-        echo "  Test 2 : Vérification pki (PQC-aware)"
-        if "$PKI_BIN" verify --ca "$hybrid_ca/ca.crt" --cert "$hybrid_cert" > /dev/null 2>&1; then
-            echo -e "    ${GREEN}✓${NC} pki : OK (vérifie ECDSA ET ML-DSA)"
-        fi
+run_cmd "pki issue --ca-dir output/hybrid-ca --profile hybrid/catalyst/tls-server --cn \"server.example.com\" --dns server.example.com --out output/hybrid-server.crt --key-out output/hybrid-server.key"
 
-        echo ""
-        echo "  → Les deux chemins fonctionnent = crypto-agility en action"
-    else
-        echo -e "  ${YELLOW}[INFO]${NC} Fais la mission Hybrid du Niveau 1 d'abord."
-    fi
+echo ""
 
-    mission_complete "Fallback testé"
-}
+pause
 
-mission_4_checklist() {
-    mission_start 4 "Checklist de préparation"
+# =============================================================================
+# Step 4: Phase 3 - Create Full PQC CA (ML-DSA)
+# =============================================================================
 
-    echo "  Es-tu prêt pour la transition PQC ?"
-    echo ""
-    echo "  ┌─────────────────────────────────────────────────────────────────┐"
-    echo "  │  CHECKLIST CRYPTO-AGILITY                                      │"
-    echo "  ├─────────────────────────────────────────────────────────────────┤"
+print_step "Step 4: Phase 3 - Full PQC CA (ML-DSA)"
 
-    # Check 1: Inventaire
-    local inv_status="${GREEN}✓${NC}"
-    echo -e "  │  $inv_status Inventaire des CA et certificats                       │"
+echo "  Creating a full post-quantum CA..."
+echo "  ML-DSA-65 only (no classical fallback)."
+echo ""
 
-    # Check 2: Hybrid CA
-    local hyb_status="${RED}✗${NC}"
-    if [[ -f "$WORKSPACE_ROOT/niveau-1/hybrid-ca/ca.crt" ]]; then
-        hyb_status="${GREEN}✓${NC}"
-    fi
-    echo -e "  │  $hyb_status CA hybride déployée                                    │"
+run_cmd "pki init-ca --name \"PQC CA\" --algorithm ml-dsa-65 --dir output/pqc-ca"
 
-    # Check 3: Tests
-    local test_status="${GREEN}✓${NC}"
-    echo -e "  │  $test_status Tests de compatibilité legacy                         │"
+echo ""
 
-    # Check 4: Révocation
-    local rev_status="${GREEN}✓${NC}"
-    echo -e "  │  $rev_status Processus de révocation testé                          │"
+if [[ -f "output/pqc-ca/ca.crt" ]]; then
+    cert_size=$(wc -c < "output/pqc-ca/ca.crt" | tr -d ' ')
+    echo -e "  ${CYAN}Certificate size:${NC} $cert_size bytes"
+    echo -e "  ${DIM}(ML-DSA-65 public key: ~1,952 bytes)${NC}"
+fi
 
-    # Check 5: OCSP
-    local ocsp_status="${GREEN}✓${NC}"
-    echo -e "  │  $ocsp_status OCSP responder fonctionnel                            │"
+echo ""
+echo "  Issue a PQC server certificate..."
+echo ""
 
-    echo "  └─────────────────────────────────────────────────────────────────┘"
-    echo ""
+run_cmd "pki issue --ca-dir output/pqc-ca --profile ml-dsa-kem/tls-server --cn \"server.example.com\" --dns server.example.com --out output/pqc-server.crt --key-out output/pqc-server.key"
 
-    mission_complete "Checklist complétée"
-}
+echo ""
 
-show_recap_final() {
-    echo ""
-    echo -e "${BOLD}${BG_GREEN}${WHITE} MISSION 8 TERMINÉE ! ${NC}"
-    echo ""
-    echo -e "${BOLD}${GREEN} NIVEAU 3 COMPLET !${NC}"
-    echo ""
+pause
 
-    show_recap "Ce que tu as accompli dans le Niveau 3 :" \
-        "Révocation et génération de CRL" \
-        "OCSP responder en temps réel" \
-        "Stratégie de transition PQC" \
-        "Crypto-agility avec hybride"
+# =============================================================================
+# Step 5: Test Interoperability
+# =============================================================================
 
-    show_lesson "La crypto-agility, c'est pouvoir changer d'algorithme
-sans interrompre le service. L'hybride est la clé de la transition.
-Tu peux migrer progressivement, client par client."
+print_step "Step 5: Test Interoperability"
 
-    echo ""
-    echo -e "${BOLD}Prochaine étape :${NC} Niveau 4 - Advanced"
-    echo "  LTV Signatures, PQC Tunnel, CMS Encryption"
-    echo ""
-    echo -e "    ${CYAN}./journey/05-advanced/01-ltv-signatures/demo.sh${NC}"
-    echo ""
-}
+echo "  Testing how different clients handle each certificate type:"
+echo ""
 
-main() {
-    [[ -x "$PKI_BIN" ]] || { echo "PKI non installé"; exit 1; }
-    init_workspace "niveau-3"
+echo "  ┌─────────────────────────────────────────────────────────────────┐"
+echo "  │  INTEROPERABILITY MATRIX                                       │"
+echo "  ├─────────────────────────────────────────────────────────────────┤"
+echo "  │                                                                 │"
+echo "  │  Certificate     │  OpenSSL (Legacy)  │  pki (PQC-aware)       │"
+echo "  │  ──────────────────────────────────────────────────────────────│"
 
-    show_welcome
-    wait_enter "Appuie sur Entrée pour commencer..."
+# Test Classic
+echo -n "  │  Classic (ECDSA) │  "
+if openssl verify -CAfile output/classic-ca/ca.crt output/classic-server.crt > /dev/null 2>&1; then
+    echo -ne "${GREEN}✓ OK${NC}               │  "
+else
+    echo -ne "${RED}✗ FAIL${NC}             │  "
+fi
+if pki verify --ca output/classic-ca/ca.crt --cert output/classic-server.crt > /dev/null 2>&1; then
+    echo -e "${GREEN}✓ OK${NC}                   │"
+else
+    echo -e "${RED}✗ FAIL${NC}                 │"
+fi
 
-    mission_1_inventory
-    wait_enter
-    mission_2_transition_plan
-    wait_enter
-    mission_3_fallback
-    wait_enter
-    mission_4_checklist
+# Test Hybrid
+echo -n "  │  Hybrid          │  "
+if openssl verify -CAfile output/hybrid-ca/ca.crt output/hybrid-server.crt > /dev/null 2>&1; then
+    echo -ne "${GREEN}✓ OK${NC}               │  "
+else
+    echo -ne "${YELLOW}~ Partial${NC}          │  "
+fi
+if pki verify --ca output/hybrid-ca/ca.crt --cert output/hybrid-server.crt > /dev/null 2>&1; then
+    echo -e "${GREEN}✓ OK${NC}                   │"
+else
+    echo -e "${RED}✗ FAIL${NC}                 │"
+fi
 
-    show_recap_final
-}
+# Test PQC
+echo -n "  │  Full PQC        │  "
+if openssl verify -CAfile output/pqc-ca/ca.crt output/pqc-server.crt > /dev/null 2>&1; then
+    echo -ne "${GREEN}✓ OK${NC}               │  "
+else
+    echo -ne "${RED}✗ FAIL${NC}             │  "
+fi
+if pki verify --ca output/pqc-ca/ca.crt --cert output/pqc-server.crt > /dev/null 2>&1; then
+    echo -e "${GREEN}✓ OK${NC}                   │"
+else
+    echo -e "${RED}✗ FAIL${NC}                 │"
+fi
 
-main "$@"
+echo "  │                                                                 │"
+echo "  └─────────────────────────────────────────────────────────────────┘"
+echo ""
+
+echo "  Key insight:"
+echo "    - Hybrid certificates work with BOTH legacy and modern clients"
+echo "    - Full PQC requires PQC-aware clients"
+echo "    - Hybrid is the bridge for gradual migration"
+echo ""
+
+pause
+
+# =============================================================================
+# Step 6: Size Comparison
+# =============================================================================
+
+print_step "Step 6: Size Comparison"
+
+echo "  Certificate sizes across the migration phases:"
+echo ""
+
+classic_ca_size=$(wc -c < "output/classic-ca/ca.crt" 2>/dev/null | tr -d ' ')
+hybrid_ca_size=$(wc -c < "output/hybrid-ca/ca.crt" 2>/dev/null | tr -d ' ')
+pqc_ca_size=$(wc -c < "output/pqc-ca/ca.crt" 2>/dev/null | tr -d ' ')
+
+classic_cert_size=$(wc -c < "output/classic-server.crt" 2>/dev/null | tr -d ' ')
+hybrid_cert_size=$(wc -c < "output/hybrid-server.crt" 2>/dev/null | tr -d ' ')
+pqc_cert_size=$(wc -c < "output/pqc-server.crt" 2>/dev/null | tr -d ' ')
+
+echo "  ┌──────────────────────────────────────────────────────────────────┐"
+echo "  │  Phase         │  CA Cert    │  Server Cert  │  Signature       │"
+echo "  ├──────────────────────────────────────────────────────────────────┤"
+printf "  │  Phase 1       │  %6s B   │  %6s B     │  ECDSA (~64 B)   │\n" "$classic_ca_size" "$classic_cert_size"
+printf "  │  Phase 2       │  %6s B   │  %6s B     │  ECDSA+ML-DSA    │\n" "$hybrid_ca_size" "$hybrid_cert_size"
+printf "  │  Phase 3       │  %6s B   │  %6s B     │  ML-DSA (~3.3 KB)│\n" "$pqc_ca_size" "$pqc_cert_size"
+echo "  └──────────────────────────────────────────────────────────────────┘"
+echo ""
+
+echo "  Size increase is expected and acceptable for security benefits."
+echo ""
+
+# =============================================================================
+# Conclusion
+# =============================================================================
+
+print_key_message "Crypto-agility is the ability to change algorithms without breaking your system. Hybrid is the bridge."
+
+show_lesson "Phase 1 (Classic): Inventory your current certificates.
+Phase 2 (Hybrid): Deploy certificates with BOTH classical and PQC.
+Phase 3 (Full PQC): When ALL clients are migrated.
+Hybrid provides 100% compatibility + PQC protection.
+Never do a \"big bang\" migration - it's too risky."
+
+show_footer

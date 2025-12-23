@@ -1,0 +1,28 @@
+# Classic CA - ECDSA P-256
+# Phase 1: Current state (classical cryptography)
+# NIST Level 1 (~128-bit classical equivalent)
+
+name: classic-ca
+description: "Classic CA ECDSA P-256"
+
+subject:
+  fixed:
+    c: "FR"
+    o: "Demo Organization"
+
+validity: 3650d  # 10 years
+
+signature:
+  algorithms:
+    - ec-p256
+
+extensions:
+  basicConstraints:
+    critical: true
+    ca: true
+    pathLen: 0
+  keyUsage:
+    critical: true
+    values:
+      - keyCertSign
+      - cRLSign
