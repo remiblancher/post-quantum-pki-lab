@@ -126,21 +126,6 @@ post-quantum-pki-lab/
 
 ---
 
-## Workspace
-
-Each level has its own workspace. Your CAs and certificates are preserved between sessions.
-
-```bash
-# Reset a specific level
-./reset.sh quickstart
-./reset.sh level-1
-
-# Reset all workspaces
-./reset.sh all
-```
-
----
-
 ## Useful Links
 
 - [Glossary](docs/GLOSSARY.md) — PQC and PKI terminology
