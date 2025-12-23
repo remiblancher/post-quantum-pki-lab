@@ -174,6 +174,75 @@ CURRENT SITUATION
 
 ---
 
+## The Commands
+
+### Step 1: Create Classic CA (Phase 1)
+
+```bash
+# Create a classic ECDSA CA
+pki init-ca --name "Classic CA" \
+    --algorithm ec-p256 \
+    --dir output/classic-ca
+
+# Issue ECDSA server certificate
+pki issue --ca-dir output/classic-ca \
+    --profile ec/tls-server \
+    --cn "server.example.com" \
+    --dns server.example.com \
+    --out output/classic-server.crt \
+    --key-out output/classic-server.key
+```
+
+### Step 2: Create Hybrid CA (Phase 2)
+
+```bash
+# Create hybrid CA (ECDSA + ML-DSA Catalyst)
+pki init-ca --name "Hybrid CA" \
+    --algorithm ec-p256 \
+    --hybrid-algorithm ml-dsa-65 \
+    --dir output/hybrid-ca
+
+# Issue hybrid server certificate
+pki issue --ca-dir output/hybrid-ca \
+    --profile hybrid/catalyst/tls-server \
+    --cn "server.example.com" \
+    --dns server.example.com \
+    --out output/hybrid-server.crt \
+    --key-out output/hybrid-server.key
+```
+
+### Step 3: Create Full PQC CA (Phase 3)
+
+```bash
+# Create full PQC CA
+pki init-ca --name "PQC CA" \
+    --algorithm ml-dsa-65 \
+    --dir output/pqc-ca
+
+# Issue PQC server certificate
+pki issue --ca-dir output/pqc-ca \
+    --profile ml-dsa-kem/tls-server \
+    --cn "server.example.com" \
+    --dns server.example.com \
+    --out output/pqc-server.crt \
+    --key-out output/pqc-server.key
+```
+
+### Step 4: Test Interoperability
+
+```bash
+# Legacy client (OpenSSL) - only verifies classical signature
+openssl verify -CAfile output/classic-ca/ca.crt output/classic-server.crt
+openssl verify -CAfile output/hybrid-ca/ca.crt output/hybrid-server.crt
+
+# PQC-aware client - verifies all signatures
+pki verify --ca output/classic-ca/ca.crt --cert output/classic-server.crt
+pki verify --ca output/hybrid-ca/ca.crt --cert output/hybrid-server.crt
+pki verify --ca output/pqc-ca/ca.crt --cert output/pqc-server.crt
+```
+
+---
+
 ## Typical Migration Timeline
 
 ```
