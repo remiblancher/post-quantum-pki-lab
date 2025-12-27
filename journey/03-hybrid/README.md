@@ -209,4 +209,4 @@ This demo uses **Catalyst** because:
 
 ---
 
-← [Full PQC Chain](../02-full-chain/) | [Next: mTLS →](../04-mtls/)
+← [Full PQC Chain](../02-full-chain/) | [Next: Revocation →](../04-revocation/)
