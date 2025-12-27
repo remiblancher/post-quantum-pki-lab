@@ -68,7 +68,7 @@ pki inspect ./pqc-ca/ca.crl
 
 ```bash
 # Generate CRL separately
-pki cert gen-crl --ca-dir ./pqc-ca --days 7
+pki ca crl gen --ca-dir ./pqc-ca --days 7
 ```
 
 **Notice anything?** The revocation workflow is identical to classical PKI.
