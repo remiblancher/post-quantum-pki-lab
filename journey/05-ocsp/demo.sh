@@ -42,7 +42,7 @@ echo ""
 echo "  Issue delegated OCSP responder certificate (best practice: CA key stays offline)..."
 echo ""
 
-run_cmd "pki cert issue --ca-dir output/pqc-ca --profile profiles/ocsp-responder.yaml --cn \"OCSP Responder\" --out output/ocsp-responder.crt --key-out output/ocsp-responder.key"
+run_cmd "pki cert issue --ca-dir output/pqc-ca --profile profiles/pqc-ocsp-responder.yaml --cn \"OCSP Responder\" --out output/ocsp-responder.crt --key-out output/ocsp-responder.key"
 
 echo ""
 echo "  Issue TLS server certificate to verify..."

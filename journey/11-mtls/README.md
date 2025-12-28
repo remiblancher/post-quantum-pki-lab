@@ -50,9 +50,9 @@ CLASSIC HTTPS = One-way verification
 ```
 
 **Risks**:
-- Identity theft
-- Unauthorized API access
-- Man-in-the-middle attack
+- Unauthorized client access to APIs
+- Client impersonation (credential stuffing, token theft)
+- Rogue services in microservice mesh
 
 ---
 
@@ -87,7 +87,10 @@ With mTLS, **BOTH** parties prove their identity:
 **Advantages**:
 - Zero-trust: never trust by default
 - No passwords to manage
-- Quantum-safe with ML-DSA
+- Quantum-safe authentication with ML-DSA
+
+> **Note:** This demo focuses on PQC *authentication* (ML-DSA signatures).
+> Key exchange and encryption depend on the TLS stack capabilities.
 
 ---
 
@@ -139,7 +142,7 @@ pki ca init --name "mTLS Demo CA" \
 ```bash
 # Server certificate with serverAuth EKU
 pki cert issue --ca-dir output/mtls-ca \
-    --profile profiles/tls-server.yaml \
+    --profile profiles/pqc-tls-server.yaml \
     --cn "api.example.com" \
     --dns api.example.com \
     --out output/server.crt \
@@ -151,14 +154,14 @@ pki cert issue --ca-dir output/mtls-ca \
 ```bash
 # Client certificate for Alice
 pki cert issue --ca-dir output/mtls-ca \
-    --profile profiles/tls-client.yaml \
+    --profile profiles/pqc-tls-client.yaml \
     --cn "Alice" \
     --out output/alice.crt \
     --key-out output/alice.key
 
 # Client certificate for Bob
 pki cert issue --ca-dir output/mtls-ca \
-    --profile profiles/tls-client.yaml \
+    --profile profiles/pqc-tls-client.yaml \
     --cn "Bob" \
     --out output/bob.crt \
     --key-out output/bob.key
@@ -180,8 +183,57 @@ pki verify --ca output/mtls-ca/ca.crt --cert output/bob.crt
 
 | Profile | EKU | Purpose |
 |---------|-----|---------|
-| `profiles/tls-server.yaml` | serverAuth | Server proves identity to client |
-| `profiles/tls-client.yaml` | clientAuth | Client proves identity to server |
+| `profiles/pqc-tls-server.yaml` | serverAuth | Server proves identity to client |
+| `profiles/pqc-tls-client.yaml` | clientAuth | Client proves identity to server |
+
+---
+
+## mTLS Handshake Flow
+
+```
+Client                                        Server
+  │                                              │
+  │ ──── 1. ClientHello ───────────────────────► │
+  │                                              │
+  │ ◄──── 2. ServerHello + Server Certificate ── │
+  │                                              │
+  │ ◄──── 3. CertificateRequest ──────────────── │
+  │       "Send me YOUR certificate"             │
+  │                                              │
+  │ ──── 4. Client Certificate ────────────────► │
+  │       + CertificateVerify (ML-DSA signature) │
+  │                                              │
+  │ ◄──── 5. Finished ─────────────────────────► │
+  │       Handshake complete                     │
+  │                                              │
+  ▼                                              ▼
+ ✓ Server verified                    ✓ Client verified
+```
+
+---
+
+## What mTLS Does NOT Do
+
+| mTLS Does | mTLS Does NOT |
+|-----------|---------------|
+| Authenticate identity | Authorize actions |
+| Prove "this is Alice" | Decide "can Alice delete?" |
+| Encrypt the channel | Replace application security |
+| Verify certificate chain | Manage user permissions |
+
+> **Important:** mTLS is *authentication*, not *authorization*.
+> You still need access control, RBAC, and application-level security.
+
+---
+
+## Is Your API mTLS-Ready?
+
+| Question | Yes = Ready | No = Action Needed |
+|----------|-------------|-------------------|
+| Do you have a dedicated CA for client certs? | ✓ | Create one |
+| Are client certificates short-lived (<1 year)? | ✓ | Reduce validity |
+| Do you have automated cert renewal? | ✓ | Implement ACME or similar |
+| Can you revoke compromised client certs? | ✓ | Set up CRL/OCSP |
 
 ---
 

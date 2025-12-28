@@ -113,7 +113,7 @@ pki ca init --name "Encryption CA" \
 
 ```bash
 pki cert issue --ca-dir output/encryption-ca \
-    --profile profiles/signing.yaml \
+    --profile profiles/pqc-signing.yaml \
     --cn "Alice" \
     --out output/alice-sign.crt \
     --key-out output/alice-sign.key
@@ -139,7 +139,7 @@ pki cert csr --algorithm ml-kem-768 \
 # Certificate includes RelatedCertificate extension
 pki cert issue --ca-dir output/encryption-ca \
     --csr output/alice-enc.csr \
-    --profile profiles/encryption.yaml \
+    --profile profiles/pqc-encryption.yaml \
     --out output/alice-enc.crt
 ```
 

@@ -65,7 +65,7 @@ pki ca init --name "PQC CA" \
 # Issue delegated OCSP responder certificate
 # Best practice: CA key stays offline
 pki cert issue --ca-dir output/pqc-ca \
-    --profile profiles/ocsp-responder.yaml \
+    --profile profiles/pqc-ocsp-responder.yaml \
     --cn "OCSP Responder" \
     --out output/ocsp-responder.crt \
     --key-out output/ocsp-responder.key
