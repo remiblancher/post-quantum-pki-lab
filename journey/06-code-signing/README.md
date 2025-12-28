@@ -172,7 +172,7 @@ pki ca init --name "Code Signing CA" \
 ```bash
 # Issue code signing certificate
 pki cert issue --ca-dir output/code-ca \
-    --profile profiles/code-signing.yaml \
+    --profile profiles/pqc-code-signing.yaml \
     --cn "ACME Software" \
     --out output/code-signing.crt \
     --key-out output/code-signing.key
