@@ -2,11 +2,11 @@
 # =============================================================================
 #  UC-10: Crypto-Agility - Migrate Without Breaking
 #
-#  Demonstrate the 3-phase migration strategy:
+#  Demonstrate CA rotation and trust bundle migration:
 #  Phase 1: Classic (ECDSA) → Phase 2: Hybrid → Phase 3: Full PQC
 #
 #  Key Message: Crypto-agility is the ability to change algorithms
-#               without breaking your system.
+#               without breaking your system. Use trust bundles.
 # =============================================================================
 
 set -e
@@ -47,6 +47,19 @@ echo "  │    → After ALL clients migrated                                │
 echo "  │                                                                 │"
 echo "  └─────────────────────────────────────────────────────────────────┘"
 echo ""
+echo "  ┌─────────────────────────────────────────────────────────────────┐"
+echo "  │  KEY CONCEPT: CA VERSIONING                                    │"
+echo "  ├─────────────────────────────────────────────────────────────────┤"
+echo "  │                                                                 │"
+echo "  │  Migration CA                                                   │"
+echo "  │  ├── v1 (ECDSA)     ──► archived                               │"
+echo "  │  ├── v2 (Hybrid)    ──► archived                               │"
+echo "  │  └── v3 (ML-DSA)    ──► active                                 │"
+echo "  │                                                                 │"
+echo "  │  Trust Bundle = v1 + v2 + v3 (published during transition)     │"
+echo "  │                                                                 │"
+echo "  └─────────────────────────────────────────────────────────────────┘"
+echo ""
 
 pause
 
@@ -54,145 +67,214 @@ pause
 # Step 2: Phase 1 - Create Classic CA (ECDSA)
 # =============================================================================
 
-print_step "Step 2: Phase 1 - Classic CA (ECDSA)"
+print_step "Step 2: Phase 1 - Create Migration CA (ECDSA)"
 
-echo "  Creating a classic ECDSA CA (current state)..."
+echo "  Creating the Migration CA with ECDSA (current state)..."
+echo "  This represents the starting point of our migration journey."
 echo ""
 
-run_cmd "pki ca init --name \"Classic CA\" --profile profiles/classic-ca.yaml --dir output/classic-ca"
+run_cmd "pki ca init --name \"Migration CA\" --profile profiles/classic-ca.yaml --dir output/ca"
 
 echo ""
 
 # Show certificate info
-if [[ -f "output/classic-ca/ca.crt" ]]; then
-    cert_size=$(wc -c < "output/classic-ca/ca.crt" | tr -d ' ')
+if [[ -f "output/ca/ca.crt" ]]; then
+    cert_size=$(wc -c < "output/ca/ca.crt" | tr -d ' ')
     echo -e "  ${CYAN}Certificate size:${NC} $cert_size bytes"
     echo -e "  ${DIM}(ECDSA P-256 public key: ~91 bytes)${NC}"
 fi
 
 echo ""
-echo "  Issue a server certificate with ECDSA..."
+
+# Issue ECDSA server certificate
+echo "  Issuing a server certificate with ECDSA..."
 echo ""
 
-run_cmd "pki cert issue --ca-dir output/classic-ca --profile ec/tls-server --cn \"server.example.com\" --dns server.example.com --out output/classic-server.crt --key-out output/classic-server.key"
+run_cmd "pki credential enroll --ca-dir output/ca --profile ec/tls-server --var cn=server.example.com"
+
+# Capture the credential ID from the output
+CRED_V1=$(pki credential list --ca-dir output/ca 2>/dev/null | grep -v "^ID" | head -1 | awk '{print $1}')
+
+if [[ -n "$CRED_V1" ]]; then
+    echo ""
+    echo -e "  ${CYAN}Credential ID:${NC} $CRED_V1"
+    run_cmd "pki credential export $CRED_V1 --ca-dir output/ca -o output/server-v1.pem"
+fi
 
 echo ""
 
 pause
 
 # =============================================================================
-# Step 3: Phase 2 - Create Hybrid CA (ECDSA + ML-DSA)
+# Step 3: Rotate to Hybrid CA (Phase 2)
 # =============================================================================
 
-print_step "Step 3: Phase 2 - Hybrid CA (ECDSA + ML-DSA)"
+print_step "Step 3: Rotate to Hybrid CA (ECDSA + ML-DSA)"
 
-echo "  Creating a hybrid CA with Catalyst mode..."
-echo "  Both ECDSA and ML-DSA signatures in one certificate."
+echo "  Rotating the CA to hybrid mode (Catalyst)..."
+echo "  The old ECDSA version becomes archived, new hybrid version is active."
 echo ""
 
-run_cmd "pki ca init --name \"Hybrid CA\" --profile profiles/hybrid-ca.yaml --dir output/hybrid-ca"
+run_cmd "pki ca rotate --ca-dir output/ca --profile profiles/hybrid-ca.yaml"
+
+echo ""
+echo "  Checking CA versions:"
+echo ""
+
+run_cmd "pki ca versions --ca-dir output/ca"
 
 echo ""
 
-if [[ -f "output/hybrid-ca/ca.crt" ]]; then
-    cert_size=$(wc -c < "output/hybrid-ca/ca.crt" | tr -d ' ')
-    echo -e "  ${CYAN}Certificate size:${NC} $cert_size bytes"
+if [[ -f "output/ca/ca.crt" ]]; then
+    cert_size=$(wc -c < "output/ca/ca.crt" | tr -d ' ')
+    echo -e "  ${CYAN}New certificate size:${NC} $cert_size bytes"
     echo -e "  ${DIM}(Contains BOTH ECDSA and ML-DSA-65 signatures)${NC}"
 fi
 
 echo ""
-echo "  Issue a hybrid server certificate..."
-echo ""
-
-run_cmd "pki cert issue --ca-dir output/hybrid-ca --profile hybrid/catalyst/tls-server --cn \"server.example.com\" --dns server.example.com --out output/hybrid-server.crt --key-out output/hybrid-server.key"
-
-echo ""
 
 pause
 
 # =============================================================================
-# Step 4: Phase 3 - Create Full PQC CA (ML-DSA)
+# Step 4: Rotate to Full PQC CA (Phase 3)
 # =============================================================================
 
-print_step "Step 4: Phase 3 - Full PQC CA (ML-DSA)"
+print_step "Step 4: Rotate to Full PQC CA (ML-DSA)"
 
-echo "  Creating a full post-quantum CA..."
+echo "  Rotating the CA to full post-quantum..."
 echo "  ML-DSA-65 only (no classical fallback)."
 echo ""
 
-run_cmd "pki ca init --name \"PQC CA\" --profile profiles/pqc-ca.yaml --dir output/pqc-ca"
+run_cmd "pki ca rotate --ca-dir output/ca --profile profiles/pqc-ca.yaml"
+
+echo ""
+echo "  Checking CA versions:"
+echo ""
+
+run_cmd "pki ca versions --ca-dir output/ca"
 
 echo ""
 
-if [[ -f "output/pqc-ca/ca.crt" ]]; then
-    cert_size=$(wc -c < "output/pqc-ca/ca.crt" | tr -d ' ')
-    echo -e "  ${CYAN}Certificate size:${NC} $cert_size bytes"
+if [[ -f "output/ca/ca.crt" ]]; then
+    cert_size=$(wc -c < "output/ca/ca.crt" | tr -d ' ')
+    echo -e "  ${CYAN}New certificate size:${NC} $cert_size bytes"
     echo -e "  ${DIM}(ML-DSA-65 public key: ~1,952 bytes)${NC}"
 fi
 
 echo ""
-echo "  Issue a PQC server certificate..."
+
+pause
+
+# =============================================================================
+# Step 5: Issue PQC Server Certificate
+# =============================================================================
+
+print_step "Step 5: Issue PQC Server Certificate"
+
+echo "  Issuing a server certificate with ML-DSA..."
 echo ""
 
-run_cmd "pki cert issue --ca-dir output/pqc-ca --profile ml-dsa-kem/tls-server --cn \"server.example.com\" --dns server.example.com --out output/pqc-server.crt --key-out output/pqc-server.key"
+run_cmd "pki credential enroll --ca-dir output/ca --profile ml-dsa-kem/tls-server-sign --var cn=server.example.com"
+
+# Get the new credential ID
+CRED_V3=$(pki credential list --ca-dir output/ca 2>/dev/null | grep -v "^ID" | grep -v "$CRED_V1" | head -1 | awk '{print $1}')
+
+if [[ -n "$CRED_V3" ]]; then
+    echo ""
+    echo -e "  ${CYAN}Credential ID:${NC} $CRED_V3"
+    run_cmd "pki credential export $CRED_V3 --ca-dir output/ca -o output/server-v3.pem"
+fi
 
 echo ""
 
 pause
 
 # =============================================================================
-# Step 5: Test Interoperability
+# Step 6: Create Trust Stores
 # =============================================================================
 
-print_step "Step 5: Test Interoperability"
+print_step "Step 6: Create Trust Stores"
 
-echo "  Testing how different clients handle each certificate type:"
+echo "  Creating trust stores for different client scenarios..."
+echo ""
+echo "  ┌─────────────────────────────────────────────────────────────────┐"
+echo "  │  TRUST STORE STRATEGY                                          │"
+echo "  ├─────────────────────────────────────────────────────────────────┤"
+echo "  │                                                                 │"
+echo "  │  Clients Legacy ── trust-legacy.pem ──► CA v1 ──► Cert v1      │"
+echo "  │  Clients Modern ── trust-modern.pem ──► CA v3 ──► Cert v3      │"
+echo "  │                                                                 │"
+echo "  │  Transition :                                                   │"
+echo "  │  Clients ── trust-transition.pem ──► CA v1 / v2 / v3           │"
+echo "  │                                                                 │"
+echo "  └─────────────────────────────────────────────────────────────────┘"
+echo ""
+
+echo "  Trust store for legacy clients (v1 only):"
+run_cmd "pki ca export --ca-dir output/ca --version v1 -o output/trust-legacy.pem"
+
+echo ""
+echo "  Trust store for modern clients (v3 only):"
+run_cmd "pki ca export --ca-dir output/ca --version v3 -o output/trust-modern.pem"
+
+echo ""
+echo "  Trust store for transition (all versions):"
+run_cmd "pki ca export --ca-dir output/ca --all -o output/trust-transition.pem"
+
+echo ""
+
+if [[ -f "output/trust-transition.pem" ]]; then
+    bundle_size=$(wc -c < "output/trust-transition.pem" | tr -d ' ')
+    echo -e "  ${CYAN}Transition bundle size:${NC} $bundle_size bytes (contains all CA versions)"
+fi
+
+echo ""
+
+pause
+
+# =============================================================================
+# Step 7: Prove Interoperability
+# =============================================================================
+
+print_step "Step 7: Prove Interoperability"
+
+echo "  Testing that certificates validate correctly with their trust stores:"
 echo ""
 
 echo "  ┌─────────────────────────────────────────────────────────────────┐"
 echo "  │  INTEROPERABILITY MATRIX                                       │"
 echo "  ├─────────────────────────────────────────────────────────────────┤"
-echo "  │                                                                 │"
-echo "  │  Certificate     │  OpenSSL (Legacy)  │  pki (PQC-aware)       │"
-echo "  │  ──────────────────────────────────────────────────────────────│"
 
-# Test Classic
-echo -n "  │  Classic (ECDSA) │  "
-if openssl verify -CAfile output/classic-ca/ca.crt output/classic-server.crt > /dev/null 2>&1; then
-    echo -ne "${GREEN}✓ OK${NC}               │  "
+# Test 1: Legacy cert with legacy trust
+echo -n "  │  v1 cert + trust-legacy.pem   │  "
+if pki verify --cert output/server-v1.pem --ca output/trust-legacy.pem > /dev/null 2>&1; then
+    echo -e "${GREEN}✓ OK${NC}                          │"
 else
-    echo -ne "${RED}✗ FAIL${NC}             │  "
-fi
-if pki verify --ca output/classic-ca/ca.crt --cert output/classic-server.crt > /dev/null 2>&1; then
-    echo -e "${GREEN}✓ OK${NC}                   │"
-else
-    echo -e "${RED}✗ FAIL${NC}                 │"
+    echo -e "${RED}✗ FAIL${NC}                        │"
 fi
 
-# Test Hybrid
-echo -n "  │  Hybrid          │  "
-if openssl verify -CAfile output/hybrid-ca/ca.crt output/hybrid-server.crt > /dev/null 2>&1; then
-    echo -ne "${GREEN}✓ OK${NC}               │  "
+# Test 2: PQC cert with modern trust
+echo -n "  │  v3 cert + trust-modern.pem   │  "
+if pki verify --cert output/server-v3.pem --ca output/trust-modern.pem > /dev/null 2>&1; then
+    echo -e "${GREEN}✓ OK${NC}                          │"
 else
-    echo -ne "${YELLOW}~ Partial${NC}          │  "
-fi
-if pki verify --ca output/hybrid-ca/ca.crt --cert output/hybrid-server.crt > /dev/null 2>&1; then
-    echo -e "${GREEN}✓ OK${NC}                   │"
-else
-    echo -e "${RED}✗ FAIL${NC}                 │"
+    echo -e "${RED}✗ FAIL${NC}                        │"
 fi
 
-# Test PQC
-echo -n "  │  Full PQC        │  "
-if openssl verify -CAfile output/pqc-ca/ca.crt output/pqc-server.crt > /dev/null 2>&1; then
-    echo -ne "${GREEN}✓ OK${NC}               │  "
+# Test 3: Legacy cert with transition trust
+echo -n "  │  v1 cert + trust-transition   │  "
+if pki verify --cert output/server-v1.pem --ca output/trust-transition.pem > /dev/null 2>&1; then
+    echo -e "${GREEN}✓ OK${NC}                          │"
 else
-    echo -ne "${RED}✗ FAIL${NC}             │  "
+    echo -e "${RED}✗ FAIL${NC}                        │"
 fi
-if pki verify --ca output/pqc-ca/ca.crt --cert output/pqc-server.crt > /dev/null 2>&1; then
-    echo -e "${GREEN}✓ OK${NC}                   │"
+
+# Test 4: PQC cert with transition trust
+echo -n "  │  v3 cert + trust-transition   │  "
+if pki verify --cert output/server-v3.pem --ca output/trust-transition.pem > /dev/null 2>&1; then
+    echo -e "${GREEN}✓ OK${NC}                          │"
 else
-    echo -e "${RED}✗ FAIL${NC}                 │"
+    echo -e "${RED}✗ FAIL${NC}                        │"
 fi
 
 echo "  │                                                                 │"
@@ -200,52 +282,74 @@ echo "  └───────────────────────
 echo ""
 
 echo "  Key insight:"
-echo "    - Hybrid certificates work with BOTH legacy and modern clients"
-echo "    - Full PQC requires PQC-aware clients"
-echo "    - Hybrid is the bridge for gradual migration"
+echo "    - Old certificates (v1) remain valid after CA rotation"
+echo "    - Transition bundle supports ALL certificate versions"
+echo "    - Clients choose which trust store to use based on their capabilities"
 echo ""
 
 pause
 
 # =============================================================================
-# Step 6: Size Comparison
+# Step 8: Demonstrate Rollback
 # =============================================================================
 
-print_step "Step 6: Size Comparison"
+print_step "Step 8: Demonstrate Rollback"
 
-echo "  Certificate sizes across the migration phases:"
+echo "  Crypto-agility means you can also go BACK if needed."
+echo "  Let's reactivate the Hybrid CA (v2)..."
 echo ""
 
-classic_ca_size=$(wc -c < "output/classic-ca/ca.crt" 2>/dev/null | tr -d ' ')
-hybrid_ca_size=$(wc -c < "output/hybrid-ca/ca.crt" 2>/dev/null | tr -d ' ')
-pqc_ca_size=$(wc -c < "output/pqc-ca/ca.crt" 2>/dev/null | tr -d ' ')
+run_cmd "pki ca activate --ca-dir output/ca --version v2"
 
-classic_cert_size=$(wc -c < "output/classic-server.crt" 2>/dev/null | tr -d ' ')
-hybrid_cert_size=$(wc -c < "output/hybrid-server.crt" 2>/dev/null | tr -d ' ')
-pqc_cert_size=$(wc -c < "output/pqc-server.crt" 2>/dev/null | tr -d ' ')
-
-echo "  ┌──────────────────────────────────────────────────────────────────┐"
-echo "  │  Phase         │  CA Cert    │  Server Cert  │  Signature       │"
-echo "  ├──────────────────────────────────────────────────────────────────┤"
-printf "  │  Phase 1       │  %6s B   │  %6s B     │  ECDSA (~64 B)   │\n" "$classic_ca_size" "$classic_cert_size"
-printf "  │  Phase 2       │  %6s B   │  %6s B     │  ECDSA+ML-DSA    │\n" "$hybrid_ca_size" "$hybrid_cert_size"
-printf "  │  Phase 3       │  %6s B   │  %6s B     │  ML-DSA (~3.3 KB)│\n" "$pqc_ca_size" "$pqc_cert_size"
-echo "  └──────────────────────────────────────────────────────────────────┘"
+echo ""
+echo "  Checking CA versions after rollback:"
 echo ""
 
-echo "  Size increase is expected and acceptable for security benefits."
+run_cmd "pki ca versions --ca-dir output/ca"
+
+echo ""
+echo -e "  ${YELLOW}v2 (Hybrid) is now active again!${NC}"
+echo ""
+echo "  This is critical for safe migrations:"
+echo "    - If PQC causes issues, rollback to Hybrid"
+echo "    - If Hybrid causes issues, rollback to Classic"
+echo "    - All existing certificates remain valid"
+echo ""
+
+pause
+
+# =============================================================================
+# Step 9: Inspect Certificates
+# =============================================================================
+
+print_step "Step 9: Inspect Certificates"
+
+echo "  Examining the certificates we created:"
+echo ""
+
+echo "  === v1 Certificate (ECDSA) ==="
+run_cmd "pki cert info output/server-v1.pem"
+
+echo ""
+echo "  === v3 Certificate (ML-DSA) ==="
+run_cmd "pki cert info output/server-v3.pem"
+
+echo ""
+echo "  === All Credentials ==="
+run_cmd "pki credential list --ca-dir output/ca"
+
 echo ""
 
 # =============================================================================
 # Conclusion
 # =============================================================================
 
-print_key_message "Crypto-agility is the ability to change algorithms without breaking your system. Hybrid is the bridge."
+print_key_message "Crypto-agility = change algorithms WITHOUT breaking clients"
 
-show_lesson "Phase 1 (Classic): Inventory your current certificates.
-Phase 2 (Hybrid): Deploy certificates with BOTH classical and PQC.
-Phase 3 (Full PQC): When ALL clients are migrated.
-Hybrid provides 100% compatibility + PQC protection.
-Never do a \"big bang\" migration - it's too risky."
+show_lesson "1. Use CA ROTATION to evolve cryptographic algorithms
+2. Publish TRUST BUNDLES during migration (v1+v2+v3)
+3. Old certificates REMAIN VALID after CA rotation
+4. ROLLBACK is always possible - activate older versions
+5. Never do \"big bang\" migration - it's too risky"
 
 show_footer
