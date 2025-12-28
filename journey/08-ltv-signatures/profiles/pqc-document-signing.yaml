@@ -14,7 +14,7 @@
 # Example:
 #   pki cert issue --ca-dir ./ltv-ca \
 #       --profile profiles/document-signing.yaml \
-#       --cn "Legal Department" \
+#       --var cn="Legal Department" \
 #       --out doc-signer.crt --key-out doc-signer.key
 #
 # =============================================================================
@@ -36,11 +36,18 @@ validity: 365d
 # Subject DN
 # -----------------------------------------------------------------------------
 subject:
-  fixed:
-    c: "FR"
-    o: "Demo Organization"
-  required:
-    - cn
+  cn: "{{ cn }}"
+  c: "FR"
+  o: "Demo Organization"
+
+# -----------------------------------------------------------------------------
+# Variables
+# -----------------------------------------------------------------------------
+variables:
+  cn:
+    type: string
+    required: true
+    description: "Signer name (e.g., 'Legal Department')"
 
 # -----------------------------------------------------------------------------
 # X.509 Extensions
