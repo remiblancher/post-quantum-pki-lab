@@ -105,7 +105,7 @@ Traditional CSR workflow:
 
 ```bash
 pki ca init --name "Encryption CA" \
-    --algorithm ml-dsa-65 \
+    --profile profiles/pqc-ca.yaml \
     --dir output/encryption-ca
 ```
 

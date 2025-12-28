@@ -181,7 +181,7 @@ CURRENT SITUATION
 ```bash
 # Create a classic ECDSA CA
 pki ca init --name "Classic CA" \
-    --algorithm ec-p256 \
+    --profile profiles/classic-ca.yaml \
     --dir output/classic-ca
 
 # Issue ECDSA server certificate
@@ -198,7 +198,7 @@ pki cert issue --ca-dir output/classic-ca \
 ```bash
 # Create hybrid CA (ECDSA + ML-DSA Catalyst)
 pki ca init --name "Hybrid CA" \
-    --algorithm ec-p256 \
+    --profile profiles/hybrid-ca.yaml \
     --dir output/hybrid-ca
 
 # Issue hybrid server certificate
@@ -215,7 +215,7 @@ pki cert issue --ca-dir output/hybrid-ca \
 ```bash
 # Create full PQC CA
 pki ca init --name "PQC CA" \
-    --algorithm ml-dsa-65 \
+    --profile profiles/pqc-ca.yaml \
     --dir output/pqc-ca
 
 # Issue PQC server certificate
