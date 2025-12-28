@@ -1,8 +1,8 @@
 # PQC Crypto-Agility: Migrate Without Breaking
 
-## The 3-Phase Migration Strategy
+## CA Rotation and Trust Bundle Migration
 
-> **Key Message:** Crypto-agility is the ability to change algorithms without breaking your system. Hybrid is the bridge.
+> **Key Message:** Crypto-agility is the ability to change algorithms without breaking your system. Use CA versioning and trust bundles.
 
 ---
 
@@ -22,7 +22,7 @@ CURRENT SITUATION
   │  ┌───────────┐  ┌───────────┐  ┌───────────┐              │
   │  │  Server   │  │  Server   │  │  Server   │  ... x 500   │
   │  │  ECDSA    │  │  ECDSA    │  │  ECDSA    │              │
-  │  │  └───────────┘  └───────────┘  └───────────┘              │
+  │  └───────────┘  └───────────┘  └───────────┘              │
   │                                                             │
   │  ┌───────────┐  ┌───────────┐  ┌───────────┐              │
   │  │  Client   │  │  Client   │  │  Client   │  ... x 9500  │
@@ -63,52 +63,46 @@ CURRENT SITUATION
 
 ---
 
-## The Solution: 3-Phase Migration
+## The Solution: CA Rotation with Trust Bundles
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
-│  PHASE 1: CLASSIC (today)                                       │
-│  ────────────────────────                                       │
+│  CA VERSIONING                                                  │
+│  ─────────────                                                  │
 │                                                                  │
-│  ┌─────────┐                                                    │
-│  │  ECDSA  │  Status quo. Inventory your systems.              │
-│  └─────────┘                                                    │
+│  Migration CA                                                    │
+│  ├── v1 (ECDSA)     ──► archived                                │
+│  ├── v2 (Hybrid)    ──► archived                                │
+│  └── v3 (ML-DSA)    ──► active                                  │
 │                                                                  │
-│  Actions:                                                        │
-│  □ Inventory all certificates                                   │
-│  □ Identify legacy vs modern clients                            │
-│  □ Test PQC tools in lab                                        │
+│  Key Insight:                                                    │
+│  - ONE logical CA with MULTIPLE cryptographic versions          │
+│  - Old certificates remain valid after rotation                  │
+│  - Trust bundles allow gradual client migration                  │
 │                                                                  │
-├──────────────────────────────────────────────────────────────────┤
+└──────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Trust Store Strategy
+
+```
+┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
-│  PHASE 2: HYBRID (transition)                                   │
-│  ─────────────────────────────                                  │
+│  TRUST STORE DEPLOYMENT                                         │
 │                                                                  │
-│  ┌─────────────────────┐                                        │
-│  │  ECDSA + ML-DSA    │  Both algorithms in one cert.          │
-│  └─────────────────────┘                                        │
+│  Clients Legacy ── trust-legacy.pem ──► CA v1 ──► Cert v1       │
+│  Clients Modern ── trust-modern.pem ──► CA v3 ──► Cert v3       │
 │                                                                  │
-│  Behavior:                                                       │
-│  - Legacy client → Uses ECDSA (ignores ML-DSA)                  │
-│  - Modern client → Verifies BOTH                                 │
+│  Transition :                                                    │
+│  Clients ── trust-transition.pem ──► CA v1 / v2 / v3            │
 │                                                                  │
-│  ✓ 100% compatibility                                           │
-│  ✓ PQC protection for modern clients                            │
-│                                                                  │
-├──────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  PHASE 3: FULL PQC (after client migration)                     │
-│  ─────────────────────────────────────────────                  │
-│                                                                  │
-│  ┌─────────┐                                                    │
-│  │  ML-DSA │  When ALL clients support PQC.                    │
-│  └─────────┘                                                    │
-│                                                                  │
-│  Prerequisites:                                                  │
-│  □ All clients updated                                          │
-│  □ Regression tests passed                                      │
-│  □ Rollback plan ready                                          │
+│  During migration:                                               │
+│  - Publish trust-transition.pem (contains ALL CA versions)      │
+│  - ALL certificates validate correctly                          │
+│  - Clients upgrade at their own pace                            │
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
 ```
@@ -141,28 +135,19 @@ CURRENT SITUATION
 
 ---
 
-## Crypto-Agility Checklist
-
-| Question | Crypto-Agile | Not Crypto-Agile |
-|----------|--------------|------------------|
-| Are algorithms configured or hardcoded? | Configured | Hardcoded |
-| Can you change algo without rebuild? | Yes | No |
-| Do certs support multiple algos? | Yes (hybrid) | No |
-| Can you rollback in < 1h? | Yes | No |
-| Is crypto inventory automated? | Yes | Manual |
-
----
-
 ## What This Demo Shows
 
 | Step | What Happens | Key Concept |
 |------|--------------|-------------|
 | 1 | Explain crypto-agility | Definition and 3-phase strategy |
-| 2 | Create Classic CA (ECDSA) | Phase 1: Current state |
-| 3 | Create Hybrid CA (ECDSA + ML-DSA) | Phase 2: Transition |
-| 4 | Create Full PQC CA (ML-DSA) | Phase 3: Target state |
-| 5 | Test interoperability | OpenSSL vs pki verify |
-| 6 | Compare certificate sizes | Size growth across phases |
+| 2 | Create Migration CA (ECDSA) | Phase 1: Current state |
+| 3 | Rotate to Hybrid CA | Phase 2: Transition |
+| 4 | Rotate to Full PQC CA | Phase 3: Target state |
+| 5 | Issue PQC certificate | New certificates use active CA |
+| 6 | Create trust stores | Legacy, modern, transition bundles |
+| 7 | Prove interoperability | Old certs remain valid |
+| 8 | Demonstrate rollback | Reactivate previous version |
+| 9 | Inspect certificates | Compare ECDSA vs ML-DSA |
 
 ---
 
@@ -176,82 +161,116 @@ CURRENT SITUATION
 
 ## The Commands
 
-### Step 1: Create Classic CA (Phase 1)
+### Step 1: Create Migration CA (Phase 1)
 
 ```bash
-# Create a classic ECDSA CA
-pki ca init --name "Classic CA" \
+# Create a Migration CA starting with ECDSA
+pki ca init --name "Migration CA" \
     --profile profiles/classic-ca.yaml \
-    --dir output/classic-ca
+    --dir output/ca
 
 # Issue ECDSA server certificate
-pki cert issue --ca-dir output/classic-ca \
+pki credential enroll --ca-dir output/ca \
     --profile ec/tls-server \
-    --cn "server.example.com" \
-    --dns server.example.com \
-    --out output/classic-server.crt \
-    --key-out output/classic-server.key
+    --var cn=server.example.com
+
+# Export the credential
+pki credential export <credential-id> \
+    --ca-dir output/ca \
+    -o output/server-v1.pem
 ```
 
-### Step 2: Create Hybrid CA (Phase 2)
+### Step 2: Rotate to Hybrid CA (Phase 2)
 
 ```bash
-# Create hybrid CA (ECDSA + ML-DSA Catalyst)
-pki ca init --name "Hybrid CA" \
-    --profile profiles/hybrid-ca.yaml \
-    --dir output/hybrid-ca
+# Rotate to hybrid mode (ECDSA + ML-DSA)
+pki ca rotate --ca-dir output/ca \
+    --profile profiles/hybrid-ca.yaml
 
-# Issue hybrid server certificate
-pki cert issue --ca-dir output/hybrid-ca \
-    --profile hybrid/catalyst/tls-server \
-    --cn "server.example.com" \
-    --dns server.example.com \
-    --out output/hybrid-server.crt \
-    --key-out output/hybrid-server.key
+# Check versions
+pki ca versions --ca-dir output/ca
+# VERSION  STATUS    ALGORITHM
+# v1       archived  ecdsa-p256
+# v2       active    hybrid-catalyst
 ```
 
-### Step 3: Create Full PQC CA (Phase 3)
+### Step 3: Rotate to Full PQC CA (Phase 3)
 
 ```bash
-# Create full PQC CA
-pki ca init --name "PQC CA" \
-    --profile profiles/pqc-ca.yaml \
-    --dir output/pqc-ca
+# Rotate to full post-quantum
+pki ca rotate --ca-dir output/ca \
+    --profile profiles/pqc-ca.yaml
 
+# Check versions
+pki ca versions --ca-dir output/ca
+# VERSION  STATUS    ALGORITHM
+# v1       archived  ecdsa-p256
+# v2       archived  hybrid-catalyst
+# v3       active    ml-dsa-65
+```
+
+### Step 4: Issue PQC Certificate
+
+```bash
 # Issue PQC server certificate
-pki cert issue --ca-dir output/pqc-ca \
-    --profile ml-dsa-kem/tls-server \
-    --cn "server.example.com" \
-    --dns server.example.com \
-    --out output/pqc-server.crt \
-    --key-out output/pqc-server.key
+pki credential enroll --ca-dir output/ca \
+    --profile ml-dsa-kem/tls-server-sign \
+    --var cn=server.example.com
+
+# Export the credential
+pki credential export <credential-id> \
+    --ca-dir output/ca \
+    -o output/server-v3.pem
 ```
 
-### Step 4: Test Interoperability
+### Step 5: Create Trust Stores
 
 ```bash
-# Legacy client (OpenSSL) - only verifies classical signature
-openssl verify -CAfile output/classic-ca/ca.crt output/classic-server.crt
-openssl verify -CAfile output/hybrid-ca/ca.crt output/hybrid-server.crt
+# Trust store for legacy clients (v1 only)
+pki ca export --ca-dir output/ca --version v1 -o output/trust-legacy.pem
 
-# PQC-aware client - verifies all signatures
-pki verify --ca output/classic-ca/ca.crt --cert output/classic-server.crt
-pki verify --ca output/hybrid-ca/ca.crt --cert output/hybrid-server.crt
-pki verify --ca output/pqc-ca/ca.crt --cert output/pqc-server.crt
+# Trust store for modern clients (v3 only)
+pki ca export --ca-dir output/ca --version v3 -o output/trust-modern.pem
+
+# Trust store for transition (all versions)
+pki ca export --ca-dir output/ca --all -o output/trust-transition.pem
+```
+
+### Step 6: Verify Interoperability
+
+```bash
+# Old cert validates with legacy trust
+pki verify --cert output/server-v1.pem --ca output/trust-legacy.pem
+
+# New cert validates with modern trust
+pki verify --cert output/server-v3.pem --ca output/trust-modern.pem
+
+# ALL certs validate with transition bundle
+pki verify --cert output/server-v1.pem --ca output/trust-transition.pem
+pki verify --cert output/server-v3.pem --ca output/trust-transition.pem
+```
+
+### Step 7: Rollback (if needed)
+
+```bash
+# Reactivate a previous version
+pki ca activate --ca-dir output/ca --version v2
+
+# Verify it's active
+pki ca versions --ca-dir output/ca
 ```
 
 ---
 
-## Typical Migration Timeline
+## Crypto-Agility Checklist
 
-```
-2024 Q4  Complete inventory
-2025 Q1  Hybrid lab tests
-2025 Q2  Hybrid deployment (5% traffic)
-2025 Q3  Hybrid deployment (100%)
-2026 Q1  Begin legacy client deprecation
-2027     Full PQC (if all clients migrated)
-```
+| Question | Crypto-Agile | Not Crypto-Agile |
+|----------|--------------|------------------|
+| Are algorithms configured or hardcoded? | Configured | Hardcoded |
+| Can you change algo without rebuild? | Yes | No |
+| Do certs support multiple algos? | Yes (hybrid) | No |
+| Can you rollback in < 1h? | Yes | No |
+| Is crypto inventory automated? | Yes | Manual |
 
 ---
 
@@ -270,10 +289,11 @@ pki verify --ca output/pqc-ca/ca.crt --cert output/pqc-server.crt
 ## What You Learned
 
 1. **Crypto-agility** is the ability to change algorithms without breaking your system
-2. **Never do "big bang"** migration - it's too risky
-3. **Hybrid certificates** provide 100% compatibility during transition
-4. **Phase 2 (Hybrid)** is the critical bridge between classic and PQC
-5. **Rollback capability** is essential for safe migration
+2. **CA rotation** allows evolving cryptographic algorithms over time
+3. **Trust bundles** enable gradual client migration
+4. **Old certificates remain valid** after CA rotation
+5. **Rollback is always possible** - reactivate older versions
+6. **Never do "big bang"** migration - it's too risky
 
 ---
 
