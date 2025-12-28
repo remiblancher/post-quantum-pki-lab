@@ -130,7 +130,7 @@ With mTLS, **BOTH** parties prove their identity:
 ```bash
 # Create dedicated CA for mTLS
 pki ca init --name "mTLS Demo CA" \
-    --algorithm ml-dsa-65 \
+    --profile profiles/pqc-ca.yaml \
     --dir output/mtls-ca
 ```
 

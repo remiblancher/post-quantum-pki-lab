@@ -163,7 +163,7 @@ Sign the code BEFORE distributing it:
 ```bash
 # Create a PQC CA for code signing
 pki ca init --name "Code Signing CA" \
-    --algorithm ml-dsa-65 \
+    --profile profiles/pqc-ca.yaml \
     --dir output/code-ca
 ```
 
