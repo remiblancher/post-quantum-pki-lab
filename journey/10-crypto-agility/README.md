@@ -107,6 +107,9 @@ CURRENT SITUATION
 └──────────────────────────────────────────────────────────────────┘
 ```
 
+> **Important:** The trust bundle is a *temporary migration artifact*.
+> It should be removed once all clients have migrated to PQC.
+
 ---
 
 ## What is Crypto-Agility?
@@ -146,7 +149,7 @@ CURRENT SITUATION
 | 5 | Issue PQC certificate | New certificates use active CA |
 | 6 | Create trust stores | Legacy, modern, transition bundles |
 | 7 | Prove interoperability | Old certs remain valid |
-| 8 | Demonstrate rollback | Reactivate previous version |
+| 8 | Incident simulation | Rollback to previous version |
 | 9 | Inspect certificates | Compare ECDSA vs ML-DSA |
 
 ---
@@ -250,13 +253,15 @@ pki verify --cert output/server-v1.pem --ca output/trust-transition.pem
 pki verify --cert output/server-v3.pem --ca output/trust-transition.pem
 ```
 
-### Step 7: Rollback (if needed)
+### Step 7: Incident Simulation (Rollback)
 
 ```bash
-# Reactivate a previous version
+# Scenario: A compatibility issue is detected on legacy appliances.
+# Action: Rollback to Hybrid CA (v2) to restore service.
+
 pki ca activate --ca-dir output/ca --version v2
 
-# Verify it's active
+# Verify rollback succeeded
 pki ca versions --ca-dir output/ca
 ```
 
@@ -282,7 +287,7 @@ pki ca versions --ca-dir output/ca
 | Phase 2 | ECDSA + ML-DSA | ~5 KB | ~6 KB | Hybrid |
 | Phase 3 | ML-DSA-65 | ~4 KB | ~5 KB | Full PQC |
 
-*Size increase is acceptable for the security benefits.*
+*Size increase is usually negligible compared to TLS records, HTTP payloads, or firmware images.*
 
 ---
 
