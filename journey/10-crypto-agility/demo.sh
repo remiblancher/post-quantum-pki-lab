@@ -229,6 +229,9 @@ if [[ -f "output/trust-transition.pem" ]]; then
 fi
 
 echo ""
+echo -e "  ${YELLOW}Note:${NC} The trust bundle is a temporary migration artifact."
+echo "        It should be removed once all clients have migrated to PQC."
+echo ""
 
 pause
 
@@ -290,12 +293,17 @@ echo ""
 pause
 
 # =============================================================================
-# Step 8: Demonstrate Rollback
+# Step 8: Incident Simulation (Rollback)
 # =============================================================================
 
-print_step "Step 8: Demonstrate Rollback"
+print_step "Step 8: Incident Simulation"
 
-echo "  Crypto-agility means you can also go BACK if needed."
+echo "  ┌─────────────────────────────────────────────────────────────────┐"
+echo "  │  SCENARIO: Compatibility issue detected on legacy appliances   │"
+echo "  │  ACTION: Rollback to Hybrid CA (v2) to restore service         │"
+echo "  └─────────────────────────────────────────────────────────────────┘"
+echo ""
+echo "  Crypto-agility means you can go BACK if needed."
 echo "  Let's reactivate the Hybrid CA (v2)..."
 echo ""
 
