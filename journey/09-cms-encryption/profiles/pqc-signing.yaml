@@ -20,7 +20,7 @@
 # Example:
 #   pki cert issue --ca-dir ./encryption-ca \
 #       --profile profiles/signing.yaml \
-#       --cn "Alice" \
+#       --var cn="Alice" \
 #       --out alice-sign.crt --key-out alice-sign.key
 #
 # =============================================================================
@@ -42,11 +42,18 @@ validity: 365d
 # Subject DN
 # -----------------------------------------------------------------------------
 subject:
-  fixed:
-    c: "FR"
-    o: "Demo Organization"
-  required:
-    - cn
+  cn: "{{ cn }}"
+  c: "FR"
+  o: "Demo Organization"
+
+# -----------------------------------------------------------------------------
+# Variables
+# -----------------------------------------------------------------------------
+variables:
+  cn:
+    type: string
+    required: true
+    description: "Signer name (e.g., 'Alice')"
 
 # -----------------------------------------------------------------------------
 # X.509 Extensions

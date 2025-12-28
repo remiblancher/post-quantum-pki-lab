@@ -15,7 +15,7 @@
 # Example:
 #   pki cert issue --ca-dir ./code-signing-ca \
 #       --profile profiles/code-signing.yaml \
-#       --cn "Developer" \
+#       --var cn="Developer" \
 #       --out developer.crt --key-out developer.key
 #
 # =============================================================================
@@ -37,11 +37,18 @@ validity: 365d
 # Subject DN
 # -----------------------------------------------------------------------------
 subject:
-  fixed:
-    c: "FR"
-    o: "Demo Organization"
-  required:
-    - cn
+  cn: "{{ cn }}"
+  c: "FR"
+  o: "Demo Organization"
+
+# -----------------------------------------------------------------------------
+# Variables
+# -----------------------------------------------------------------------------
+variables:
+  cn:
+    type: string
+    required: true
+    description: "Developer or organization name"
 
 # -----------------------------------------------------------------------------
 # X.509 Extensions

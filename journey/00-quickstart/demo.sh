@@ -66,7 +66,7 @@ pause
 step "Issue Classical TLS Certificate" \
      "ECDSA P-384, TLS Server extensions (EKU, SAN)"
 
-run_cmd "$PKI_BIN issue --ca-dir $CLASSIC_CA --profile $PROFILES/classic-tls-server.yaml --cn classic.example.com --dns classic.example.com --out $DEMO_TMP/classic-server.crt --key-out $DEMO_TMP/classic-server.key"
+run_cmd "$PKI_BIN issue --ca-dir $CLASSIC_CA --profile $PROFILES/classic-tls-server.yaml --var cn=classic.example.com --out $DEMO_TMP/classic-server.crt --key-out $DEMO_TMP/classic-server.key"
 
 echo ""
 echo -e "  ${GREEN}Certificate issued.${NC}"
@@ -96,7 +96,7 @@ pause
 step "Issue Post-Quantum TLS Certificate" \
      "ML-DSA-65 (FIPS 204), TLS Server extensions"
 
-run_cmd "$PKI_BIN issue --ca-dir $PQC_CA --profile $PROFILES/pqc-tls-server.yaml --cn pq.example.com --dns pq.example.com --out $DEMO_TMP/pq-server.crt --key-out $DEMO_TMP/pq-server.key"
+run_cmd "$PKI_BIN issue --ca-dir $PQC_CA --profile $PROFILES/pqc-tls-server.yaml --var cn=pq.example.com --out $DEMO_TMP/pq-server.crt --key-out $DEMO_TMP/pq-server.key"
 
 echo ""
 echo -e "  ${GREEN}Certificate issued.${NC}"

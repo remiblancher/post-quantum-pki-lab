@@ -48,7 +48,7 @@ echo "  The certificate inherits the hybrid nature from the CA."
 echo "  It will contain both ECDSA and ML-DSA keys/signatures."
 echo ""
 
-run_cmd "pki cert issue --ca-dir output/hybrid-ca --profile profiles/hybrid-tls-server.yaml --cn hybrid.example.com --dns hybrid.example.com --out output/hybrid-server.crt --key-out output/hybrid-server.key"
+run_cmd "pki cert issue --ca-dir output/hybrid-ca --profile profiles/hybrid-tls-server.yaml --var cn=hybrid.example.com --out output/hybrid-server.crt --key-out output/hybrid-server.key"
 
 echo ""
 echo -e "  ${BOLD}Hybrid certificate details:${NC}"
