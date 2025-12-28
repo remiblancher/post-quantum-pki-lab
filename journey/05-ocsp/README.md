@@ -59,7 +59,7 @@ Yes. Same HTTP protocol, same request/response format. Only signature sizes chan
 ```bash
 # Create PQC CA with ML-DSA-65
 pki ca init --name "PQC CA" \
-    --algorithm ml-dsa-65 \
+    --profile profiles/pqc-ca.yaml \
     --dir output/pqc-ca
 
 # Issue delegated OCSP responder certificate

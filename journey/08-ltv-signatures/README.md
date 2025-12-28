@@ -146,7 +146,7 @@ Embed EVERYTHING needed in a self-sufficient bundle:
 ```bash
 # Create PQC CA
 pki ca init --name "LTV Demo CA" \
-    --algorithm ml-dsa-65 \
+    --profile profiles/pqc-ca.yaml \
     --dir output/ltv-ca
 
 # Issue document signing certificate

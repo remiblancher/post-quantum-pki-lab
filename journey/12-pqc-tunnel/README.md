@@ -189,7 +189,7 @@ For transition, we combine both:
 ```bash
 # Create CA with ML-DSA-65 for signing
 pki ca init --name "KEM Demo CA" \
-    --algorithm ml-dsa-65 \
+    --profile profiles/pqc-ca.yaml \
     --dir output/kem-ca
 ```
 
