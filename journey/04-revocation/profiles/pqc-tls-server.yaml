@@ -13,7 +13,7 @@
 # Example:
 #   pki cert issue --ca-dir ./revocation-ca \
 #       --profile profiles/pqc-tls-server.yaml \
-#       --cn server.example.com --dns server.example.com \
+#       --var cn=server.example.com \
 #       --out server.crt --key-out server.key
 #
 # =============================================================================
@@ -35,11 +35,22 @@ validity: 365d
 # Subject DN
 # -----------------------------------------------------------------------------
 subject:
-  fixed:
-    c: "FR"
-    o: "Demo Organization"
-  required:
-    - cn
+  cn: "{{ cn }}"
+  c: "FR"
+  o: "Demo Organization"
+
+# -----------------------------------------------------------------------------
+# Variables
+# -----------------------------------------------------------------------------
+variables:
+  cn:
+    type: dns_name
+    required: true
+    description: "Server common name (e.g., server.example.com)"
+  dns:
+    type: dns_names
+    required: false
+    description: "Additional DNS names for SAN"
 
 # -----------------------------------------------------------------------------
 # X.509 Extensions
@@ -66,5 +77,5 @@ extensions:
   # Subject Alternative Name
   subjectAltName:
     critical: false
-    dns:
-      - "${DNS}"
+    dns: "{{ dns }}"
+    dns_include_cn: true

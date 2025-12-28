@@ -190,9 +190,16 @@ show_files() {
     fi
 }
 
-# Pause and wait for user
+# Pause and wait for user (skipped in CI mode)
 pause() {
     local message="${1:-Press Enter to continue...}"
+
+    # Skip pause in CI mode
+    if [[ "${CI:-false}" == "true" ]]; then
+        echo -e "  ${DIM}[CI mode: skipping pause]${NC}"
+        return 0
+    fi
+
     echo ""
     read -p "$(echo -e "  ${DIM}$message${NC}")" _
 }

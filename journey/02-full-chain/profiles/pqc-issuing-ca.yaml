@@ -16,7 +16,7 @@
 # Example:
 #   pki cert issue --ca-dir ./root-ca \
 #       --profile profiles/pqc-issuing-ca.yaml \
-#       --cn "PQ Issuing CA" \
+#       --name "PQ Issuing CA" \
 #       --out issuing-ca.crt --key-out issuing-ca.key
 #
 # =============================================================================
@@ -44,9 +44,8 @@ validity: 3650d
 # Subject DN
 # -----------------------------------------------------------------------------
 subject:
-  fixed:
-    c: "FR"
-    o: "Demo Organization"
+  c: "FR"
+  o: "Demo Organization"
 
 # -----------------------------------------------------------------------------
 # X.509 Extensions

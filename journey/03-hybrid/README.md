@@ -83,8 +83,7 @@ pki inspect output/hybrid-ca/ca.crt
 # Issue hybrid certificate for TLS server
 pki cert issue --ca-dir output/hybrid-ca \
     --profile profiles/hybrid-tls-server.yaml \
-    --cn hybrid.example.com \
-    --dns hybrid.example.com \
+    --var cn=hybrid.example.com \
     --out output/hybrid-server.crt \
     --key-out output/hybrid-server.key
 

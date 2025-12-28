@@ -92,8 +92,7 @@ pki inspect output/pqc-issuing-ca/ca.crt
 # Issue end-entity certificate for TLS server
 pki cert issue --ca-dir output/pqc-issuing-ca \
     --profile profiles/pqc-tls-server.yaml \
-    --cn server.example.com \
-    --dns server.example.com \
+    --var cn=server.example.com \
     --out output/server.crt \
     --key-out output/server.key
 

@@ -26,7 +26,7 @@
 #   # Step 1: Generate CSR (signed by signing key)
 #   pki cert csr --algorithm ml-kem-768 \
 #       --keyout alice-enc.key \
-#       --cn "Alice" \
+#       --var cn="Alice" \
 #       --attest-cert alice-sign.crt \
 #       --attest-key alice-sign.key \
 #       -o alice-enc.csr
@@ -56,11 +56,18 @@ validity: 365d
 # Subject DN
 # -----------------------------------------------------------------------------
 subject:
-  fixed:
-    c: "FR"
-    o: "Demo Organization"
-  required:
-    - cn
+  cn: "{{ cn }}"
+  c: "FR"
+  o: "Demo Organization"
+
+# -----------------------------------------------------------------------------
+# Variables
+# -----------------------------------------------------------------------------
+variables:
+  cn:
+    type: string
+    required: true
+    description: "Recipient name (e.g., 'Alice')"
 
 # -----------------------------------------------------------------------------
 # X.509 Extensions

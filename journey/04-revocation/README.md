@@ -78,8 +78,7 @@ pki ca init --profile profiles/pqc-ca.yaml \
 # Issue TLS certificate
 pki cert issue --ca-dir output/pqc-ca \
     --profile profiles/pqc-tls-server.yaml \
-    --cn server.example.com \
-    --dns server.example.com \
+    --var cn=server.example.com \
     --out output/server.crt \
     --key-out output/server.key
 

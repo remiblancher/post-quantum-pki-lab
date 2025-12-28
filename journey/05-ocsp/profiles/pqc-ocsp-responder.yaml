@@ -15,7 +15,7 @@
 # Example:
 #   pki cert issue --ca-dir ./ocsp-ca \
 #       --profile profiles/ocsp-responder.yaml \
-#       --cn "OCSP Responder" \
+#       --var cn="OCSP Responder" \
 #       --out ocsp-responder.crt --key-out ocsp-responder.key
 #
 # =============================================================================
@@ -37,11 +37,18 @@ validity: 365d
 # Subject DN
 # -----------------------------------------------------------------------------
 subject:
-  fixed:
-    c: "FR"
-    o: "Demo Organization"
-  required:
-    - cn
+  cn: "{{ cn }}"
+  c: "FR"
+  o: "Demo Organization"
+
+# -----------------------------------------------------------------------------
+# Variables
+# -----------------------------------------------------------------------------
+variables:
+  cn:
+    type: string
+    required: true
+    description: "OCSP Responder name (e.g., 'OCSP Responder')"
 
 # -----------------------------------------------------------------------------
 # X.509 Extensions

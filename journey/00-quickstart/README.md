@@ -42,8 +42,7 @@ pki ca init --profile profiles/classic-root-ca.yaml \
 # Issue TLS certificate
 pki cert issue --ca-dir ./classic-ca \
     --profile profiles/classic-tls-server.yaml \
-    --cn classic.example.com \
-    --dns classic.example.com \
+    --var cn=classic.example.com \
     --out classic-server.crt \
     --key-out classic-server.key
 
@@ -61,8 +60,7 @@ pki ca init --profile profiles/pqc-root-ca.yaml \
 # Issue TLS certificate
 pki cert issue --ca-dir ./pqc-ca \
     --profile profiles/pqc-tls-server.yaml \
-    --cn pq.example.com \
-    --dns pq.example.com \
+    --var cn=pq.example.com \
     --out pq-server.crt \
     --key-out pq-server.key
 

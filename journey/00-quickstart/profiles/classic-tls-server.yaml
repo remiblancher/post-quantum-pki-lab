@@ -15,7 +15,7 @@
 # Example:
 #   pki cert issue --ca-dir ./classic-ca \
 #       --profile profiles/classic-tls-server.yaml \
-#       --cn classic.example.com --dns classic.example.com \
+#       --var cn=classic.example.com \
 #       --out classic-server.crt --key-out classic-server.key
 #
 # =============================================================================
@@ -37,11 +37,22 @@ validity: 365d
 # Subject DN
 # -----------------------------------------------------------------------------
 subject:
-  fixed:
-    c: "FR"
-    o: "Demo Organization"
-  required:
-    - cn
+  cn: "{{ cn }}"
+  c: "FR"
+  o: "Demo Organization"
+
+# -----------------------------------------------------------------------------
+# Variables
+# -----------------------------------------------------------------------------
+variables:
+  cn:
+    type: dns_name
+    required: true
+    description: "Server common name (e.g., server.example.com)"
+  dns:
+    type: dns_names
+    required: false
+    description: "Additional DNS names for SAN"
 
 # -----------------------------------------------------------------------------
 # X.509 Extensions
@@ -68,5 +79,5 @@ extensions:
   # Subject Alternative Name (RFC 5280 Section 4.2.1.6)
   subjectAltName:
     critical: false
-    dns:
-      - "${DNS}"
+    dns: "{{ dns }}"
+    dns_include_cn: true

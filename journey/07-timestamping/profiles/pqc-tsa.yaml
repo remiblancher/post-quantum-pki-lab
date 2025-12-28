@@ -15,7 +15,7 @@
 # Example:
 #   pki cert issue --ca-dir ./tsa-ca \
 #       --profile profiles/tsa.yaml \
-#       --cn "Demo TSA" \
+#       --var cn="Demo TSA" \
 #       --out tsa.crt --key-out tsa.key
 #
 # =============================================================================
@@ -37,11 +37,18 @@ validity: 365d
 # Subject DN
 # -----------------------------------------------------------------------------
 subject:
-  fixed:
-    c: "FR"
-    o: "Demo Organization"
-  required:
-    - cn
+  cn: "{{ cn }}"
+  c: "FR"
+  o: "Demo Organization"
+
+# -----------------------------------------------------------------------------
+# Variables
+# -----------------------------------------------------------------------------
+variables:
+  cn:
+    type: string
+    required: true
+    description: "TSA name (e.g., 'Demo TSA')"
 
 # -----------------------------------------------------------------------------
 # X.509 Extensions

@@ -15,7 +15,7 @@
 # Example:
 #   pki cert issue --ca-dir ./pqc-ca \
 #       --profile profiles/pqc-tls-server.yaml \
-#       --cn pq.example.com --dns pq.example.com \
+#       --var cn=pq.example.com \
 #       --out pq-server.crt --key-out pq-server.key
 #
 # =============================================================================
@@ -41,11 +41,22 @@ validity: 365d
 # Subject DN
 # -----------------------------------------------------------------------------
 subject:
-  fixed:
-    c: "FR"
-    o: "Demo Organization"
-  required:
-    - cn
+  cn: "{{ cn }}"
+  c: "FR"
+  o: "Demo Organization"
+
+# -----------------------------------------------------------------------------
+# Variables
+# -----------------------------------------------------------------------------
+variables:
+  cn:
+    type: dns_name
+    required: true
+    description: "Server common name (e.g., server.example.com)"
+  dns:
+    type: dns_names
+    required: false
+    description: "Additional DNS names for SAN"
 
 # -----------------------------------------------------------------------------
 # X.509 Extensions
@@ -72,5 +83,5 @@ extensions:
   # Subject Alternative Name (RFC 5280 Section 4.2.1.6)
   subjectAltName:
     critical: false
-    dns:
-      - "${DNS}"
+    dns: "{{ dns }}"
+    dns_include_cn: true
