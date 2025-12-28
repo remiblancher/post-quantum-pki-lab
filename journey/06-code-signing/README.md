@@ -172,8 +172,8 @@ pki ca init --name "Code Signing CA" \
 ```bash
 # Generate key and CSR
 pki cert csr --algorithm ml-dsa-65 \
-    --key-out output/code-signing.key \
-    --var cn="ACME Software" \
+    --keyout output/code-signing.key \
+    --cn "ACME Software" \
     --out output/code-signing.csr
 
 # Issue certificate from CSR

@@ -43,7 +43,7 @@ echo "    - Extended Key Usage: codeSigning"
 echo "    - Key Usage: digitalSignature"
 echo ""
 
-run_cmd "pki cert csr --algorithm ml-dsa-65 --key-out output/code-signing.key --var cn=\"ACME Software\" --out output/code-signing.csr"
+run_cmd "pki cert csr --algorithm ml-dsa-65 --keyout output/code-signing.key --cn \"ACME Software\" --out output/code-signing.csr"
 
 echo ""
 
