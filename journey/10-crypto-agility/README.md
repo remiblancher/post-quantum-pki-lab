@@ -174,7 +174,7 @@ pki ca init --name "Migration CA" \
 
 # Issue ECDSA server certificate
 pki credential enroll --ca-dir output/ca \
-    --profile profiles/tls-server-classic.yaml \
+    --profile profiles/classic-tls-server.yaml \
     --var cn=server.example.com
 
 # Export the credential
@@ -217,7 +217,7 @@ pki ca versions --ca-dir output/ca
 ```bash
 # Issue PQC server certificate
 pki credential enroll --ca-dir output/ca \
-    --profile profiles/tls-server-pqc.yaml \
+    --profile profiles/pqc-tls-server.yaml \
     --var cn=server.example.com
 
 # Export the credential
