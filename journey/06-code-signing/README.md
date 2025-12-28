@@ -170,12 +170,15 @@ pki ca init --name "Code Signing CA" \
 ### Step 2: Issue Code Signing Certificate
 
 ```bash
-# Issue code signing certificate
+# Generate signing key
+pki key gen --algorithm ml-dsa-65 --out output/code-signing.key
+
+# Issue certificate with existing key
 pki cert issue --ca-dir output/code-ca \
     --profile profiles/pqc-code-signing.yaml \
+    --key output/code-signing.key \
     --var cn="ACME Software" \
-    --out output/code-signing.crt \
-    --key-out output/code-signing.key
+    --out output/code-signing.crt
 ```
 
 ### Step 3: Sign a Binary
