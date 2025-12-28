@@ -21,6 +21,8 @@
 | **Issuing CA** | Intermediate CA that issues end-entity certificates. Signed by Root CA. |
 | **CRL** | Certificate Revocation List. Signed list of revoked certificate serial numbers. |
 | **OCSP** | Online Certificate Status Protocol. Real-time certificate validity check. |
+| **TSA** | Timestamp Authority. Trusted service that provides cryptographic proof of when data existed (RFC 3161). |
+| **CSR Attestation** | RFC 9883 mechanism where a signing certificate attests for a KEM key that cannot sign its own CSR. |
 | **mTLS** | Mutual TLS. Both client and server authenticate with certificates. |
 | **SAN** | Subject Alternative Name. Certificate extension for multiple identities (DNS, IP, email). |
 
@@ -30,6 +32,7 @@
 |------|------------|
 | **PQC** | Post-Quantum Cryptography. Algorithms resistant to quantum computer attacks. |
 | **SNDL** | Store Now, Decrypt Later. Threat where adversaries capture encrypted data today to decrypt with future quantum computers. |
+| **TNFL** | Trust Now, Forge Later. Threat where classical signatures can be forged retroactively once quantum computers exist. |
 | **Hybrid** | Combining classical + post-quantum algorithms for defense in depth. |
 | **Catalyst** | ITU-T X.509 9.8 hybrid certificate format with dual signatures. |
 | **Composite** | Alternative hybrid format combining keys/signatures into single objects. |
@@ -54,5 +57,7 @@
 | **FIPS 204** | NIST standard for ML-DSA (digital signatures). |
 | **FIPS 205** | NIST standard for SLH-DSA (hash-based signatures). |
 | **X.509** | ITU-T standard for public key certificates. |
+| **RFC 3161** | Time-Stamp Protocol (TSP). Standard for trusted timestamping services. |
+| **RFC 9883** | Use of Post-Quantum KEM in CMS. Defines CSR attestation for KEM keys. |
 | **CMS** | Cryptographic Message Syntax (RFC 5652). Format for signed/encrypted data. |
 | **S/MIME** | Secure email standard using CMS. |
