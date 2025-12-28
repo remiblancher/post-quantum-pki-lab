@@ -45,37 +45,37 @@ Then start with: `./journey/00-quickstart/demo.sh`
 
 | # | Mission | Time | Key Message |
 |---|---------|------|-------------|
-| 0 | [**Quick Start**](journey/00-quickstart/) — Create your first CA | 8 min | Quantum breaks algorithms, not PKI workflows. |
-| 1 | [**The Revelation**](journey/01-revelation/) — Why PQC matters? | 7 min | Quantum attacks are passive and retroactive. |
+| 0 | [**Quick Start**](journey/00-quickstart/) — Create your first CA | 8 min | Quantum breaks algorithms, not PKI workflows. Migration is configuration, not redesign. |
+| 1 | [**The Revelation**](journey/01-revelation/) — Why PQC matters? | 7 min | Quantum attacks are passive and retroactive. Today's encrypted data is tomorrow's plaintext. |
 
 ### 📚 Core PKI
 
 | # | Mission | Time | Key Message |
 |---|---------|------|-------------|
-| 2 | [**Full PQC Chain**](journey/02-full-chain/) — Root → Issuing → TLS (ML-DSA) | 10 min | A single classical link breaks long-term security. |
-| 3 | [**Hybrid Catalyst**](journey/03-hybrid/) — Dual-key certificate (ECDSA + ML-DSA) | 10 min | Hybrid certificates allow PQC without breaking legacy. |
+| 2 | [**Full PQC Chain**](journey/02-full-chain/) — Root → Issuing → TLS (ML-DSA) | 10 min | One classical link breaks the entire chain. PQC must be end-to-end. |
+| 3 | [**Hybrid Catalyst**](journey/03-hybrid/) — Dual-key certificate (ECDSA + ML-DSA) | 10 min | Hybrid bridges legacy and quantum-safe. Security fails only if both algorithms fail. |
 
 ### ⚙️ PKI Lifecycle
 
 | # | Mission | Time | Key Message |
 |---|---------|------|-------------|
-| 4 | [**Revocation**](journey/04-revocation/) — CRL generation | 8 min | Compromised PQC keys must be revoked like classical ones. |
-| 5 | [**PQC OCSP**](journey/05-ocsp/) — Is This Cert Still Good? | 8 min | OCSP limits the window of trust after key compromise. |
+| 4 | [**Revocation**](journey/04-revocation/) — CRL generation | 8 min | PQC keys get compromised too. Revocation works exactly the same. |
+| 5 | [**PQC OCSP**](journey/05-ocsp/) — Is This Cert Still Good? | 8 min | OCSP reports trust in real-time. PQC doesn't change how revocation is checked. |
 
 ### 🔧 Applications
 
 | # | Mission | Time | Key Message |
 |---|---------|------|-------------|
-| 6 | [**PQC Code Signing**](journey/06-code-signing/) — Signatures That Outlive the Threat | 8 min | Quantum turns old signatures into perfect forgeries. |
-| 7 | [**PQC Timestamping**](journey/07-timestamping/) — Trust Now, Verify Forever | 8 min | Without PQC, time-based proofs can be forged retroactively. |
-| 8 | [**PQC LTV**](journey/08-ltv-signatures/) — Sign Today, Verify in 30 Years | 10 min | All embedded proofs must resist future quantum attacks. |
-| 9 | [**CMS Encryption**](journey/09-cms-encryption/) — Encrypt documents (ML-KEM) | 10 min | Quantum-safe encryption requires new trust models (KEM). |
+| 6 | [**PQC Code Signing**](journey/06-code-signing/) — Signatures That Outlive the Threat | 8 min | Signatures must outlive algorithms. Quantum makes forgery undetectable. |
+| 7 | [**PQC Timestamping**](journey/07-timestamping/) — Trust Now, Verify Forever | 8 min | Timestamps prove WHEN. Without PQC, that proof becomes forgeable. |
+| 8 | [**PQC LTV**](journey/08-ltv-signatures/) — Sign Today, Verify in 30 Years | 10 min | LTV bundles all proofs for offline verification. Every element must be quantum-safe. |
+| 9 | [**CMS Encryption**](journey/09-cms-encryption/) — Encrypt documents (ML-KEM) | 10 min | KEM keys can't sign. Attestation links encryption keys to identity. |
 
 ### 🧭 Architecture & Migration
 
 | # | Mission | Time | Key Message |
 |---|---------|------|-------------|
-| 10 | [**Crypto-Agility**](journey/10-crypto-agility/) — Migrate ECDSA → ML-DSA | 12 min | Quantum timelines are uncertain. Migration must be reversible. |
+| 10 | [**Crypto-Agility**](journey/10-crypto-agility/) — Migrate ECDSA → ML-DSA | 12 min | Quantum timelines are uncertain. Crypto-agility means reversible migration. |
 
 ---
 
