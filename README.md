@@ -142,7 +142,7 @@ post-quantum-pki-lab/
 
 ## About
 
-An **educational resource** to help teams understand PQC migration through hands-on practice.
+An **educational resource** to help teams understand PKI and post-quantum migration through hands-on practice.
 
 ## License
 
