@@ -1,12 +1,12 @@
 #!/bin/bash
 # =============================================================================
-# Banner for Post-Quantum PKI Lab
+# Banner for Post-Quantum PKI Lab (QLAB)
 # =============================================================================
 
 source "$(dirname "${BASH_SOURCE[0]}")/colors.sh"
 
 show_banner() {
-    local title="${1:-Post-Quantum PKI Lab}"
+    local title="${1:-Post-Quantum PKI Lab (QLAB)}"
 
     echo -e "${BOLD_CYAN}"
     cat << 'EOF'
@@ -25,7 +25,7 @@ EOF
 show_footer() {
     echo ""
     echo -e "${CYAN}  ─────────────────────────────────────────────────${NC}"
-    echo -e "  ${PURPLE}QentriQ${NC} — ${BLUE}https://qentriq.com${NC}"
+    echo -e "  ${DIM}QLAB uses QPKI (Post-Quantum PKI)${NC}"
     echo ""
 }
 

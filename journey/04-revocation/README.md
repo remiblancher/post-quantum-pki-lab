@@ -71,12 +71,12 @@ The same way you revoke any certificate. PKI operations are algorithm-agnostic.
 
 ```bash
 # Create PQC CA
-pki ca init --profile profiles/pqc-ca.yaml \
+qpki ca init --profile profiles/pqc-ca.yaml \
     --name "PQC CA" \
     --dir output/pqc-ca
 
 # Issue TLS certificate
-pki cert issue --ca-dir output/pqc-ca \
+qpki cert issue --ca-dir output/pqc-ca \
     --profile profiles/pqc-tls-server.yaml \
     --var cn=server.example.com \
     --out output/server.crt \
@@ -90,17 +90,17 @@ openssl x509 -in output/server.crt -noout -serial
 
 ```bash
 # Revoke certificate with reason
-pki cert revoke <serial> --ca-dir output/pqc-ca --reason keyCompromise
+qpki cert revoke <serial> --ca-dir output/pqc-ca --reason keyCompromise
 
 # Generate updated CRL
-pki ca crl gen --ca-dir output/pqc-ca
+qpki ca crl gen --ca-dir output/pqc-ca
 ```
 
 ### Step 3: Verify Revocation
 
 ```bash
 # Verify certificate against CRL (should fail)
-pki verify --cert output/server.crt \
+qpki verify --cert output/server.crt \
     --ca output/pqc-ca/ca.crt \
     --crl output/pqc-ca/crl/ca.crl
 ```
@@ -130,10 +130,10 @@ pki verify --cert output/server.crt \
    └─► Identify affected certificates (serial numbers)
 
 3. REVOKE
-   └─► pki cert revoke <serial> --ca-dir <ca> --reason keyCompromise
+   └─► qpki cert revoke <serial> --ca-dir <ca> --reason keyCompromise
 
 4. PUBLISH
-   └─► pki ca crl gen --ca-dir <ca>
+   └─► qpki ca crl gen --ca-dir <ca>
 
 5. NOTIFY
    └─► Inform relying parties, update distribution points

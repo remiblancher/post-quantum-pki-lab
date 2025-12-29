@@ -36,46 +36,46 @@ After running the demo, artifacts are in `output/`.
 
 ```bash
 # Create CA
-pki ca init --profile profiles/classic-root-ca.yaml \
+qpki ca init --profile profiles/classic-root-ca.yaml \
     --name "Classic Root CA" --dir ./classic-ca
 
 # Generate key and CSR
-pki cert csr --algorithm ecdsa-p384 \
+qpki cert csr --algorithm ecdsa-p384 \
     --keyout classic-server.key \
     --cn classic.example.com \
     --out classic-server.csr
 
 # Issue TLS certificate
-pki cert issue --ca-dir ./classic-ca \
+qpki cert issue --ca-dir ./classic-ca \
     --profile profiles/classic-tls-server.yaml \
     --csr classic-server.csr \
     --out classic-server.crt
 
 # Inspect
-pki inspect classic-server.crt
+qpki inspect classic-server.crt
 ```
 
 ### Step 2: Post-Quantum (ML-DSA-65)
 
 ```bash
 # Create CA
-pki ca init --profile profiles/pqc-root-ca.yaml \
+qpki ca init --profile profiles/pqc-root-ca.yaml \
     --name "PQ Root CA" --dir ./pqc-ca
 
 # Generate key and CSR
-pki cert csr --algorithm ml-dsa-65 \
+qpki cert csr --algorithm ml-dsa-65 \
     --keyout pq-server.key \
     --cn pq.example.com \
     --out pq-server.csr
 
 # Issue TLS certificate
-pki cert issue --ca-dir ./pqc-ca \
+qpki cert issue --ca-dir ./pqc-ca \
     --profile profiles/pqc-tls-server.yaml \
     --csr pq-server.csr \
     --out pq-server.crt
 
 # Inspect
-pki inspect pq-server.crt
+qpki inspect pq-server.crt
 ```
 
 **Notice anything?** The workflow is identical. Only the algorithm name changes.
@@ -110,7 +110,7 @@ pki inspect pq-server.crt
 
 **Switching to post-quantum is a profile change, not an architecture change.**
 
-The workflow stays identical: `ca init` → `cert csr` → `cert issue` → X.509 certificates.
+The workflow stays identical: `qpki ca init` → `qpki cert csr` → `qpki cert issue` → X.509 certificates.
 Only the algorithm (and sizes) change.
 
 ---
@@ -156,4 +156,4 @@ ML-DSA     ├───────────────────┼──
 
 ---
 
-← [Home](../../README.md) | [Next: The Revelation →](../01-revelation/)
+← [QLAB Home](../../README.md) | [Next: The Revelation →](../01-revelation/)

@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# Common Functions for Post-Quantum PKI Lab
+# Common Functions for Post-Quantum PKI Lab (QLAB)
 # =============================================================================
 
 LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -10,10 +10,10 @@ source "$LIB_DIR/banner.sh"
 # Get the lab root directory
 LAB_ROOT="$(cd "$LIB_DIR/.." && pwd)"
 
-# PKI binary location (always in bin/)
-PKI_BIN="$LAB_ROOT/bin/pki"
+# QPKI binary location (QLAB uses QPKI for all PKI operations)
+PKI_BIN="$LAB_ROOT/bin/qpki"
 
-# Add bin directory to PATH so 'pki' command works
+# Add bin directory to PATH so 'qpki' command works
 export PATH="$LAB_ROOT/bin:$PATH"
 
 # Output directory for demo artifacts (local to each demo)
@@ -41,9 +41,9 @@ setup_demo() {
     # Show banner
     show_banner "$demo_name"
 
-    # Check PKI binary
+    # Check QPKI binary
     if [[ ! -x "$PKI_BIN" ]]; then
-        print_error "PKI tool not installed"
+        print_error "QPKI tool not installed"
         print_info "Run: ./tooling/install.sh"
         exit 1
     fi

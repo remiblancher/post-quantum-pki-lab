@@ -149,19 +149,19 @@ Embed EVERYTHING needed in a self-sufficient bundle:
 
 ```bash
 # Create PQC CA
-pki ca init --name "LTV Demo CA" \
+qpki ca init --name "LTV Demo CA" \
     --profile profiles/pqc-ca.yaml \
     --dir output/ltv-ca
 
 # Issue document signing certificate
-pki cert issue --ca-dir output/ltv-ca \
+qpki cert issue --ca-dir output/ltv-ca \
     --profile profiles/pqc-document-signing.yaml \
     --var cn="Alice (Legal Counsel)" \
     --out output/alice.crt \
     --keyout output/alice.key
 
 # Issue TSA certificate
-pki cert issue --ca-dir output/ltv-ca \
+qpki cert issue --ca-dir output/ltv-ca \
     --profile profiles/pqc-tsa.yaml \
     --var cn="LTV Timestamp Authority" \
     --out output/tsa.crt \
@@ -180,7 +180,7 @@ Parties: ACME Properties / TechCorp Industries
 EOF
 
 # Sign with CMS (ML-DSA)
-pki cms sign --data output/contract.txt \
+qpki cms sign --data output/contract.txt \
     --cert output/alice.crt \
     --key output/alice.key \
     -o output/contract.p7s
@@ -190,7 +190,7 @@ pki cms sign --data output/contract.txt \
 
 ```bash
 # Timestamp the signature (proves WHEN it was signed)
-pki tsa sign --data output/contract.p7s \
+qpki tsa sign --data output/contract.p7s \
     --cert output/tsa.crt \
     --key output/tsa.key \
     -o output/contract.tsr
@@ -211,7 +211,7 @@ cat output/alice.crt output/ltv-ca/ca.crt > output/ltv-bundle/chain.pem
 
 ```bash
 # Verify using only the bundle (no network)
-pki cms verify --signature output/ltv-bundle/signature.p7s \
+qpki cms verify --signature output/ltv-bundle/signature.p7s \
     --data output/ltv-bundle/document.txt
 # Result: VALID - signature verified with bundled chain
 ```
