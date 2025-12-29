@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# Workspace Management for Post-Quantum PKI Lab
+# Workspace Management for Post-Quantum PKI Lab (QLAB)
 # =============================================================================
 # Provides persistent workspace per level (no more rm -rf at each demo)
 

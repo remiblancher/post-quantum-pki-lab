@@ -69,26 +69,26 @@ This is the reality of PQC migration. You can't flip a switch and move everythin
 
 ```bash
 # Initialize hybrid CA with both classical and PQC keys
-pki ca init --profile profiles/hybrid-root-ca.yaml \
+qpki ca init --profile profiles/hybrid-root-ca.yaml \
     --name "Hybrid Root CA" \
     --dir output/hybrid-ca
 
 # Inspect
-pki inspect output/hybrid-ca/ca.crt
+qpki inspect output/hybrid-ca/ca.crt
 ```
 
 ### Step 2: Issue Hybrid TLS Certificate
 
 ```bash
 # Issue hybrid certificate for TLS server
-pki cert issue --ca-dir output/hybrid-ca \
+qpki cert issue --ca-dir output/hybrid-ca \
     --profile profiles/hybrid-tls-server.yaml \
     --var cn=hybrid.example.com \
     --out output/hybrid-server.crt \
     --keyout output/hybrid-server.key
 
 # Inspect
-pki inspect output/hybrid-server.crt
+qpki inspect output/hybrid-server.crt
 ```
 
 ### Step 3: Test Interoperability
@@ -98,8 +98,8 @@ pki inspect output/hybrid-server.crt
 openssl verify -CAfile output/hybrid-ca/ca.crt output/hybrid-server.crt
 # → OK (uses ECDSA, ignores PQC extensions)
 
-# PQC-aware client (pki tool)
-pki verify --cert output/hybrid-server.crt --ca output/hybrid-ca/ca.crt
+# PQC-aware client (qpki tool)
+qpki verify --cert output/hybrid-server.crt --ca output/hybrid-ca/ca.crt
 # → OK (verifies BOTH ECDSA and ML-DSA signatures)
 ```
 
@@ -138,7 +138,7 @@ A Catalyst certificate (ITU-T X.509 Section 9.8) contains dual keys:
 | Client Type | What It Does | Result |
 |-------------|--------------|--------|
 | Legacy (OpenSSL) | Uses ECDSA, ignores PQC extensions | ✓ OK |
-| PQC-Aware (pki) | Verifies BOTH signatures | ✓ OK |
+| PQC-Aware (qpki) | Verifies BOTH signatures | ✓ OK |
 
 **This is the power of hybrid: zero breaking changes for legacy clients.**
 

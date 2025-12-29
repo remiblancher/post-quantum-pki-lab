@@ -1,7 +1,7 @@
 #!/bin/bash
 # =============================================================================
-# PKI Tool Installation Script
-# Post-Quantum PKI Lab
+# QPKI Tool Installation Script
+# Post-Quantum PKI Lab (QLAB)
 # =============================================================================
 
 set -e
@@ -18,7 +18,8 @@ NC='\033[0m'
 
 echo -e "${CYAN}"
 echo "=============================================="
-echo "  Post-Quantum PKI Lab - Tool Installation"
+echo "  QLAB - Post-Quantum PKI Lab"
+echo "  Installing QPKI (Post-Quantum PKI) toolkit"
 echo "=============================================="
 echo -e "${NC}"
 
@@ -45,27 +46,27 @@ echo -e "${GREEN}Detected:${NC} $OS / $ARCH"
 # Check if binary already exists
 # =============================================================================
 
-if [[ -x "$LAB_ROOT/bin/pki" ]]; then
+if [[ -x "$LAB_ROOT/bin/qpki" ]]; then
     echo ""
-    echo -e "${GREEN}PKI tool already installed at: $LAB_ROOT/bin/pki${NC}"
+    echo -e "${GREEN}QPKI tool already installed at: $LAB_ROOT/bin/qpki${NC}"
     echo ""
-    "$LAB_ROOT/bin/pki" version 2>/dev/null || echo -e "${YELLOW}(version check not available)${NC}"
+    "$LAB_ROOT/bin/qpki" version 2>/dev/null || echo -e "${YELLOW}(version check not available)${NC}"
     echo ""
     echo -e "To rebuild from source, remove the binary first:"
-    echo -e "  ${CYAN}rm $LAB_ROOT/bin/pki && ./tooling/install.sh${NC}"
+    echo -e "  ${CYAN}rm $LAB_ROOT/bin/qpki && ./tooling/install.sh${NC}"
     echo ""
     exit 0
 fi
 
 # =============================================================================
-# Option 1: Build from source (if pki repo is available)
+# Option 1: Build from source (if QPKI repo is available)
 # =============================================================================
 
 PKI_SOURCE_DIR="${PKI_SOURCE_DIR:-$LAB_ROOT/../pki}"
 
 if [[ -d "$PKI_SOURCE_DIR" ]] && [[ -f "$PKI_SOURCE_DIR/go.mod" ]]; then
     echo ""
-    echo -e "${CYAN}Found PKI source at: $PKI_SOURCE_DIR${NC}"
+    echo -e "${CYAN}Found QPKI source at: $PKI_SOURCE_DIR${NC}"
     echo -e "Building from source..."
     echo ""
 
@@ -81,21 +82,21 @@ if [[ -d "$PKI_SOURCE_DIR" ]] && [[ -f "$PKI_SOURCE_DIR/go.mod" ]]; then
     echo -e "Go version: $GO_VERSION"
 
     # Build
-    echo -e "${CYAN}Building PKI binary...${NC}"
-    go build -o "$LAB_ROOT/bin/pki" ./cmd/pki
+    echo -e "${CYAN}Building QPKI binary...${NC}"
+    go build -o "$LAB_ROOT/bin/qpki" ./cmd/pki
 
-    if [[ -f "$LAB_ROOT/bin/pki" ]]; then
-        echo -e "${GREEN}Success!${NC} PKI binary built at: $LAB_ROOT/bin/pki"
+    if [[ -f "$LAB_ROOT/bin/qpki" ]]; then
+        echo -e "${GREEN}Success!${NC} QPKI binary built at: $LAB_ROOT/bin/qpki"
         echo ""
         echo "Add to your PATH:"
         echo -e "  ${YELLOW}export PATH=\"$LAB_ROOT/bin:\$PATH\"${NC}"
         echo ""
         echo "Or use directly:"
-        echo -e "  ${YELLOW}export PKI_BIN=\"$LAB_ROOT/bin/pki\"${NC}"
+        echo -e "  ${YELLOW}export PKI_BIN=\"$LAB_ROOT/bin/qpki\"${NC}"
 
         # Create symlink for convenience
         mkdir -p "$LAB_ROOT/bin"
-        chmod +x "$LAB_ROOT/bin/pki"
+        chmod +x "$LAB_ROOT/bin/qpki"
 
         exit 0
     else
@@ -109,7 +110,7 @@ fi
 # =============================================================================
 
 echo ""
-echo -e "${YELLOW}PKI source not found at $PKI_SOURCE_DIR${NC}"
+echo -e "${YELLOW}QPKI source not found at $PKI_SOURCE_DIR${NC}"
 echo -e "Attempting to download pre-built binary..."
 echo ""
 
@@ -132,15 +133,15 @@ echo "  Pre-built binaries not yet available"
 echo "=============================================="
 echo -e "${NC}"
 echo ""
-echo "To use this lab, you need to build the PKI tool from source:"
+echo "To use QLAB, you need to build QPKI from source:"
 echo ""
-echo "  1. Clone the PKI repository:"
+echo "  1. Clone the QPKI repository:"
 echo -e "     ${CYAN}git clone https://github.com/$GITHUB_REPO.git $LAB_ROOT/../pki${NC}"
 echo ""
 echo "  2. Run this script again:"
 echo -e "     ${CYAN}./tooling/install.sh${NC}"
 echo ""
-echo "Or set PKI_SOURCE_DIR to point to an existing PKI checkout:"
+echo "Or set PKI_SOURCE_DIR to point to an existing QPKI checkout:"
 echo -e "  ${CYAN}PKI_SOURCE_DIR=/path/to/pki ./tooling/install.sh${NC}"
 echo ""
 

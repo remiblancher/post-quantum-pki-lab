@@ -1,8 +1,10 @@
-# Post-Quantum PKI Lab
+# Post-Quantum PKI Lab (QLAB)
 
 > **"The PKI is the tool for transition — post-quantum is an engineering problem, not magic."**
 
 Educational demonstrations for transitioning to Post-Quantum Cryptography using a real PKI implementation.
+
+> **QLAB** is built on top of **[QPKI (Post-Quantum PKI)](https://github.com/remiblancher/pki)**, which provides the underlying PKI toolkit for all certificate authority operations, key generation, and cryptographic functions. QPKI is an external dependency.
 
 ---
 
@@ -97,7 +99,7 @@ post-quantum-pki-lab/
 │   └── 10-crypto-agility/      # Crypto-Agility
 ├── reference/usecases/         # Reference documentation
 ├── lib/                        # Shell helpers
-└── bin/pki                     # PKI tool (Go)
+└── bin/qpki                    # QPKI tool (Post-Quantum PKI)
 ```
 
 ---
@@ -124,7 +126,7 @@ post-quantum-pki-lab/
 
 ## Requirements
 
-- **Go 1.21+** (for building the PKI tool)
+- **Go 1.21+** (for building QPKI from source)
 - **OpenSSL 3.x** (for verification demos)
 - **Docker** (optional, for isolated environments)
 
@@ -132,6 +134,7 @@ post-quantum-pki-lab/
 
 ## Useful Links
 
+- [QPKI - Post-Quantum PKI](https://github.com/remiblancher/pki) — The PKI toolkit used by QLAB
 - [Glossary](docs/GLOSSARY.md) — PQC and PKI terminology
 - [NIST Post-Quantum Cryptography](https://csrc.nist.gov/projects/post-quantum-cryptography)
 - [FIPS 203 (ML-KEM)](https://csrc.nist.gov/pubs/fips/203/final)
@@ -142,7 +145,18 @@ post-quantum-pki-lab/
 
 ## About
 
-An **educational resource** to help teams understand PKI and post-quantum migration through hands-on practice.
+**QLAB** (Post-Quantum PKI Lab) is an educational resource to help teams understand PKI and Post-Quantum Cryptography (PQC) migration through hands-on practice.
+
+QLAB provides:
+- Lab exercises and scenarios for learning PQC migration
+- Interactive demonstrations of quantum-safe certificate operations
+- Step-by-step journeys from classical to post-quantum PKI
+
+QLAB uses **[QPKI (Post-Quantum PKI)](https://github.com/remiblancher/pki)** for all PKI operations including:
+- Certificate Authority (CA) management
+- Certificate generation and issuance
+- Post-Quantum Cryptography (PQC) algorithms
+- Hybrid certificate support
 
 ## License
 

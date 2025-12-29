@@ -60,20 +60,20 @@ Yes. Same HTTP protocol, same request/response format. Only signature sizes chan
 
 ```bash
 # Create PQC CA with ML-DSA-65
-pki ca init --name "PQC CA" \
+qpki ca init --name "PQC CA" \
     --profile profiles/pqc-ca.yaml \
     --dir output/pqc-ca
 
 # Issue delegated OCSP responder certificate
 # Best practice: CA key stays offline
-pki cert issue --ca-dir output/pqc-ca \
+qpki cert issue --ca-dir output/pqc-ca \
     --profile profiles/pqc-ocsp-responder.yaml \
     --var cn="OCSP Responder" \
     --out output/ocsp-responder.crt \
     --keyout output/ocsp-responder.key
 
 # Issue TLS certificate to verify
-pki cert issue --ca-dir output/pqc-ca \
+qpki cert issue --ca-dir output/pqc-ca \
     --profile profiles/pqc-tls-server.yaml \
     --var cn=server.example.com \
     --out output/server.crt \
@@ -84,7 +84,7 @@ pki cert issue --ca-dir output/pqc-ca \
 
 ```bash
 # Start with delegated certificate (recommended)
-pki ocsp serve --port 8888 --ca-dir output/pqc-ca \
+qpki ocsp serve --port 8888 --ca-dir output/pqc-ca \
     --cert output/ocsp-responder.crt \
     --key output/ocsp-responder.key
 ```
@@ -93,7 +93,7 @@ pki ocsp serve --port 8888 --ca-dir output/pqc-ca \
 
 ```bash
 # Generate OCSP request
-pki ocsp request --issuer output/pqc-ca/ca.crt \
+qpki ocsp request --issuer output/pqc-ca/ca.crt \
     --cert output/server.crt \
     -o output/request.ocsp
 
@@ -105,14 +105,14 @@ curl -s -X POST \
     -o output/response.ocsp
 
 # Inspect response
-pki ocsp info output/response.ocsp
+qpki ocsp info output/response.ocsp
 ```
 
 ### Step 4: Revoke and Re-query
 
 ```bash
 # Revoke certificate
-pki cert revoke <serial> --ca-dir output/pqc-ca --reason keyCompromise
+qpki cert revoke <serial> --ca-dir output/pqc-ca --reason keyCompromise
 
 # Query again - status changes immediately!
 curl -s -X POST \
@@ -121,7 +121,7 @@ curl -s -X POST \
     http://localhost:8888/ \
     -o output/response2.ocsp
 
-pki ocsp info output/response2.ocsp
+qpki ocsp info output/response2.ocsp
 # Status: revoked
 # Revocation Reason: keyCompromise
 ```
@@ -151,7 +151,7 @@ pki ocsp info output/response2.ocsp
 ```
 ┌─────────────┐                      ┌──────────────────┐
 │   Client    │ ─── OCSP Request ──► │  OCSP Responder  │
-│ (curl/app)  │ ◄── OCSP Response ── │ (pki ocsp serve) │
+│ (curl/app)  │ ◄── OCSP Response ── │ (qpki ocsp serve) │
 └─────────────┘                      └────────┬─────────┘
                                               │
                                      Signs with CA key
@@ -163,7 +163,7 @@ pki ocsp info output/response2.ocsp
 ```
 ┌─────────────┐                      ┌──────────────────┐
 │   Client    │ ─── OCSP Request ──► │  OCSP Responder  │
-│ (curl/app)  │ ◄── OCSP Response ── │ (pki ocsp serve) │
+│ (curl/app)  │ ◄── OCSP Response ── │ (qpki ocsp serve) │
 └─────────────┘                      └────────┬─────────┘
                                               │
                                      Signs with responder key
