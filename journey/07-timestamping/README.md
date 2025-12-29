@@ -132,12 +132,12 @@ A trusted authority (TSA) proves when the signature was created:
 
 ```bash
 # Create a PQC CA for timestamp authority
-pki ca init --name "TSA Root CA" \
+qpki ca init --name "TSA Root CA" \
     --profile profiles/pqc-ca.yaml \
     --dir output/tsa-ca
 
 # Issue TSA certificate (EKU: timeStamping)
-pki cert issue --ca-dir output/tsa-ca \
+qpki cert issue --ca-dir output/tsa-ca \
     --profile profiles/pqc-tsa.yaml \
     --var cn="PQC Timestamp Authority" \
     --out output/tsa.crt \
@@ -151,7 +151,7 @@ pki cert issue --ca-dir output/tsa-ca \
 echo "Contract content - signed on $(date)" > output/document.txt
 
 # Timestamp with PQC (RFC 3161)
-pki tsa sign --data output/document.txt \
+qpki tsa sign --data output/document.txt \
     --cert output/tsa.crt \
     --key output/tsa.key \
     -o output/document.tsr
@@ -161,7 +161,7 @@ pki tsa sign --data output/document.txt \
 
 ```bash
 # Verify token against original document
-pki tsa verify --token output/document.tsr \
+qpki tsa verify --token output/document.tsr \
     --data output/document.txt \
     --ca output/tsa-ca/ca.crt
 # Result: VALID
@@ -174,7 +174,7 @@ pki tsa verify --token output/document.tsr \
 echo "FRAUDULENT MODIFICATION" >> output/document.txt
 
 # Verify again
-pki tsa verify --token output/document.tsr \
+qpki tsa verify --token output/document.tsr \
     --data output/document.txt \
     --ca output/tsa-ca/ca.crt
 # Result: INVALID - document modified after timestamping

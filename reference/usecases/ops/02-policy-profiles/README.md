@@ -49,7 +49,7 @@ workspace/
 BEFORE (Classic):                    AFTER (PQC):
 ─────────────────                    ─────────────
 
-pki cert issue \                          pki cert issue \
+qpkicert issue \                          qpkicert issue \
   --profile ec/tls-server \            --profile ml-dsa-kem/tls-server \
   --cn api.example.com                 --cn api.example.com
 

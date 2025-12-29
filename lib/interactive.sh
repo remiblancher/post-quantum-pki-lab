@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# Interactive Helpers for Post-Quantum PKI Lab
+# Interactive Helpers for Post-Quantum PKI Lab (QLAB)
 # =============================================================================
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

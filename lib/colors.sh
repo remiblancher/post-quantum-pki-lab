@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# Terminal Colors for Post-Quantum PKI Lab
+# Terminal Colors for Post-Quantum PKI Lab (QLAB)
 # =============================================================================
 
 # Reset

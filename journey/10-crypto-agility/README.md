@@ -171,17 +171,17 @@ CURRENT SITUATION
 
 ```bash
 # Create a Migration CA starting with ECDSA
-pki ca init --name "Migration CA" \
+qpki ca init --name "Migration CA" \
     --profile profiles/classic-ca.yaml \
     --dir output/ca
 
 # Issue ECDSA server certificate
-pki credential enroll --ca-dir output/ca \
+qpki credential enroll --ca-dir output/ca \
     --profile profiles/classic-tls-server.yaml \
     --var cn=server.example.com
 
 # Export the credential
-pki credential export <credential-id> \
+qpki credential export <credential-id> \
     --ca-dir output/ca \
     -o output/server-v1.pem
 ```
@@ -190,11 +190,11 @@ pki credential export <credential-id> \
 
 ```bash
 # Rotate to hybrid mode (ECDSA + ML-DSA)
-pki ca rotate --ca-dir output/ca \
+qpki ca rotate --ca-dir output/ca \
     --profile profiles/hybrid-ca.yaml
 
 # Check versions
-pki ca versions --ca-dir output/ca
+qpki ca versions --ca-dir output/ca
 # VERSION  STATUS    ALGORITHM
 # v1       archived  ecdsa-p256
 # v2       active    hybrid-catalyst
@@ -204,11 +204,11 @@ pki ca versions --ca-dir output/ca
 
 ```bash
 # Rotate to full post-quantum
-pki ca rotate --ca-dir output/ca \
+qpki ca rotate --ca-dir output/ca \
     --profile profiles/pqc-ca.yaml
 
 # Check versions
-pki ca versions --ca-dir output/ca
+qpki ca versions --ca-dir output/ca
 # VERSION  STATUS    ALGORITHM
 # v1       archived  ecdsa-p256
 # v2       archived  hybrid-catalyst
@@ -219,12 +219,12 @@ pki ca versions --ca-dir output/ca
 
 ```bash
 # Issue PQC server certificate
-pki credential enroll --ca-dir output/ca \
+qpki credential enroll --ca-dir output/ca \
     --profile profiles/pqc-tls-server.yaml \
     --var cn=server.example.com
 
 # Export the credential
-pki credential export <credential-id> \
+qpki credential export <credential-id> \
     --ca-dir output/ca \
     -o output/server-v3.pem
 ```
@@ -233,27 +233,27 @@ pki credential export <credential-id> \
 
 ```bash
 # Trust store for legacy clients (v1 only)
-pki ca export --ca-dir output/ca --version v1 -o output/trust-legacy.pem
+qpki ca export --ca-dir output/ca --version v1 -o output/trust-legacy.pem
 
 # Trust store for modern clients (v3 only)
-pki ca export --ca-dir output/ca --version v3 -o output/trust-modern.pem
+qpki ca export --ca-dir output/ca --version v3 -o output/trust-modern.pem
 
 # Trust store for transition (all versions)
-pki ca export --ca-dir output/ca --all -o output/trust-transition.pem
+qpki ca export --ca-dir output/ca --all -o output/trust-transition.pem
 ```
 
 ### Step 6: Verify Interoperability
 
 ```bash
 # Old cert validates with legacy trust
-pki verify --cert output/server-v1.pem --ca output/trust-legacy.pem
+qpki verify --cert output/server-v1.pem --ca output/trust-legacy.pem
 
 # New cert validates with modern trust
-pki verify --cert output/server-v3.pem --ca output/trust-modern.pem
+qpki verify --cert output/server-v3.pem --ca output/trust-modern.pem
 
 # ALL certs validate with transition bundle
-pki verify --cert output/server-v1.pem --ca output/trust-transition.pem
-pki verify --cert output/server-v3.pem --ca output/trust-transition.pem
+qpki verify --cert output/server-v1.pem --ca output/trust-transition.pem
+qpki verify --cert output/server-v3.pem --ca output/trust-transition.pem
 ```
 
 ### Step 7: Incident Simulation (Rollback)
@@ -262,10 +262,10 @@ pki verify --cert output/server-v3.pem --ca output/trust-transition.pem
 # Scenario: A compatibility issue is detected on legacy appliances.
 # Action: Rollback to Hybrid CA (v2) to restore service.
 
-pki ca activate --ca-dir output/ca --version v2
+qpki ca activate --ca-dir output/ca --version v2
 
 # Verify rollback succeeded
-pki ca versions --ca-dir output/ca
+qpki ca versions --ca-dir output/ca
 ```
 
 ---

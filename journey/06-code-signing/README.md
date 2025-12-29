@@ -162,7 +162,7 @@ Sign the code BEFORE distributing it:
 
 ```bash
 # Create a PQC CA for code signing
-pki ca init --name "Code Signing CA" \
+qpki ca init --name "Code Signing CA" \
     --profile profiles/pqc-ca.yaml \
     --dir output/code-ca
 ```
@@ -171,13 +171,13 @@ pki ca init --name "Code Signing CA" \
 
 ```bash
 # Generate key and CSR
-pki cert csr --algorithm ml-dsa-65 \
+qpki cert csr --algorithm ml-dsa-65 \
     --keyout output/code-signing.key \
     --cn "ACME Software" \
     --out output/code-signing.csr
 
 # Issue certificate from CSR
-pki cert issue --ca-dir output/code-ca \
+qpki cert issue --ca-dir output/code-ca \
     --profile profiles/pqc-code-signing.yaml \
     --csr output/code-signing.csr \
     --out output/code-signing.crt
@@ -190,7 +190,7 @@ pki cert issue --ca-dir output/code-ca \
 dd if=/dev/urandom of=output/firmware.bin bs=1024 count=100
 
 # Sign with PQC (CMS/PKCS#7 format)
-pki cms sign --data output/firmware.bin \
+qpki cms sign --data output/firmware.bin \
     --cert output/code-signing.crt \
     --key output/code-signing.key \
     -o output/firmware.p7s
@@ -200,7 +200,7 @@ pki cms sign --data output/firmware.bin \
 
 ```bash
 # Verify signature against original binary
-pki cms verify --signature output/firmware.p7s \
+qpki cms verify --signature output/firmware.p7s \
     --data output/firmware.bin
 # Result: VALID
 ```
@@ -212,7 +212,7 @@ pki cms verify --signature output/firmware.p7s \
 echo "MALWARE" >> output/firmware.bin
 
 # Verify again
-pki cms verify --signature output/firmware.p7s \
+qpki cms verify --signature output/firmware.p7s \
     --data output/firmware.bin
 # Result: INVALID - signature verification failed
 ```
