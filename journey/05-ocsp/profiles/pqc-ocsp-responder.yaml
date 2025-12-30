@@ -66,3 +66,8 @@ extensions:
   # OCSP No Check (RFC 6960 Section 4.2.2.2.1)
   ocspNoCheck:
     critical: false
+
+# -----------------------------------------------------------------------------
+# Signature Algorithm (how this certificate is signed)
+# -----------------------------------------------------------------------------
+# ML-DSA signatures are intrinsic to the algorithm (no override needed)

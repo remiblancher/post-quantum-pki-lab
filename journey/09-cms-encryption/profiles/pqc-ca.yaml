@@ -54,3 +54,9 @@ extensions:
     values:
       - keyCertSign
       - cRLSign
+
+# -----------------------------------------------------------------------------
+# Signature Algorithm (how this certificate is signed)
+# -----------------------------------------------------------------------------
+# KEM certificates are signed by the issuing CA using its signature algorithm.
+# ML-KEM is a key encapsulation mechanism, not a signature algorithm.
