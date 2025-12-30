@@ -132,7 +132,7 @@ With mTLS, **BOTH** parties prove their identity:
 
 ```bash
 # Create dedicated CA for mTLS
-qpkica init --name "mTLS Demo CA" \
+qpki ca init --name "mTLS Demo CA" \
     --profile profiles/pqc-ca.yaml \
     --dir output/mtls-ca
 ```
@@ -141,7 +141,7 @@ qpkica init --name "mTLS Demo CA" \
 
 ```bash
 # Server certificate with serverAuth EKU
-qpkicert issue --ca-dir output/mtls-ca \
+qpki cert issue --ca-dir output/mtls-ca \
     --profile profiles/pqc-tls-server.yaml \
     --cn "api.example.com" \
     --dns api.example.com \
@@ -153,14 +153,14 @@ qpkicert issue --ca-dir output/mtls-ca \
 
 ```bash
 # Client certificate for Alice
-qpkicert issue --ca-dir output/mtls-ca \
+qpki cert issue --ca-dir output/mtls-ca \
     --profile profiles/pqc-tls-client.yaml \
     --cn "Alice" \
     --out output/alice.crt \
     --keyout output/alice.key
 
 # Client certificate for Bob
-qpkicert issue --ca-dir output/mtls-ca \
+qpki cert issue --ca-dir output/mtls-ca \
     --profile profiles/pqc-tls-client.yaml \
     --cn "Bob" \
     --out output/bob.crt \
@@ -171,10 +171,10 @@ qpkicert issue --ca-dir output/mtls-ca \
 
 ```bash
 # Verify Alice's certificate
-qpkiverify --ca output/mtls-ca/ca.crt --cert output/alice.crt
+qpki verify --ca output/mtls-ca/ca.crt --cert output/alice.crt
 
 # Verify Bob's certificate
-qpkiverify --ca output/mtls-ca/ca.crt --cert output/bob.crt
+qpki verify --ca output/mtls-ca/ca.crt --cert output/bob.crt
 ```
 
 ---

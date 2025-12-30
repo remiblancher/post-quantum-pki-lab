@@ -36,27 +36,27 @@ print_step "Step 1: Create CA and Certificates"
 echo "  First, we create a PQC CA and issue certificates."
 echo ""
 
-run_cmd "qpkica init --name \"PQC CA\" --profile profiles/pqc-ca.yaml --dir output/pqc-ca"
+run_cmd "qpki ca init --name \"PQC CA\" --profile profiles/pqc-ca.yaml --dir output/pqc-ca"
 
 echo ""
 echo "  Issue delegated OCSP responder certificate (best practice: CA key stays offline)..."
 echo ""
 
-run_cmd "qpkicert csr --algorithm ml-dsa-65 --keyout output/ocsp-responder.key --cn \"OCSP Responder\" --out output/ocsp-responder.csr"
+run_cmd "qpki cert csr --algorithm ml-dsa-65 --keyout output/ocsp-responder.key --cn \"OCSP Responder\" --out output/ocsp-responder.csr"
 
 echo ""
 
-run_cmd "qpkicert issue --ca-dir output/pqc-ca --profile profiles/pqc-ocsp-responder.yaml --csr output/ocsp-responder.csr --out output/ocsp-responder.crt"
+run_cmd "qpki cert issue --ca-dir output/pqc-ca --profile profiles/pqc-ocsp-responder.yaml --csr output/ocsp-responder.csr --out output/ocsp-responder.crt"
 
 echo ""
 echo "  Issue TLS server certificate to verify..."
 echo ""
 
-run_cmd "qpkicert csr --algorithm ml-dsa-65 --keyout output/server.key --cn server.example.com --out output/server.csr"
+run_cmd "qpki cert csr --algorithm ml-dsa-65 --keyout output/server.key --cn server.example.com --out output/server.csr"
 
 echo ""
 
-run_cmd "qpkicert issue --ca-dir output/pqc-ca --profile profiles/pqc-tls-server.yaml --csr output/server.csr --out output/server.crt"
+run_cmd "qpki cert issue --ca-dir output/pqc-ca --profile profiles/pqc-tls-server.yaml --csr output/server.csr --out output/server.crt"
 
 # Get serial number
 SERIAL=$(openssl x509 -in output/server.crt -noout -serial 2>/dev/null | cut -d= -f2)
@@ -78,10 +78,10 @@ echo "  The OCSP responder is an HTTP service that answers status queries."
 echo "  It signs responses with its delegated certificate (CA key stays offline)."
 echo ""
 
-echo -e "  ${DIM}$ qpkiocsp serve --port $OCSP_PORT --ca-dir output/pqc-ca --cert output/ocsp-responder.crt --key output/ocsp-responder.key &${NC}"
+echo -e "  ${DIM}$ qpki ocsp serve --port $OCSP_PORT --ca-dir output/pqc-ca --cert output/ocsp-responder.crt --key output/ocsp-responder.key &${NC}"
 echo ""
 
-qpkiocsp serve --port $OCSP_PORT --ca-dir output/pqc-ca \
+qpki ocsp serve --port $OCSP_PORT --ca-dir output/pqc-ca \
     --cert output/ocsp-responder.crt \
     --key output/ocsp-responder.key > /dev/null 2>&1 &
 OCSP_PID=$!
@@ -110,7 +110,7 @@ echo "  Let's query the OCSP responder for our server certificate status..."
 echo ""
 
 # Generate OCSP request
-run_cmd "qpkiocsp request --issuer output/pqc-ca/ca.crt --cert output/server.crt -o output/request.ocsp"
+run_cmd "qpki ocsp request --issuer output/pqc-ca/ca.crt --cert output/server.crt -o output/request.ocsp"
 
 echo ""
 echo "  Send request to OCSP responder via HTTP POST..."
@@ -123,7 +123,7 @@ echo "  Inspect the response..."
 echo ""
 
 if [[ -f "output/response.ocsp" ]] && [[ -s "output/response.ocsp" ]]; then
-    qpkiocsp info output/response.ocsp 2>/dev/null || echo -e "  ${GREEN}✓${NC} Status: good"
+    qpki ocsp info output/response.ocsp 2>/dev/null || echo -e "  ${GREEN}✓${NC} Status: good"
 
     resp_size=$(wc -c < "output/response.ocsp" | tr -d ' ')
     echo ""
@@ -145,7 +145,7 @@ print_step "Step 4: Revoke and Re-query"
 echo -e "  ${RED}Simulating key compromise...${NC}"
 echo ""
 
-run_cmd "qpkicert revoke $SERIAL --ca-dir output/pqc-ca --reason keyCompromise"
+run_cmd "qpki cert revoke $SERIAL --ca-dir output/pqc-ca --reason keyCompromise"
 
 echo ""
 echo "  Query again - status should change immediately!"
@@ -159,7 +159,7 @@ curl -s -X POST \
     -o output/response2.ocsp 2>/dev/null
 
 if [[ -f "output/response2.ocsp" ]] && [[ -s "output/response2.ocsp" ]]; then
-    qpkiocsp info output/response2.ocsp 2>/dev/null || echo -e "  ${RED}✗${NC} Status: revoked"
+    qpki ocsp info output/response2.ocsp 2>/dev/null || echo -e "  ${RED}✗${NC} Status: revoked"
 fi
 
 echo ""
