@@ -68,3 +68,9 @@ extensions:
     values:
       - keyCertSign
       - cRLSign
+
+# -----------------------------------------------------------------------------
+# Signature Algorithm (how this certificate is signed)
+# -----------------------------------------------------------------------------
+# Dual signatures: ecdsa(sha384) + ML-DSA (intrinsic)
+# Classical clients verify ECDSA, PQC-aware clients verify both.

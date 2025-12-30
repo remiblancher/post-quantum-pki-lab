@@ -68,3 +68,8 @@ extensions:
     critical: false
     dns: "{{ dns }}"
     dns_include_cn: true
+
+# -----------------------------------------------------------------------------
+# Signature Algorithm (how this certificate is signed)
+# -----------------------------------------------------------------------------
+# ML-DSA signatures are intrinsic to the algorithm (no override needed)
