@@ -61,3 +61,8 @@ extensions:
     values:
       - keyCertSign
       - cRLSign
+
+# -----------------------------------------------------------------------------
+# Signature Algorithm (how this certificate is signed)
+# -----------------------------------------------------------------------------
+# Defaults: scheme=ecdsa, hash=sha384
