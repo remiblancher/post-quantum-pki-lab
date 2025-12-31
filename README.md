@@ -97,7 +97,6 @@ post-quantum-pki-lab/
 │   ├── 08-ltv-signatures/      # LTV Signatures
 │   ├── 09-cms-encryption/      # CMS Encryption
 │   └── 10-crypto-agility/      # Crypto-Agility
-├── reference/usecases/         # Reference documentation
 ├── lib/                        # Shell helpers
 └── bin/qpki                    # QPKI tool (Post-Quantum PKI)
 ```
