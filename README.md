@@ -41,14 +41,14 @@ Then start with: `./journey/00-quickstart/demo.sh`
 
 ## Learning Path
 
-**Total time: ~1h40** | **Minimum path: 15 min** (Quick Start + Revelation)
+**Total time: ~1h45** | **Minimum path: 20 min** (Quick Start + Revelation)
 
 ### 🚀 Getting Started
 
 | # | Mission | Time | Key Message |
 |---|---------|------|-------------|
-| 0 | [**Quick Start**](journey/00-quickstart/) — Create your first CA | 8 min | Quantum breaks algorithms, not PKI workflows. Migration is configuration, not redesign. |
-| 1 | [**The Revelation**](journey/01-revelation/) — Why PQC matters? | 7 min | Quantum attacks are passive and retroactive. Today's encrypted data is tomorrow's plaintext. |
+| 0 | [**Quick Start**](journey/00-quickstart/) — Create your first CA | 10 min | Quantum breaks algorithms, not PKI workflows. Migration is configuration, not redesign. |
+| 1 | [**The Revelation**](journey/01-revelation/) — Why PQC matters? | 10 min | Quantum attacks are passive and retroactive. Today's encrypted data is tomorrow's plaintext. |
 
 ### 📚 Core PKI
 
@@ -61,15 +61,15 @@ Then start with: `./journey/00-quickstart/demo.sh`
 
 | # | Mission | Time | Key Message |
 |---|---------|------|-------------|
-| 4 | [**Revocation**](journey/04-revocation/) — CRL generation | 8 min | PQC keys get compromised too. Revocation works exactly the same. |
-| 5 | [**PQC OCSP**](journey/05-ocsp/) — Is This Cert Still Good? | 8 min | OCSP reports trust in real-time. PQC doesn't change how revocation is checked. |
+| 4 | [**Revocation**](journey/04-revocation/) — CRL generation | 10 min | PQC keys get compromised too. Revocation works exactly the same. |
+| 5 | [**PQC OCSP**](journey/05-ocsp/) — Is This Cert Still Good? | 10 min | OCSP reports trust in real-time. PQC doesn't change how revocation is checked. |
 
 ### 🔧 Applications
 
 | # | Mission | Time | Key Message |
 |---|---------|------|-------------|
-| 6 | [**PQC Code Signing**](journey/06-code-signing/) — Signatures That Outlive the Threat | 8 min | Signatures must outlive algorithms. Quantum makes forgery undetectable. |
-| 7 | [**PQC Timestamping**](journey/07-timestamping/) — Trust Now, Verify Forever | 8 min | Timestamps prove WHEN. Without PQC, that proof becomes forgeable. |
+| 6 | [**PQC Code Signing**](journey/06-code-signing/) — Signatures That Outlive the Threat | 10 min | Signatures must outlive algorithms. Quantum makes forgery undetectable. |
+| 7 | [**PQC Timestamping**](journey/07-timestamping/) — Trust Now, Verify Forever | 10 min | Timestamps prove WHEN. Without PQC, that proof becomes forgeable. |
 | 8 | [**PQC LTV**](journey/08-ltv-signatures/) — Sign Today, Verify in 30 Years | 10 min | LTV bundles all proofs for offline verification. Every element must be quantum-safe. |
 | 9 | [**CMS Encryption**](journey/09-cms-encryption/) — Encrypt documents (ML-KEM) | 10 min | KEM keys can't sign. Attestation links encryption keys to identity. |
 
@@ -77,7 +77,7 @@ Then start with: `./journey/00-quickstart/demo.sh`
 
 | # | Mission | Time | Key Message |
 |---|---------|------|-------------|
-| 10 | [**Crypto-Agility**](journey/10-crypto-agility/) — Migrate ECDSA → ML-DSA | 12 min | Quantum timelines are uncertain. Crypto-agility means reversible migration. |
+| 10 | [**Crypto-Agility**](journey/10-crypto-agility/) — Migrate ECDSA → ML-DSA | 15 min | Quantum timelines are uncertain. Crypto-agility means reversible migration. |
 
 ---
 
