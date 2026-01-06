@@ -38,6 +38,9 @@ echo ""
 
 run_cmd "qpki ca init --profile profiles/pqc-ca.yaml --var cn=\"PQC CA\" --ca-dir output/pqc-ca"
 
+# Export CA certificate for OCSP request (issuerKeyHash requires CA public key)
+qpki ca export --ca-dir output/pqc-ca > output/pqc-ca/ca.crt
+
 echo ""
 echo "  Issue delegated OCSP responder certificate (best practice: CA key stays offline)..."
 echo ""
