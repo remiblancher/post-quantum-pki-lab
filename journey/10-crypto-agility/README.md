@@ -173,7 +173,7 @@ CURRENT SITUATION
 # Create a Migration CA starting with ECDSA
 qpki ca init --profile profiles/classic-ca.yaml \
     --var cn="Migration CA" \
-    --dir output/ca
+    --ca-dir output/ca
 
 # Issue ECDSA server certificate
 qpki credential enroll --ca-dir output/ca \

@@ -164,7 +164,7 @@ Sign the code BEFORE distributing it:
 # Create a PQC CA for code signing
 qpki ca init --profile profiles/pqc-ca.yaml \
     --var cn="Code Signing CA" \
-    --dir output/code-ca
+    --ca-dir output/code-ca
 ```
 
 ### Step 2: Issue Code Signing Certificate
