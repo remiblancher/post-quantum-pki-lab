@@ -106,7 +106,7 @@ Traditional CSR workflow:
 ```bash
 qpki ca init --profile profiles/pqc-ca.yaml \
     --var cn="Encryption CA" \
-    --dir output/encryption-ca
+    --ca-dir output/encryption-ca
 ```
 
 ### Step 2: Issue Signing Certificate (ML-DSA-65)

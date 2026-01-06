@@ -134,7 +134,7 @@ A trusted authority (TSA) proves when the signature was created:
 # Create a PQC CA for timestamp authority
 qpki ca init --profile profiles/pqc-ca.yaml \
     --var cn="TSA Root CA" \
-    --dir output/tsa-ca
+    --ca-dir output/tsa-ca
 
 # Issue TSA certificate (EKU: timeStamping)
 qpki cert issue --ca-dir output/tsa-ca \

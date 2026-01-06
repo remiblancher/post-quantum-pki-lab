@@ -151,7 +151,7 @@ Embed EVERYTHING needed in a self-sufficient bundle:
 # Create PQC CA
 qpki ca init --profile profiles/pqc-ca.yaml \
     --var cn="LTV Demo CA" \
-    --dir output/ltv-ca
+    --ca-dir output/ltv-ca
 
 # Issue document signing certificate
 qpki cert issue --ca-dir output/ltv-ca \

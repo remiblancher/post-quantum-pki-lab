@@ -62,7 +62,7 @@ Yes. Same HTTP protocol, same request/response format. Only signature sizes chan
 # Create PQC CA with ML-DSA-65
 qpki ca init --profile profiles/pqc-ca.yaml \
     --var cn="PQC CA" \
-    --dir output/pqc-ca
+    --ca-dir output/pqc-ca
 
 # Issue delegated OCSP responder certificate
 # Best practice: CA key stays offline
