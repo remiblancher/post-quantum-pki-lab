@@ -64,6 +64,9 @@ qpki ca init --profile profiles/pqc-ca.yaml \
     --var cn="PQC CA" \
     --ca-dir output/pqc-ca
 
+# Export CA certificate (needed for OCSP request issuerKeyHash)
+qpki ca export --ca-dir output/pqc-ca > output/pqc-ca/ca.crt
+
 # Issue delegated OCSP responder certificate
 # Best practice: CA key stays offline
 qpki cert issue --ca-dir output/pqc-ca \

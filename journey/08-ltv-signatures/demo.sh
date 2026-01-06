@@ -32,6 +32,9 @@ echo ""
 
 run_cmd "qpki ca init --profile profiles/pqc-ca.yaml --var cn=\"LTV Demo CA\" --ca-dir output/ltv-ca"
 
+# Export CA certificate for chain building
+qpki ca export --ca-dir output/ltv-ca > output/ltv-ca/ca.crt
+
 echo ""
 echo "  Issue document signing certificate for Alice..."
 echo ""
