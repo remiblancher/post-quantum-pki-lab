@@ -103,7 +103,9 @@ post-quantum-pki-lab/
 │           ├── ca/             # CA certificates and keys
 │           └── credentials/    # Issued credentials
 ├── lib/                        # Shell helpers
-└── bin/qpki                    # QPKI tool (Post-Quantum PKI)
+├── tooling/
+│   └── install.sh              # Install QPKI binary
+└── bin/                        # (generated) QPKI binary
 ```
 
 ---
