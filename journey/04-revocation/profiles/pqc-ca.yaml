@@ -13,7 +13,7 @@
 #
 # Example:
 #   pki ca init --profile profiles/pqc-ca.yaml \
-#       --var cn="Revocation Demo CA" --dir ./revocation-ca
+#       --var cn="Revocation Demo CA" --ca-dir ./revocation-ca
 #
 # =============================================================================
 

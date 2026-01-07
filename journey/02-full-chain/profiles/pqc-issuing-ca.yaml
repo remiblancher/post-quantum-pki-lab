@@ -16,7 +16,7 @@
 # Example:
 #   pki ca init --profile profiles/pqc-issuing-ca.yaml \
 #       --var cn="PQ Issuing CA" \
-#       --parent ./root-ca --dir ./issuing-ca
+#       --parent ./root-ca --ca-dir ./issuing-ca
 #
 # =============================================================================
 

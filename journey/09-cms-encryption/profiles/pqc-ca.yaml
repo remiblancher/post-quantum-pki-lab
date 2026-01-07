@@ -13,7 +13,7 @@
 #
 # Example:
 #   pki ca init --profile profiles/pqc-ca.yaml \
-#       --var cn="Encryption Demo CA" --dir ./encryption-ca
+#       --var cn="Encryption Demo CA" --ca-dir ./encryption-ca
 #
 # =============================================================================
 
