@@ -10,7 +10,7 @@
 #
 # Example:
 #   pki ca init --profile profiles/pqc-ca.yaml \
-#       --var cn="Code Signing CA" --dir ./code-signing-ca
+#       --var cn="Code Signing CA" --ca-dir ./code-signing-ca
 #
 # =============================================================================
 

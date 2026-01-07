@@ -10,7 +10,7 @@
 #
 # Example:
 #   pki ca init --profile profiles/pqc-ca.yaml \
-#       --var cn="TSA CA" --dir ./tsa-ca
+#       --var cn="TSA CA" --ca-dir ./tsa-ca
 #
 # =============================================================================
 
