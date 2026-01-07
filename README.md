@@ -97,6 +97,11 @@ post-quantum-pki-lab/
 │   ├── 08-ltv-signatures/      # LTV Signatures
 │   ├── 09-cms-encryption/      # CMS Encryption
 │   └── 10-crypto-agility/      # Crypto-Agility
+│       ├── demo.sh             # Demo script
+│       ├── profiles/           # Certificate profiles (YAML)
+│       └── output/             # Generated artifacts
+│           ├── ca/             # CA certificates and keys
+│           └── credentials/    # Issued credentials
 ├── lib/                        # Shell helpers
 └── bin/qpki                    # QPKI tool (Post-Quantum PKI)
 ```
