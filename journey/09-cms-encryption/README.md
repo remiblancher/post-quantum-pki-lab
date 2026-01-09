@@ -157,6 +157,26 @@ qpki cert issue --ca-dir output/encryption-ca \
     --out output/alice-enc.crt
 ```
 
+### Step 6: Encrypt Document (CMS EnvelopedData)
+
+```bash
+# Encrypt document for Alice using her ML-KEM encryption certificate
+qpki cms encrypt \
+    --recipient output/alice-enc.crt \
+    --in output/secret-document.txt \
+    --out output/secret-document.p7m
+```
+
+### Step 7: Decrypt Document
+
+```bash
+# Alice decrypts using her ML-KEM private key
+qpki cms decrypt \
+    --key output/alice-enc.key \
+    --in output/secret-document.p7m \
+    --out output/decrypted.txt
+```
+
 ---
 
 ## Alice's Certificate Pair
