@@ -83,10 +83,10 @@ Traditional CSR workflow:
 |------|--------------|-------------|
 | 1 | Explain KEM key problem | Why KEM keys can't sign CSRs |
 | 2 | Create Encryption CA | ML-DSA-65 for signing |
-| 3 | Generate signing CSR | ML-DSA can sign its own CSR |
-| 4 | Issue signing certificate | ML-DSA-65 for attestation |
-| 5 | Create CSR for encryption key | Signed by signing key (RFC 9883) |
-| 6 | CA issues encryption certificate | ML-KEM-768 + RelatedCertificate |
+| 3 | Generate Signing CSR (ML-DSA-65) | ML-DSA can sign its own CSR |
+| 4 | Issue Signing Certificate (ML-DSA-65) | Certificate for attestation |
+| 5 | Generate Encryption CSR (ML-KEM-768) | Signed by signing key (RFC 9883) |
+| 6 | Issue Encryption Certificate (ML-KEM-768) | RelatedCertificate extension |
 | 7 | Show certificate pair | Two linked certificates |
 | 8 | CMS encryption flow | Hybrid encryption (AES + ML-KEM) |
 | 9 | Why hybrid encryption? | AES speed + ML-KEM quantum safety |
@@ -122,7 +122,7 @@ qpki csr gen --algorithm ml-dsa-65 \
     -o output/alice-sign.csr
 ```
 
-### Step 3: Issue Signing Certificate
+### Step 3: Issue Signing Certificate (ML-DSA-65)
 
 ```bash
 # CA verifies CSR signature and issues certificate
@@ -132,7 +132,7 @@ qpki cert issue --ca-dir output/encryption-ca \
     --out output/alice-sign.crt
 ```
 
-### Step 4: Create CSR for Encryption Key (RFC 9883 Attestation)
+### Step 4: Generate Encryption CSR (ML-KEM-768)
 
 ```bash
 # Generate ML-KEM key and create CSR
@@ -145,7 +145,7 @@ qpki csr gen --algorithm ml-kem-768 \
     -o output/alice-enc.csr
 ```
 
-### Step 5: CA Issues Encryption Certificate
+### Step 5: Issue Encryption Certificate (ML-KEM-768)
 
 ```bash
 # CA verifies attestation and issues certificate

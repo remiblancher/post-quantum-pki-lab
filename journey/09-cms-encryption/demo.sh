@@ -100,7 +100,7 @@ pause
 # Step 4: Issue Signing Certificate
 # =============================================================================
 
-print_step "Step 4: Issue Signing Certificate for Alice"
+print_step "Step 4: Issue Signing Certificate (ML-DSA-65)"
 
 echo "  The CA verifies the CSR signature and issues the certificate."
 echo "  This certificate will be used to attest for her encryption key."
@@ -141,7 +141,7 @@ pause
 # Step 5: Create CSR for Encryption Key (ML-KEM-768)
 # =============================================================================
 
-print_step "Step 5: Create CSR for Encryption Key (RFC 9883 Attestation)"
+print_step "Step 5: Generate Encryption CSR (ML-KEM-768)"
 
 echo "  Now Alice creates a CSR for her ENCRYPTION key."
 echo "  The CSR is signed by her SIGNING key (attestation)."
@@ -191,7 +191,7 @@ pause
 # Step 6: CA Issues Encryption Certificate
 # =============================================================================
 
-print_step "Step 6: CA Issues Encryption Certificate"
+print_step "Step 6: Issue Encryption Certificate (ML-KEM-768)"
 
 echo "  The CA verifies the CSR attestation and issues the encryption cert."
 echo "  The certificate includes RelatedCertificate extension pointing"
