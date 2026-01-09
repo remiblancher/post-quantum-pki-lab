@@ -22,10 +22,10 @@ source "$SCRIPT_DIR/../../lib/common.sh"
 setup_demo "PQC CMS Encryption + CSR Attestation"
 
 # =============================================================================
-# Step 1: The KEM Key Problem
+# Introduction: The KEM Key Problem
 # =============================================================================
 
-print_step "Step 1: The KEM Key Problem (RFC 9883)"
+print_step "The KEM Key Problem (RFC 9883)"
 
 echo "  Traditional CSR workflow:"
 echo "    1. Generate key pair"
@@ -53,10 +53,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 2: Create Encryption CA
+# Step 1: Create Encryption CA
 # =============================================================================
 
-print_step "Step 2: Create Encryption CA"
+print_step "Step 1: Create Encryption CA"
 
 echo "  The CA signs both signing and encryption certificates."
 echo "  We use ML-DSA-65 for the CA (quantum-safe signatures)."
@@ -69,56 +69,20 @@ echo ""
 pause
 
 # =============================================================================
-# Step 3: Generate Signing CSR (ML-DSA-65)
+# Step 2: Issue Signing Certificate (ML-DSA-65)
 # =============================================================================
 
-print_step "Step 3: Generate Signing CSR (ML-DSA-65)"
+print_step "Step 2: Issue Signing Certificate (ML-DSA-65)"
 
-echo "  Alice generates a key pair and CSR for her signing certificate."
-echo "  The CSR is self-signed (proof of possession of the private key)."
-echo ""
-echo "  ┌─────────────────────────────────────────────────────────────────┐"
-echo "  │  CSR GENERATION (Classical Workflow)                            │"
-echo "  ├─────────────────────────────────────────────────────────────────┤"
-echo "  │                                                                 │"
-echo "  │  1. Generate ML-DSA-65 key pair                                 │"
-echo "  │  2. Create Certificate Signing Request (CSR)                    │"
-echo "  │  3. Sign CSR with private key (proof of possession)             │"
-echo "  │                                                                 │"
-echo "  │  This works because ML-DSA can SIGN!                            │"
-echo "  │                                                                 │"
-echo "  └─────────────────────────────────────────────────────────────────┘"
+echo "  Alice generates a signing key pair and gets a certificate."
+echo "  The CSR is self-signed (proof of possession). This works because ML-DSA can SIGN!"
 echo ""
 
 run_cmd "qpki csr gen --algorithm ml-dsa-65 --keyout output/alice-sign.key --cn \"Alice\" -o output/alice-sign.csr"
 
 echo ""
-
-pause
-
-# =============================================================================
-# Step 4: Issue Signing Certificate
-# =============================================================================
-
-print_step "Step 4: Issue Signing Certificate (ML-DSA-65)"
-
 echo "  The CA verifies the CSR signature and issues the certificate."
 echo "  This certificate will be used to attest for her encryption key."
-echo ""
-echo "  ┌─────────────────────────────────────────────────────────────────┐"
-echo "  │  SIGNING CERTIFICATE (ML-DSA-65)                                │"
-echo "  ├─────────────────────────────────────────────────────────────────┤"
-echo "  │                                                                 │"
-echo "  │  Key Usage:                                                     │"
-echo "  │    ✓ digitalSignature (sign messages, CSRs)                     │"
-echo "  │    ✓ nonRepudiation (legal binding)                             │"
-echo "  │                                                                 │"
-echo "  │  Can be used to:                                                │"
-echo "  │    • Sign CMS SignedData                                        │"
-echo "  │    • Attest CSR for encryption certificates                     │"
-echo "  │    • Authenticate identity in S/MIME                            │"
-echo "  │                                                                 │"
-echo "  └─────────────────────────────────────────────────────────────────┘"
 echo ""
 
 run_cmd "qpki cert issue --ca-dir output/encryption-ca --profile profiles/pqc-signing.yaml --csr output/alice-sign.csr --out output/alice-sign.crt"
@@ -138,10 +102,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 5: Create CSR for Encryption Key (ML-KEM-768)
+# Step 3: Generate Encryption CSR with Attestation (ML-KEM-768)
 # =============================================================================
 
-print_step "Step 5: Generate Encryption CSR (ML-KEM-768)"
+print_step "Step 3: Generate Encryption CSR (ML-KEM-768)"
 
 echo "  Now Alice creates a CSR for her ENCRYPTION key."
 echo "  The CSR is signed by her SIGNING key (attestation)."
@@ -188,10 +152,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 6: CA Issues Encryption Certificate
+# Step 4: Issue Encryption Certificate (ML-KEM-768)
 # =============================================================================
 
-print_step "Step 6: Issue Encryption Certificate (ML-KEM-768)"
+print_step "Step 4: Issue Encryption Certificate (ML-KEM-768)"
 
 echo "  The CA verifies the CSR attestation and issues the encryption cert."
 echo "  The certificate includes RelatedCertificate extension pointing"
@@ -232,10 +196,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 7: Alice's Certificate Pair
+# Step 5: Alice's Certificate Pair
 # =============================================================================
 
-print_step "Step 7: Alice's Certificate Pair"
+print_step "Step 5: Alice's Certificate Pair"
 
 echo "  Alice now has TWO linked certificates:"
 echo ""
@@ -269,10 +233,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 8: CMS Encryption Flow
+# Step 6: Encrypt Document
 # =============================================================================
 
-print_step "Step 8: How CMS Encryption Works"
+print_step "Step 6: Encrypt Document"
 
 echo "  Now that Alice has her certificates, she can receive encrypted documents."
 echo ""
@@ -301,29 +265,6 @@ orig_size=$(wc -c < "output/secret-document.txt" | tr -d ' ')
 echo -e "  ${CYAN}Original size:${NC} $orig_size bytes"
 echo ""
 
-echo "  ┌─────────────────────────────────────────────────────────────────┐"
-echo "  │  CMS ENVELOPE (EnvelopedData per RFC 5652)                      │"
-echo "  ├─────────────────────────────────────────────────────────────────┤"
-echo "  │                                                                 │"
-echo "  │  ┌─────────────────────────────────────────────────────────┐   │"
-echo "  │  │  KEMRecipientInfo (for ML-KEM recipients)               │   │"
-echo "  │  │  → Recipient identity (issuer + serial)                 │   │"
-echo "  │  │  → KEM ciphertext (~1,088 bytes for ML-KEM-768)         │   │"
-echo "  │  │  → Wrapped session key (AES Key Wrap)                   │   │"
-echo "  │  └─────────────────────────────────────────────────────────┘   │"
-echo "  │                                                                 │"
-echo "  │  ┌─────────────────────────────────────────────────────────┐   │"
-echo "  │  │  EncryptedContent                                       │   │"
-echo "  │  │  → Document encrypted with AES-256-GCM                  │   │"
-echo "  │  │  → Fast symmetric encryption (AEAD)                     │   │"
-echo "  │  └─────────────────────────────────────────────────────────┘   │"
-echo "  │                                                                 │"
-echo "  └─────────────────────────────────────────────────────────────────┘"
-echo ""
-
-echo "  Encrypting document for Alice..."
-echo ""
-
 run_cmd "qpki cms encrypt --recipient output/alice-enc.crt --in output/secret-document.txt --out output/secret-document.p7m"
 
 echo ""
@@ -340,6 +281,15 @@ echo ""
 run_cmd "qpki cms info output/secret-document.p7m"
 
 echo ""
+
+pause
+
+# =============================================================================
+# Step 7: Decrypt Document
+# =============================================================================
+
+print_step "Step 7: Decrypt Document"
+
 echo "  Alice decrypts with her ML-KEM private key..."
 echo ""
 
@@ -358,10 +308,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 9: Why Hybrid Encryption?
+# Conclusion: Why Hybrid Encryption?
 # =============================================================================
 
-print_step "Step 9: Why Hybrid Encryption?"
+print_step "Why Hybrid Encryption?"
 
 echo "  ┌─────────────────────────────────────────────────────────────────┐"
 echo "  │  WHY AES + ML-KEM?                                              │"
