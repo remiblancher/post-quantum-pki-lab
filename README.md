@@ -132,7 +132,7 @@ post-quantum-pki-lab/
 
 ## Requirements
 
-- **Go 1.21+** (for building QPKI from source)
+- **Go 1.25+** (for building QPKI from source)
 - **OpenSSL 3.x** (for verification demos)
 - **Docker** (optional, for isolated environments)
 

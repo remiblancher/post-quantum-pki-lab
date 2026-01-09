@@ -81,15 +81,13 @@ Traditional CSR workflow:
 
 | Step | What Happens | Key Concept |
 |------|--------------|-------------|
-| 1 | Explain KEM key problem | Why KEM keys can't sign CSRs |
-| 2 | Create Encryption CA | ML-DSA-65 for signing |
-| 3 | Generate Signing CSR (ML-DSA-65) | ML-DSA can sign its own CSR |
-| 4 | Issue Signing Certificate (ML-DSA-65) | Certificate for attestation |
-| 5 | Generate Encryption CSR (ML-KEM-768) | Signed by signing key (RFC 9883) |
-| 6 | Issue Encryption Certificate (ML-KEM-768) | RelatedCertificate extension |
-| 7 | Show certificate pair | Two linked certificates |
-| 8 | CMS encryption flow | Hybrid encryption (AES + ML-KEM) |
-| 9 | Why hybrid encryption? | AES speed + ML-KEM quantum safety |
+| 1 | Create Encryption CA | ML-DSA-65 CA for signing |
+| 2 | Issue Signing Certificate | ML-DSA can sign its own CSR |
+| 3 | Generate Encryption CSR | Signed by signing key (RFC 9883) |
+| 4 | Issue Encryption Certificate | RelatedCertificate extension |
+| 5 | Show Certificate Pair | Two linked certificates |
+| 6 | Encrypt Document | CMS EnvelopedData (AES + ML-KEM) |
+| 7 | Decrypt Document | ML-KEM decapsulation |
 
 ---
 
@@ -111,20 +109,15 @@ qpki ca init --profile profiles/pqc-ca.yaml \
     --ca-dir output/encryption-ca
 ```
 
-### Step 2: Generate Signing CSR (ML-DSA-65)
+### Step 2: Issue Signing Certificate (ML-DSA-65)
 
 ```bash
-# Generate ML-DSA-65 key pair and CSR
-# CSR is self-signed (proof of possession)
+# Generate ML-DSA-65 key pair and CSR (self-signed = proof of possession)
 qpki csr gen --algorithm ml-dsa-65 \
     --keyout output/alice-sign.key \
     --cn "Alice" \
     -o output/alice-sign.csr
-```
 
-### Step 3: Issue Signing Certificate (ML-DSA-65)
-
-```bash
 # CA verifies CSR signature and issues certificate
 qpki cert issue --ca-dir output/encryption-ca \
     --profile profiles/pqc-signing.yaml \
@@ -132,11 +125,11 @@ qpki cert issue --ca-dir output/encryption-ca \
     --out output/alice-sign.crt
 ```
 
-### Step 4: Generate Encryption CSR (ML-KEM-768)
+### Step 3: Generate Encryption CSR (ML-KEM-768)
 
 ```bash
 # Generate ML-KEM key and create CSR
-# CSR is signed by Alice's SIGNING key (attestation)
+# CSR is signed by Alice's SIGNING key (attestation per RFC 9883)
 qpki csr gen --algorithm ml-kem-768 \
     --keyout output/alice-enc.key \
     --cn "Alice" \
@@ -145,7 +138,7 @@ qpki csr gen --algorithm ml-kem-768 \
     -o output/alice-enc.csr
 ```
 
-### Step 5: Issue Encryption Certificate (ML-KEM-768)
+### Step 4: Issue Encryption Certificate (ML-KEM-768)
 
 ```bash
 # CA verifies attestation and issues certificate
@@ -156,6 +149,8 @@ qpki cert issue --ca-dir output/encryption-ca \
     --attest-cert output/alice-sign.crt \
     --out output/alice-enc.crt
 ```
+
+*Step 5 (Show Certificate Pair) is displayed in the demo but has no command.*
 
 ### Step 6: Encrypt Document (CMS EnvelopedData)
 
