@@ -321,16 +321,38 @@ echo "  │                                                                 │"
 echo "  └─────────────────────────────────────────────────────────────────┘"
 echo ""
 
-echo "  ┌─────────────────────────────────────────────────────────────────┐"
-echo "  │  ENCRYPTION COMMAND (coming soon)                               │"
-echo "  ├─────────────────────────────────────────────────────────────────┤"
-echo "  │                                                                 │"
-echo -e "  │  ${DIM}pki cms encrypt \\\\${NC}                                           │"
-echo -e "  │  ${DIM}  --recipient output/alice-enc.crt \\\\${NC}                        │"
-echo -e "  │  ${DIM}  --in output/secret-document.txt \\\\${NC}                         │"
-echo -e "  │  ${DIM}  --out output/secret-document.p7m${NC}                           │"
-echo "  │                                                                 │"
-echo "  └─────────────────────────────────────────────────────────────────┘"
+echo "  Encrypting document for Alice..."
+echo ""
+
+run_cmd "qpki cms encrypt --recipient output/alice-enc.crt --in output/secret-document.txt --out output/secret-document.p7m"
+
+echo ""
+
+if [[ -f "output/secret-document.p7m" ]]; then
+    enc_size=$(wc -c < "output/secret-document.p7m" | tr -d ' ')
+    echo -e "  ${CYAN}Encrypted size:${NC} $enc_size bytes"
+fi
+
+echo ""
+echo "  CMS EnvelopedData structure:"
+echo ""
+
+run_cmd "qpki cms info output/secret-document.p7m"
+
+echo ""
+echo "  Alice decrypts with her ML-KEM private key..."
+echo ""
+
+run_cmd "qpki cms decrypt --key output/alice-enc.key --in output/secret-document.p7m --out output/decrypted.txt"
+
+echo ""
+echo "  Verifying decrypted content matches original..."
+if diff -q output/secret-document.txt output/decrypted.txt > /dev/null 2>&1; then
+    echo -e "  ${GREEN}✓ Decryption successful! Content matches original.${NC}"
+else
+    echo -e "  ${RED}✗ Decryption failed or content mismatch.${NC}"
+fi
+
 echo ""
 
 pause
