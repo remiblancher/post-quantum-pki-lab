@@ -39,17 +39,31 @@ echo ""
 pause
 
 # =============================================================================
-# Step 2: Issue Hybrid TLS Certificate
+# Step 2: Generate Hybrid Keys and CSR
 # =============================================================================
 
-print_step "Step 2: Issue Hybrid TLS Certificate"
+print_step "Step 2: Generate Hybrid Keys and CSR"
 
-echo "  The certificate inherits the hybrid nature from the CA."
-echo "  It will contain both ECDSA and ML-DSA keys/signatures."
+echo "  Generate hybrid keys (classical + PQC) and create CSR."
+echo ""
+echo "    Primary:     ECDSA P-384 (classical)"
+echo "    Alternative: ML-DSA-65 (post-quantum)"
 echo ""
 
 run_cmd "qpki csr gen --algorithm ecdsa-p384 --hybrid ml-dsa-65 --keyout output/hybrid-server.key --hybrid-keyout output/hybrid-server-pqc.key --cn hybrid.example.com -o output/hybrid-server.csr"
 
+echo ""
+
+pause
+
+# =============================================================================
+# Step 3: Issue Hybrid TLS Certificate
+# =============================================================================
+
+print_step "Step 3: Issue Hybrid TLS Certificate"
+
+echo "  The certificate inherits the hybrid nature from the CA."
+echo "  It will contain both ECDSA and ML-DSA keys/signatures."
 echo ""
 
 run_cmd "qpki cert issue --ca-dir output/hybrid-ca --profile profiles/hybrid-tls-server.yaml --csr output/hybrid-server.csr --out output/hybrid-server.crt"
@@ -62,10 +76,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 3: Test Interoperability
+# Step 4: Test Interoperability
 # =============================================================================
 
-print_step "Step 3: Test Interoperability"
+print_step "Step 4: Test Interoperability"
 
 echo "  The power of hybrid: works with EVERYONE!"
 echo ""
@@ -107,10 +121,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 4: Size Comparison
+# Step 5: Size Comparison
 # =============================================================================
 
-print_step "Step 4: Size Comparison"
+print_step "Step 5: Size Comparison"
 
 if [[ -f "output/hybrid-ca/ca.crt" ]]; then
     hybrid_ca_size=$(wc -c < "output/hybrid-ca/ca.crt" | tr -d ' ')

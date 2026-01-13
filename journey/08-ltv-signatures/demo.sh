@@ -19,15 +19,12 @@ setup_demo "PQC LTV Signatures"
 BUNDLE_DIR="output/ltv-bundle"
 
 # =============================================================================
-# Step 1: Create PKI Infrastructure
+# Step 1: Create CA
 # =============================================================================
 
-print_step "Step 1: Create PKI Infrastructure"
+print_step "Step 1: Create CA"
 
-echo "  We need:"
-echo "    - A CA to issue certificates"
-echo "    - A document signing certificate for Alice"
-echo "    - A TSA certificate for timestamping"
+echo "  We need a CA to issue certificates for document signing and timestamping."
 echo ""
 
 run_cmd "qpki ca init --profile profiles/pqc-ca.yaml --var cn=\"LTV Demo CA\" --ca-dir output/ltv-ca"
@@ -36,21 +33,43 @@ run_cmd "qpki ca init --profile profiles/pqc-ca.yaml --var cn=\"LTV Demo CA\" --
 qpki ca export --ca-dir output/ltv-ca > output/ltv-ca/ca.crt
 
 echo ""
-echo "  Issue document signing certificate for Alice..."
+
+pause
+
+# =============================================================================
+# Step 2: Generate Keys and CSRs
+# =============================================================================
+
+print_step "Step 2: Generate Keys and CSRs"
+
+echo "  Generate document signing key and CSR for Alice..."
 echo ""
 
 run_cmd "qpki csr gen --algorithm ml-dsa-65 --keyout output/alice.key --cn \"Alice (Legal Counsel)\" -o output/alice.csr"
 
+echo ""
+echo "  Generate TSA key and CSR..."
+echo ""
+
+run_cmd "qpki csr gen --algorithm ml-dsa-65 --keyout output/tsa.key --cn \"LTV Timestamp Authority\" -o output/tsa.csr"
+
+echo ""
+
+pause
+
+# =============================================================================
+# Step 3: Issue Certificates
+# =============================================================================
+
+print_step "Step 3: Issue Certificates"
+
+echo "  Issue document signing certificate for Alice..."
 echo ""
 
 run_cmd "qpki cert issue --ca-dir output/ltv-ca --profile profiles/pqc-document-signing.yaml --csr output/alice.csr --out output/alice.crt"
 
 echo ""
 echo "  Issue TSA certificate..."
-echo ""
-
-run_cmd "qpki csr gen --algorithm ml-dsa-65 --keyout output/tsa.key --cn \"LTV Timestamp Authority\" -o output/tsa.csr"
-
 echo ""
 
 run_cmd "qpki cert issue --ca-dir output/ltv-ca --profile profiles/pqc-tsa.yaml --csr output/tsa.csr --out output/tsa.crt"
@@ -60,10 +79,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 2: Create and Sign Document
+# Step 4: Create and Sign Document
 # =============================================================================
 
-print_step "Step 2: Create and Sign the 30-Year Contract"
+print_step "Step 4: Create and Sign the 30-Year Contract"
 
 SIGN_DATE=$(date "+%Y-%m-%d %H:%M:%S")
 
@@ -115,10 +134,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 3: Add Timestamp
+# Step 5: Add Timestamp
 # =============================================================================
 
-print_step "Step 3: Add Timestamp (RFC 3161)"
+print_step "Step 5: Add Timestamp (RFC 3161)"
 
 echo "  The timestamp proves WHEN the document was signed."
 echo "  This is critical because it proves the certificate was valid at signing time."
@@ -138,10 +157,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 4: Create LTV Bundle
+# Step 6: Create LTV Bundle
 # =============================================================================
 
-print_step "Step 4: Create LTV Bundle"
+print_step "Step 6: Create LTV Bundle"
 
 echo "  Packaging everything for long-term verification..."
 echo ""
@@ -184,10 +203,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 5: Verify Offline (Simulating 2055)
+# Step 7: Verify Offline (Simulating 2055)
 # =============================================================================
 
-print_step "Step 5: Verify Offline (Simulating Year 2055)"
+print_step "Step 7: Verify Offline (Simulating Year 2055)"
 
 echo "  ┌─────────────────────────────────────────────────────────────────┐"
 echo "  │  SIMULATING: It's now 2055. The original CA is long gone.      │"
@@ -211,7 +230,7 @@ echo ""
 # Comparison: With vs Without LTV
 # =============================================================================
 
-print_step "Step 6: Why LTV Matters"
+print_step "Step 8: Why LTV Matters"
 
 echo ""
 echo -e "  ${BOLD}WITHOUT LTV (in 2055):${NC}"

@@ -28,12 +28,12 @@ cleanup() {
 trap cleanup EXIT
 
 # =============================================================================
-# Step 1: Create CA and Certificates
+# Step 1: Create CA
 # =============================================================================
 
-print_step "Step 1: Create CA and Certificates"
+print_step "Step 1: Create CA"
 
-echo "  First, we create a PQC CA and issue certificates."
+echo "  First, we create a PQC CA."
 echo ""
 
 run_cmd "qpki ca init --profile profiles/pqc-ca.yaml --var cn=\"PQC CA\" --ca-dir output/pqc-ca"
@@ -42,21 +42,43 @@ run_cmd "qpki ca init --profile profiles/pqc-ca.yaml --var cn=\"PQC CA\" --ca-di
 qpki ca export --ca-dir output/pqc-ca > output/pqc-ca/ca.crt
 
 echo ""
-echo "  Issue delegated OCSP responder certificate (best practice: CA key stays offline)..."
+
+pause
+
+# =============================================================================
+# Step 2: Generate Keys and CSRs
+# =============================================================================
+
+print_step "Step 2: Generate Keys and CSRs"
+
+echo "  Generate OCSP responder key and CSR..."
 echo ""
 
 run_cmd "qpki csr gen --algorithm ml-dsa-65 --keyout output/ocsp-responder.key --cn \"OCSP Responder\" -o output/ocsp-responder.csr"
 
+echo ""
+echo "  Generate TLS server key and CSR..."
+echo ""
+
+run_cmd "qpki csr gen --algorithm ml-dsa-65 --keyout output/server.key --cn server.example.com -o output/server.csr"
+
+echo ""
+
+pause
+
+# =============================================================================
+# Step 3: Issue Certificates
+# =============================================================================
+
+print_step "Step 3: Issue Certificates"
+
+echo "  Issue delegated OCSP responder certificate (best practice: CA key stays offline)..."
 echo ""
 
 run_cmd "qpki cert issue --ca-dir output/pqc-ca --profile profiles/pqc-ocsp-responder.yaml --csr output/ocsp-responder.csr --out output/ocsp-responder.crt"
 
 echo ""
 echo "  Issue TLS server certificate to verify..."
-echo ""
-
-run_cmd "qpki csr gen --algorithm ml-dsa-65 --keyout output/server.key --cn server.example.com -o output/server.csr"
-
 echo ""
 
 run_cmd "qpki cert issue --ca-dir output/pqc-ca --profile profiles/pqc-tls-server.yaml --csr output/server.csr --out output/server.crt"
@@ -72,10 +94,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 2: Start OCSP Responder
+# Step 4: Start OCSP Responder
 # =============================================================================
 
-print_step "Step 2: Start OCSP Responder"
+print_step "Step 4: Start OCSP Responder"
 
 echo "  The OCSP responder is an HTTP service that answers status queries."
 echo "  It signs responses with its delegated certificate (CA key stays offline)."
@@ -104,10 +126,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 3: Query Certificate Status
+# Step 5: Query Certificate Status
 # =============================================================================
 
-print_step "Step 3: Query Certificate Status"
+print_step "Step 5: Query Certificate Status"
 
 echo "  Let's query the OCSP responder for our server certificate status..."
 echo ""
@@ -140,10 +162,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 4: Revoke and Re-query
+# Step 6: Revoke and Re-query
 # =============================================================================
 
-print_step "Step 4: Revoke and Re-query"
+print_step "Step 6: Revoke and Re-query"
 
 echo -e "  ${RED}Simulating key compromise...${NC}"
 echo ""

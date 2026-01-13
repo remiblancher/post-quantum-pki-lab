@@ -60,16 +60,27 @@ echo ""
 pause
 
 # =============================================================================
-# Step 3: Issue TLS Server Certificate
+# Step 3: Generate Server Key and CSR
 # =============================================================================
 
-print_step "Step 3: Issue TLS Server Certificate"
+print_step "Step 3: Generate Server Key and CSR"
 
-echo "  The TLS server certificate uses ML-DSA-65 for authentication."
+echo "  Generate an ML-DSA-65 key pair and Certificate Signing Request."
 echo ""
 
 run_cmd "qpki csr gen --algorithm ml-dsa-65 --keyout output/server.key --cn server.example.com -o output/server.csr"
 
+echo ""
+
+pause
+
+# =============================================================================
+# Step 4: Issue TLS Server Certificate
+# =============================================================================
+
+print_step "Step 4: Issue TLS Server Certificate"
+
+echo "  The TLS server certificate uses ML-DSA-65 for authentication."
 echo ""
 
 run_cmd "qpki cert issue --ca-dir output/pqc-issuing-ca --profile profiles/pqc-tls-server.yaml --csr output/server.csr --out output/server.crt"
@@ -82,10 +93,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 4: Examine the Chain
+# Step 5: Examine the Chain
 # =============================================================================
 
-print_step "Step 4: Examine the Complete Chain"
+print_step "Step 5: Examine the Complete Chain"
 
 echo "  Your complete PQC PKI hierarchy:"
 echo ""

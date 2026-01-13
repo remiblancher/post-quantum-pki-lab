@@ -20,22 +20,42 @@ source "$SCRIPT_DIR/../../lib/common.sh"
 setup_demo "Certificate Revocation"
 
 # =============================================================================
-# Step 1: Create CA and Issue Certificate
+# Step 1: Create CA
 # =============================================================================
 
-print_step "Step 1: Create CA and Issue Certificate"
+print_step "Step 1: Create CA"
 
-echo "  First, we need a CA and a certificate to revoke."
+echo "  First, we need a CA to issue and revoke certificates."
 echo ""
 
 run_cmd "qpki ca init --profile profiles/pqc-ca.yaml --var cn=\"Demo CA\" --ca-dir output/demo-ca"
 
 echo ""
-echo "  Now issue a TLS certificate..."
+
+pause
+
+# =============================================================================
+# Step 2: Generate Key and CSR
+# =============================================================================
+
+print_step "Step 2: Generate Key and CSR"
+
+echo "  Generate an ML-DSA-65 key pair and Certificate Signing Request."
 echo ""
 
 run_cmd "qpki csr gen --algorithm ml-dsa-65 --keyout output/server.key --cn server.example.com -o output/server.csr"
 
+echo ""
+
+pause
+
+# =============================================================================
+# Step 3: Issue TLS Certificate
+# =============================================================================
+
+print_step "Step 3: Issue TLS Certificate"
+
+echo "  Issue a TLS certificate that we'll later revoke."
 echo ""
 
 run_cmd "qpki cert issue --ca-dir output/demo-ca --profile profiles/pqc-tls-server.yaml --csr output/server.csr --out output/server.crt"
@@ -51,10 +71,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 2: Incident - Key Compromise!
+# Step 4: Incident - Key Compromise!
 # =============================================================================
 
-print_step "Step 2: Incident - Key Compromise!"
+print_step "Step 4: Incident - Key Compromise!"
 
 echo -e "  ${RED}ALERT: The private key for server.example.com was exposed!${NC}"
 echo ""
@@ -69,10 +89,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 3: Revoke the Certificate
+# Step 5: Revoke the Certificate
 # =============================================================================
 
-print_step "Step 3: Revoke the Certificate"
+print_step "Step 5: Revoke the Certificate"
 
 echo "  Revocation reasons (RFC 5280):"
 echo ""
@@ -93,10 +113,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 4: Generate CRL
+# Step 6: Generate CRL
 # =============================================================================
 
-print_step "Step 4: Generate CRL (Certificate Revocation List)"
+print_step "Step 6: Generate CRL (Certificate Revocation List)"
 
 echo "  The CRL is a signed list of all revoked certificates."
 echo "  Clients download it to check certificate validity."
@@ -118,10 +138,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 5: Verify Revocation Status
+# Step 7: Verify Revocation Status
 # =============================================================================
 
-print_step "Step 5: Verify Revocation Status"
+print_step "Step 7: Verify Revocation Status"
 
 echo "  Let's verify the certificate is now rejected..."
 echo ""

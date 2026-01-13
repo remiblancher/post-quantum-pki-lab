@@ -17,23 +17,42 @@ source "$SCRIPT_DIR/../../lib/common.sh"
 setup_demo "PQC Timestamping"
 
 # =============================================================================
-# Step 1: Create TSA CA and Certificate
+# Step 1: Create TSA CA
 # =============================================================================
 
-print_step "Step 1: Create TSA CA and Certificate"
+print_step "Step 1: Create TSA CA"
 
 echo "  A Timestamp Authority (TSA) issues cryptographic proofs of time."
-echo "  The TSA certificate has Extended Key Usage: timeStamping."
 echo ""
 
 run_cmd "qpki ca init --profile profiles/pqc-ca.yaml --var cn=\"TSA Root CA\" --ca-dir output/tsa-ca"
 
 echo ""
-echo "  Issue TSA certificate..."
+
+pause
+
+# =============================================================================
+# Step 2: Generate TSA Key and CSR
+# =============================================================================
+
+print_step "Step 2: Generate TSA Key and CSR"
+
+echo "  Generate an ML-DSA-65 key pair and Certificate Signing Request for the TSA."
 echo ""
 
 run_cmd "qpki csr gen --algorithm ml-dsa-65 --keyout output/tsa.key --cn \"PQC Timestamp Authority\" -o output/tsa.csr"
 
+echo ""
+
+pause
+
+# =============================================================================
+# Step 3: Issue TSA Certificate
+# =============================================================================
+
+print_step "Step 3: Issue TSA Certificate"
+
+echo "  The TSA certificate has Extended Key Usage: timeStamping."
 echo ""
 
 run_cmd "qpki cert issue --ca-dir output/tsa-ca --profile profiles/pqc-tsa.yaml --csr output/tsa.csr --out output/tsa.crt"
@@ -51,10 +70,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 2: Timestamp a Document
+# Step 4: Timestamp a Document
 # =============================================================================
 
-print_step "Step 2: Timestamp a Document"
+print_step "Step 4: Timestamp a Document"
 
 echo "  Creating a test contract..."
 echo ""
@@ -94,10 +113,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 3: Verify the Timestamp
+# Step 5: Verify the Timestamp
 # =============================================================================
 
-print_step "Step 3: Verify the Timestamp"
+print_step "Step 5: Verify the Timestamp"
 
 echo "  Verifying that the document hasn't been modified"
 echo "  and the timestamp is valid..."
@@ -123,10 +142,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 4: Tamper and Verify Again
+# Step 6: Tamper and Verify Again
 # =============================================================================
 
-print_step "Step 4: Tamper and Verify Again"
+print_step "Step 6: Tamper and Verify Again"
 
 echo -e "  ${RED}Simulating fraudulent modification...${NC}"
 echo ""
