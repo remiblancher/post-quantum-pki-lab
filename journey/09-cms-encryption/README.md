@@ -125,7 +125,7 @@ qpki cert issue --ca-dir output/encryption-ca \
     --out output/alice-sign.crt
 ```
 
-### Step 3: Generate Encryption CSR (ML-KEM-768)
+### Step 3: Generate Encryption Key and CSR (ML-KEM-768)
 
 ```bash
 # Generate ML-KEM key and create CSR
