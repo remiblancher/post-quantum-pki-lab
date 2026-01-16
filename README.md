@@ -1,10 +1,32 @@
-# Post-Quantum PKI Lab (QLAB)
+# QLAB
+
+**Post-Quantum PKI Lab**
 
 > **"The PKI is the tool for transition — post-quantum is an engineering problem, not magic."**
 
-Educational demonstrations for transitioning to Post-Quantum Cryptography using a real PKI implementation.
+QLAB is an educational resource to help teams understand PKI and Post-Quantum Cryptography (PQC) migration through hands-on practice.
 
-> **QLAB** is built on top of **[QPKI (Post-Quantum PKI)](https://github.com/remiblancher/post-quantum-pki)**, which provides the underlying PKI toolkit for all certificate authority operations, key generation, and cryptographic functions. QPKI is an external dependency.
+- **Lab exercises** — Learn PQC migration with real scenarios
+- **Interactive demos** — Quantum-safe certificate operations
+- **Step-by-step journeys** — From classical to post-quantum PKI
+
+QLAB uses **[QPKI](https://github.com/remiblancher/post-quantum-pki)** for all PKI operations:
+- Certificate Authority (CA) management
+- Certificate generation and issuance
+- Post-Quantum Cryptography (PQC) algorithms
+- Hybrid certificates support
+
+---
+
+## Table of Contents
+
+- [Why This Matters](#why-this-matters)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Learning Path](#learning-path)
+- [Supported Algorithms](#supported-algorithms)
+- [Useful Links](#useful-links)
+- [License](#license)
 
 ---
 
@@ -24,6 +46,14 @@ This lab demonstrates:
 - **Classical and post-quantum PKI work the same way** — only the algorithm changes
 - **Hybrid certificates provide a quantum-safe migration path** — protect legacy and future clients
 - **The PKI model is algorithm-agnostic** — your workflow stays exactly the same
+
+---
+
+## Prerequisites
+
+- **Go 1.25+** (for building QPKI from source)
+- **OpenSSL 3.x** (for verification demos)
+- **Docker** (optional, for isolated environments)
 
 ---
 
@@ -81,35 +111,6 @@ Then start with: `./journey/00-quickstart/demo.sh`
 
 ---
 
-## Project Structure
-
-```
-post-quantum-pki-lab/
-├── journey/                    # Guided demos (linear progression)
-│   ├── 00-quickstart/          # Quick Start
-│   ├── 01-revelation/          # The Quantum Threat
-│   ├── 02-full-chain/          # Full PQC Chain
-│   ├── 03-hybrid/              # Hybrid Certificates
-│   ├── 04-revocation/          # Revocation (CRL)
-│   ├── 05-ocsp/                # OCSP
-│   ├── 06-code-signing/        # Code Signing
-│   ├── 07-timestamping/        # Timestamping
-│   ├── 08-ltv-signatures/      # LTV Signatures
-│   ├── 09-cms-encryption/      # CMS Encryption
-│   └── 10-crypto-agility/      # Crypto-Agility
-│       ├── demo.sh             # Demo script
-│       ├── profiles/           # Certificate profiles (YAML)
-│       └── output/             # Generated artifacts
-│           ├── ca/             # CA certificates and keys
-│           └── credentials/    # Issued credentials
-├── lib/                        # Shell helpers
-├── tooling/
-│   └── install.sh              # Install QPKI binary
-└── bin/                        # (generated) QPKI binary
-```
-
----
-
 ## Supported Algorithms
 
 ### Classical (Production)
@@ -130,14 +131,6 @@ post-quantum-pki-lab/
 
 ---
 
-## Requirements
-
-- **Go 1.25+** (for building QPKI from source)
-- **OpenSSL 3.x** (for verification demos)
-- **Docker** (optional, for isolated environments)
-
----
-
 ## Useful Links
 
 - [QPKI - Post-Quantum PKI](https://github.com/remiblancher/post-quantum-pki) — The PKI toolkit used by QLAB
@@ -148,21 +141,6 @@ post-quantum-pki-lab/
 - [ITU-T X.509 (Hybrid Certificates)](https://www.itu.int/rec/T-REC-X.509)
 
 ---
-
-## About
-
-**QLAB** (Post-Quantum PKI Lab) is an educational resource to help teams understand PKI and Post-Quantum Cryptography (PQC) migration through hands-on practice.
-
-QLAB provides:
-- Lab exercises and scenarios for learning PQC migration
-- Interactive demonstrations of quantum-safe certificate operations
-- Step-by-step journeys from classical to post-quantum PKI
-
-QLAB uses **[QPKI (Post-Quantum PKI)](https://github.com/remiblancher/post-quantum-pki)** for all PKI operations including:
-- Certificate Authority (CA) management
-- Certificate generation and issuance
-- Post-Quantum Cryptography (PQC) algorithms
-- Hybrid certificate support
 
 ## License
 
