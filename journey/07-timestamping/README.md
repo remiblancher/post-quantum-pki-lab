@@ -118,6 +118,7 @@ A trusted authority (TSA) proves when the signature was created:
 | 5 | Request timestamp | Token via HTTP POST |
 | 6 | Verify timestamp | Status: VALID |
 | 7 | Tamper and verify | Status: INVALID |
+| 8 | Stop TSA server | Server stopped cleanly |
 
 ---
 
@@ -214,6 +215,13 @@ qpki tsa verify output/document.tsr \
     --data output/document.txt \
     --ca output/tsa-ca/ca.crt
 # Status: INVALID - document modified after timestamping
+```
+
+### Step 8: Stop TSA Server
+
+```bash
+# Stop the TSA server
+qpki tsa stop --port 8318
 ```
 
 ---

@@ -127,11 +127,15 @@ Embed EVERYTHING needed in a self-sufficient bundle:
 
 | Step | What Happens | Expected Result |
 |------|--------------|-----------------|
-| 1 | Create CA + Signing Certificate + TSA | ML-DSA-65 PKI ready |
-| 2 | Sign document (CMS format) | `contract.p7s` created |
-| 3 | Add timestamp (RFC 3161) | `contract.tsr` created |
-| 4 | Create LTV bundle | All proofs packaged |
-| 5 | Verify offline (simulating 2055) | Status: VALID |
+| 1 | Create CA | ML-DSA-65 CA ready |
+| 2 | Issue TSA certificate | TSA cert ready |
+| 3 | Start TSA server | HTTP service on port 8318 |
+| 4 | Issue Signing certificate | Alice cert ready |
+| 5 | Create & Sign Document | `contract.p7s` created |
+| 6 | Request Timestamp (via HTTP) | `contract.tsr` created |
+| 7 | Create LTV Bundle | All proofs packaged |
+| 8 | Verify Offline (Simulating 2055) | Status: VALID |
+| 9 | Stop TSA server | Server stopped cleanly |
 
 ---
 
@@ -152,32 +156,19 @@ Embed EVERYTHING needed in a self-sufficient bundle:
 qpki ca init --profile profiles/pqc-ca.yaml \
     --var cn="LTV Demo CA" \
     --ca-dir output/ltv-ca
+
+# Export CA certificate
+qpki ca export --ca-dir output/ltv-ca > output/ltv-ca/ca.crt
 ```
 
-### Step 2: Generate Keys and CSRs
+### Step 2: Issue TSA Certificate
 
 ```bash
-# Generate document signing key and CSR (Alice)
-qpki csr gen --algorithm ml-dsa-65 \
-    --keyout output/alice.key \
-    --cn "Alice (Legal Counsel)" \
-    -o output/alice.csr
-
 # Generate TSA key and CSR
 qpki csr gen --algorithm ml-dsa-65 \
     --keyout output/tsa.key \
     --cn "LTV Timestamp Authority" \
     -o output/tsa.csr
-```
-
-### Step 3: Issue Certificates
-
-```bash
-# Issue document signing certificate
-qpki cert issue --ca-dir output/ltv-ca \
-    --profile profiles/pqc-document-signing.yaml \
-    --csr output/alice.csr \
-    --out output/alice.crt
 
 # Issue TSA certificate
 qpki cert issue --ca-dir output/ltv-ca \
@@ -186,7 +177,32 @@ qpki cert issue --ca-dir output/ltv-ca \
     --out output/tsa.crt
 ```
 
-### Step 4: Sign the Document
+### Step 3: Start TSA Server
+
+```bash
+# Start RFC 3161 HTTP timestamp server
+qpki tsa serve --port 8318 \
+    --cert output/tsa.crt \
+    --key output/tsa.key
+```
+
+### Step 4: Issue Signing Certificate
+
+```bash
+# Generate document signing key and CSR (Alice)
+qpki csr gen --algorithm ml-dsa-65 \
+    --keyout output/alice.key \
+    --cn "Alice (Legal Counsel)" \
+    -o output/alice.csr
+
+# Issue document signing certificate
+qpki cert issue --ca-dir output/ltv-ca \
+    --profile profiles/pqc-document-signing.yaml \
+    --csr output/alice.csr \
+    --out output/alice.crt
+```
+
+### Step 5: Create & Sign Document
 
 ```bash
 # Create a 30-year lease agreement
@@ -204,17 +220,22 @@ qpki cms sign --data output/contract.txt \
     -o output/contract.p7s
 ```
 
-### Step 5: Add Timestamp
+### Step 6: Request Timestamp (via HTTP)
 
 ```bash
-# Timestamp the signature (proves WHEN it was signed)
-qpki tsa sign --data output/contract.p7s \
-    --cert output/tsa.crt \
-    --key output/tsa.key \
+# Create timestamp request
+qpki tsa request --data output/contract.p7s \
+    -o output/request.tsq
+
+# Send to TSA server via HTTP POST
+curl -s -X POST \
+    -H "Content-Type: application/timestamp-query" \
+    --data-binary @output/request.tsq \
+    http://localhost:8318/ \
     -o output/contract.tsr
 ```
 
-### Step 6: Create LTV Bundle
+### Step 7: Create LTV Bundle
 
 ```bash
 # Package everything for long-term verification
@@ -225,13 +246,20 @@ cp output/contract.tsr output/ltv-bundle/timestamp.tsr
 cat output/alice.crt output/ltv-ca/ca.crt > output/ltv-bundle/chain.pem
 ```
 
-### Step 7: Verify Offline (Simulating 2055)
+### Step 8: Verify Offline (Simulating 2055)
 
 ```bash
 # Verify using only the bundle (no network)
 qpki cms verify output/ltv-bundle/signature.p7s \
     --data output/ltv-bundle/document.txt
 # Result: VALID - signature verified with bundled chain
+```
+
+### Step 9: Stop TSA Server
+
+```bash
+# Stop the TSA server
+qpki tsa stop --port 8318
 ```
 
 ---

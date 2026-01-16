@@ -202,6 +202,23 @@ echo "  │  The status change is IMMEDIATE - no waiting for CRL refresh!  │"
 echo "  └─────────────────────────────────────────────────────────────────┘"
 echo ""
 
+pause
+
+# =============================================================================
+# Step 8: Stop OCSP Responder
+# =============================================================================
+
+print_step "Step 8: Stop OCSP Responder"
+
+echo "  Stopping the OCSP responder..."
+echo ""
+
+run_cmd "$PKI_BIN ocsp stop --port $OCSP_PORT"
+
+OCSP_PID=""  # Clear PID so cleanup doesn't try to stop again
+
+echo ""
+
 # =============================================================================
 # Conclusion
 # =============================================================================

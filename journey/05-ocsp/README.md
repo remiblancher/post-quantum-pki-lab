@@ -46,6 +46,7 @@ Yes. Same HTTP protocol, same request/response format. Only signature sizes chan
 | 5 | Query certificate status | Status: GOOD |
 | 6 | Revoke certificate | Certificate marked revoked |
 | 7 | Query again | Status: REVOKED (immediate!) |
+| 8 | Stop OCSP responder | Server stopped cleanly |
 
 ---
 
@@ -150,6 +151,13 @@ curl -s -X POST \
 qpki ocsp info output/response2.ocsp
 # Status: revoked
 # Revocation Reason: keyCompromise
+```
+
+### Step 8: Stop OCSP Responder
+
+```bash
+# Stop the OCSP responder
+qpki ocsp stop --port 8888
 ```
 
 ---

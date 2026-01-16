@@ -226,6 +226,23 @@ echo "  │  The timestamp proves the document existed at a specific time!  │"
 echo "  └─────────────────────────────────────────────────────────────────┘"
 echo ""
 
+pause
+
+# =============================================================================
+# Step 8: Stop TSA Server
+# =============================================================================
+
+print_step "Step 8: Stop TSA Server"
+
+echo "  Stopping the TSA server..."
+echo ""
+
+run_cmd "$PKI_BIN tsa stop --port $TSA_PORT"
+
+TSA_PID=""  # Clear PID so cleanup doesn't try to stop again
+
+echo ""
+
 # =============================================================================
 # Conclusion
 # =============================================================================
