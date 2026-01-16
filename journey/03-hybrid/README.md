@@ -195,6 +195,32 @@ This demo uses **Catalyst** because:
 
 ---
 
+## Why Hybrid?
+
+During the transition period, combining classical + PQC is the recommended "belt and suspenders" strategy:
+
+```
+Hybrid Key Exchange:  X25519 + ML-KEM-768
+Hybrid Signature:     ECDSA + ML-DSA-65
+```
+
+**Why not pure PQC right now?**
+
+PQC algorithms are mathematically sound, but they're new. Classical algorithms like ECDSA have decades of cryptanalysis — researchers worldwide have tried (and failed) to break them. PQC algorithms don't have this track record yet. A hybrid approach hedges against the unknown.
+
+**The security guarantee:**
+
+| Scenario | Classical | PQC | Hybrid Result |
+|----------|-----------|-----|---------------|
+| No quantum computer | ✓ Secure | ✓ Secure | ✓ Secure |
+| Quantum computer exists | ✗ Broken | ✓ Secure | ✓ Secure |
+| PQC weakness discovered | ✓ Secure | ✗ Broken | ✓ Secure |
+| Both fail | ✗ Broken | ✗ Broken | ✗ Broken |
+
+**Result:** Hybrid fails only if BOTH algorithms fail simultaneously — an extremely unlikely scenario.
+
+---
+
 ## What You Learned
 
 1. **Hybrid:** The capability to combine classical + PQC cryptography

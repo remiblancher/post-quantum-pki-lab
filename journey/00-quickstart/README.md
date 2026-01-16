@@ -10,6 +10,25 @@
 
 Short answer: **No.** The PKI workflow is identical. Only the algorithm name changes.
 
+```
+┌──────────────────────────────────────────────────────────────┐
+│  CLASSICAL                      POST-QUANTUM                 │
+│  ─────────                      ────────────                 │
+│                                                              │
+│   ROOT CA                        ROOT CA                     │
+│   ECDSA P-384                    ML-DSA-65                   │
+│       │                              │                       │
+│       │ Signs                        │ Signs                 │
+│       ▼                              ▼                       │
+│   TLS CERT                       TLS CERT                    │
+│   server.crt                     server.crt                  │
+│                                                              │
+│   Same workflow — different algorithm                        │
+└──────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## What This Demo Shows
 
 | Step | Classical | Post-Quantum |
