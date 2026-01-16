@@ -152,7 +152,7 @@ A Catalyst certificate (ITU-T X.509 Section 9.8) contains dual keys:
 
 **This is the power of hybrid: zero breaking changes for legacy clients.**
 
-**Note:** Hybrid provides quantum resistance only for PQC-aware clients. Legacy clients remain protected by classical cryptography only.
+> **Important:** Hybrid certificates do NOT make legacy clients quantum-safe. Legacy clients only verify the classical signature — they remain vulnerable to future quantum attacks. Only PQC-aware clients get full quantum protection.
 
 ---
 

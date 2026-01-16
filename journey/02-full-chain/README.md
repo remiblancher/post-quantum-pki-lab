@@ -179,7 +179,8 @@ Use SLH-DSA when:
 
 - [NIST FIPS 204: ML-DSA Standard](https://csrc.nist.gov/pubs/fips/204/final)
 - [NIST FIPS 205: SLH-DSA Standard](https://csrc.nist.gov/pubs/fips/205/final)
-- [NSA CNSA 2.0 Guidelines](https://media.defense.gov/2025/May/30/2003728741/-1/-1/0/CSA_CNSA_2.0_ALGORITHMS.PDF)
+- [NSA CNSA 2.0 Guidelines (PDF)](https://media.defense.gov/2025/May/30/2003728741/-1/-1/0/CSA_CNSA_2.0_ALGORITHMS.PDF)
+- [NSA CNSA 2.0 Announcement](https://www.nsa.gov/Press-Room/News-Highlights/Article/Article/3148990/nsa-releases-future-quantum-resistant-qr-algorithm-requirements-for-national-se/)
 
 ---
 
