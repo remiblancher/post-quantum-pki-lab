@@ -155,6 +155,31 @@ NIST finalized 3 post-quantum algorithms (August 2024).
 | ML-DSA | FIPS 204 | Module Lattice | TNFL (signatures) | ECDSA, RSA |
 | SLH-DSA | FIPS 205 | Stateless Hash | TNFL (signatures) | Alternative to ML-DSA |
 
+### Classical vs Post-Quantum: At a Glance
+
+*Before diving into variants, here's what changes:*
+
+**Signatures (protects against TNFL)**
+
+| | Classical | Post-Quantum | Change |
+|--|-----------|--------------|--------|
+| Example | ECDSA P-256 | ML-DSA-65 | |
+| Public Key | 64 B | 1,952 B | ~30x larger |
+| Signature | 64 B | 3,309 B | ~50x larger |
+| Sign speed | Fast | Faster | ✓ Improved |
+| Verify speed | Fast | Faster | ✓ Improved |
+
+**Key Exchange (protects against SNDL)**
+
+| | Classical | Post-Quantum | Change |
+|--|-----------|--------------|--------|
+| Example | X25519 | ML-KEM-768 | |
+| Public Key | 32 B | 1,184 B | ~37x larger |
+| Ciphertext | 32 B | 1,088 B | ~34x larger |
+| Speed | Very fast | Fast | ~ Similar |
+
+**Bottom line:** Larger sizes, but performance is comparable or better. The trade-off is worth it for quantum resistance.
+
 ### ML-KEM Variants (Key Encapsulation) — *used in this lab*
 
 ML-KEM (Module Lattice Key Encapsulation Mechanism) enables secure key exchange resistant to quantum attacks. Unlike traditional Diffie-Hellman where both parties contribute to the shared secret, ML-KEM uses **encapsulation**: one party generates a random secret and "wraps" it with the recipient's public key. Only the recipient can "unwrap" it with their private key.
