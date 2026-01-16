@@ -240,4 +240,4 @@ The OCSP responder certificate has:
 
 ---
 
-← [Revocation](../04-revocation/) | [Next: Code Signing →](../06-code-signing/)
+← [Revocation](../04-revocation/) | [QLAB Home](../../README.md) | [Next: Code Signing →](../06-code-signing/)

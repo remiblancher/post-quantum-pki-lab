@@ -225,4 +225,4 @@ This demo uses **Catalyst** because:
 
 ---
 
-← [Full PQC Chain](../02-full-chain/) | [Next: Revocation →](../04-revocation/)
+← [Full PQC Chain](../02-full-chain/) | [QLAB Home](../../README.md) | [Next: Revocation →](../04-revocation/)

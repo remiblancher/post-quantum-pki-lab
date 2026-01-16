@@ -25,11 +25,11 @@ echo "  The Root CA is the trust anchor of your PKI."
 echo "  It uses ML-DSA-87 (NIST Level 5) for maximum security."
 echo ""
 
-run_cmd "qpki ca init --profile profiles/pqc-root-ca.yaml --var cn=\"PQC Root CA\" --ca-dir output/pqc-root-ca"
+run_cmd "$PKI_BIN ca init --profile profiles/pqc-root-ca.yaml --var cn=\"PQC Root CA\" --ca-dir output/pqc-root-ca"
 
 echo ""
 echo -e "  ${BOLD}Root CA details:${NC}"
-qpki inspect output/pqc-root-ca/ca.crt 2>/dev/null | head -8 | sed 's/^/    /'
+$PKI_BIN inspect output/pqc-root-ca/ca.crt 2>/dev/null | head -8 | sed 's/^/    /'
 echo ""
 
 pause
@@ -44,7 +44,7 @@ echo "  The Issuing CA issues end-entity certificates."
 echo "  It uses ML-DSA-65 (NIST Level 3) - good balance of security/performance."
 echo ""
 
-run_cmd "qpki ca init --profile profiles/pqc-issuing-ca.yaml --var cn=\"PQC Issuing CA\" --parent output/pqc-root-ca --ca-dir output/pqc-issuing-ca"
+run_cmd "$PKI_BIN ca init --profile profiles/pqc-issuing-ca.yaml --var cn=\"PQC Issuing CA\" --parent output/pqc-root-ca --ca-dir output/pqc-issuing-ca"
 
 echo ""
 echo -e "  ${BOLD}Chain visualization:${NC}"
@@ -68,7 +68,7 @@ print_step "Step 3: Generate Server Key and CSR"
 echo "  Generate an ML-DSA-65 key pair and Certificate Signing Request."
 echo ""
 
-run_cmd "qpki csr gen --algorithm ml-dsa-65 --keyout output/server.key --cn server.example.com -o output/server.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/server.key --cn server.example.com -o output/server.csr"
 
 echo ""
 
@@ -83,11 +83,11 @@ print_step "Step 4: Issue TLS Server Certificate"
 echo "  The TLS server certificate uses ML-DSA-65 for authentication."
 echo ""
 
-run_cmd "qpki cert issue --ca-dir output/pqc-issuing-ca --profile profiles/pqc-tls-server.yaml --csr output/server.csr --out output/server.crt"
+run_cmd "$PKI_BIN cert issue --ca-dir output/pqc-issuing-ca --profile profiles/pqc-tls-server.yaml --csr output/server.csr --out output/server.crt"
 
 echo ""
 echo -e "  ${BOLD}Certificate details:${NC}"
-qpki inspect output/server.crt 2>/dev/null | head -10 | sed 's/^/    /'
+$PKI_BIN inspect output/server.crt 2>/dev/null | head -10 | sed 's/^/    /'
 echo ""
 
 pause

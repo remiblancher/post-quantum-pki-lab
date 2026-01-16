@@ -314,4 +314,4 @@ ML-DSA signature:       Still secure            ✓ VERIFIED
 
 ---
 
-← [PQC Timestamping](../07-timestamping/) | [Next: CMS Encryption →](../09-cms-encryption/)
+← [PQC Timestamping](../07-timestamping/) | [QLAB Home](../../README.md) | [Next: CMS Encryption →](../09-cms-encryption/)

@@ -26,7 +26,7 @@ echo "  A code signing CA issues certificates for software publishers."
 echo "  We use ML-DSA-65 for quantum-resistant signatures."
 echo ""
 
-run_cmd "qpki ca init --profile profiles/pqc-ca.yaml --var cn=\"Code Signing CA\" --ca-dir output/code-ca"
+run_cmd "$PKI_BIN ca init --profile profiles/pqc-ca.yaml --var cn=\"Code Signing CA\" --ca-dir output/code-ca"
 
 echo ""
 
@@ -43,11 +43,11 @@ echo "    - Extended Key Usage: codeSigning"
 echo "    - Key Usage: digitalSignature"
 echo ""
 
-run_cmd "qpki csr gen --algorithm ml-dsa-65 --keyout output/code-signing.key --cn \"ACME Software\" -o output/code-signing.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/code-signing.key --cn \"ACME Software\" -o output/code-signing.csr"
 
 echo ""
 
-run_cmd "qpki cert issue --ca-dir output/code-ca --profile profiles/pqc-code-signing.yaml --csr output/code-signing.csr --out output/code-signing.crt"
+run_cmd "$PKI_BIN cert issue --ca-dir output/code-ca --profile profiles/pqc-code-signing.yaml --csr output/code-signing.csr --out output/code-signing.crt"
 
 echo ""
 
@@ -79,7 +79,7 @@ echo ""
 echo "  Signing with CMS/PKCS#7 format (industry standard)..."
 echo ""
 
-run_cmd "qpki cms sign --data output/firmware.bin --cert output/code-signing.crt --key output/code-signing.key -o output/firmware.p7s"
+run_cmd "$PKI_BIN cms sign --data output/firmware.bin --cert output/code-signing.crt --key output/code-signing.key -o output/firmware.p7s"
 
 echo ""
 
@@ -102,7 +102,7 @@ print_step "Step 4: Verify the Signature"
 echo "  Simulating client-side verification..."
 echo ""
 
-run_cmd "qpki cms verify output/firmware.p7s --data output/firmware.bin"
+run_cmd "$PKI_BIN cms verify output/firmware.p7s --data output/firmware.bin"
 
 echo ""
 echo -e "  ${GREEN}✓${NC} Signature valid!"
@@ -132,7 +132,7 @@ echo ""
 echo -e "  ${DIM}$ qpki cms verify output/firmware.p7s --data output/firmware.bin${NC}"
 echo ""
 
-if qpki cms verify output/firmware.p7s --data output/firmware.bin > /dev/null 2>&1; then
+if $PKI_BIN cms verify output/firmware.p7s --data output/firmware.bin > /dev/null 2>&1; then
     echo -e "  ${GREEN}✓${NC} Signature valid"
 else
     echo -e "  ${RED}✗${NC} Signature verification FAILED!"

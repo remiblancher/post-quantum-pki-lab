@@ -36,10 +36,10 @@ print_step "Step 1: Create CA"
 echo "  First, we create a PQC CA."
 echo ""
 
-run_cmd "qpki ca init --profile profiles/pqc-ca.yaml --var cn=\"PQC CA\" --ca-dir output/pqc-ca"
+run_cmd "$PKI_BIN ca init --profile profiles/pqc-ca.yaml --var cn=\"PQC CA\" --ca-dir output/pqc-ca"
 
 # Export CA certificate for OCSP request (issuerKeyHash requires CA public key)
-qpki ca export --ca-dir output/pqc-ca > output/pqc-ca/ca.crt
+$PKI_BIN ca export --ca-dir output/pqc-ca > output/pqc-ca/ca.crt
 
 echo ""
 
@@ -54,13 +54,13 @@ print_step "Step 2: Generate Keys and CSRs"
 echo "  Generate OCSP responder key and CSR..."
 echo ""
 
-run_cmd "qpki csr gen --algorithm ml-dsa-65 --keyout output/ocsp-responder.key --cn \"OCSP Responder\" -o output/ocsp-responder.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/ocsp-responder.key --cn \"OCSP Responder\" -o output/ocsp-responder.csr"
 
 echo ""
 echo "  Generate TLS server key and CSR..."
 echo ""
 
-run_cmd "qpki csr gen --algorithm ml-dsa-65 --keyout output/server.key --cn server.example.com -o output/server.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/server.key --cn server.example.com -o output/server.csr"
 
 echo ""
 
@@ -75,16 +75,20 @@ print_step "Step 3: Issue Certificates"
 echo "  Issue delegated OCSP responder certificate (best practice: CA key stays offline)..."
 echo ""
 
-run_cmd "qpki cert issue --ca-dir output/pqc-ca --profile profiles/pqc-ocsp-responder.yaml --csr output/ocsp-responder.csr --out output/ocsp-responder.crt"
+run_cmd "$PKI_BIN cert issue --ca-dir output/pqc-ca --profile profiles/pqc-ocsp-responder.yaml --csr output/ocsp-responder.csr --out output/ocsp-responder.crt"
 
 echo ""
 echo "  Issue TLS server certificate to verify..."
 echo ""
 
-run_cmd "qpki cert issue --ca-dir output/pqc-ca --profile profiles/pqc-tls-server.yaml --csr output/server.csr --out output/server.crt"
+run_cmd "$PKI_BIN cert issue --ca-dir output/pqc-ca --profile profiles/pqc-tls-server.yaml --csr output/server.csr --out output/server.crt"
 
 # Get serial number
 SERIAL=$(openssl x509 -in output/server.crt -noout -serial 2>/dev/null | cut -d= -f2)
+if [[ -z "$SERIAL" ]]; then
+    print_error "Failed to extract certificate serial number"
+    exit 1
+fi
 
 echo ""
 echo -e "  ${BOLD}Certificates issued:${NC}"
@@ -106,7 +110,7 @@ echo ""
 echo -e "  ${DIM}$ qpki ocsp serve --port $OCSP_PORT --ca-dir output/pqc-ca --cert output/ocsp-responder.crt --key output/ocsp-responder.key &${NC}"
 echo ""
 
-qpki ocsp serve --port $OCSP_PORT --ca-dir output/pqc-ca \
+$PKI_BIN ocsp serve --port $OCSP_PORT --ca-dir output/pqc-ca \
     --cert output/ocsp-responder.crt \
     --key output/ocsp-responder.key > /dev/null 2>&1 &
 OCSP_PID=$!
@@ -135,7 +139,7 @@ echo "  Let's query the OCSP responder for our server certificate status..."
 echo ""
 
 # Generate OCSP request
-run_cmd "qpki ocsp request --issuer output/pqc-ca/ca.crt --cert output/server.crt -o output/request.ocsp"
+run_cmd "$PKI_BIN ocsp request --issuer output/pqc-ca/ca.crt --cert output/server.crt -o output/request.ocsp"
 
 echo ""
 echo "  Send request to OCSP responder via HTTP POST..."
@@ -148,7 +152,7 @@ echo "  Inspect the response..."
 echo ""
 
 if [[ -f "output/response.ocsp" ]] && [[ -s "output/response.ocsp" ]]; then
-    qpki ocsp info output/response.ocsp 2>/dev/null || echo -e "  ${GREEN}✓${NC} Status: good"
+    $PKI_BIN ocsp info output/response.ocsp 2>/dev/null || echo -e "  ${GREEN}✓${NC} Status: good"
 
     resp_size=$(wc -c < "output/response.ocsp" | tr -d ' ')
     echo ""
@@ -170,7 +174,7 @@ print_step "Step 6: Revoke and Re-query"
 echo -e "  ${RED}Simulating key compromise...${NC}"
 echo ""
 
-run_cmd "qpki cert revoke $SERIAL --ca-dir output/pqc-ca --reason keyCompromise"
+run_cmd "$PKI_BIN cert revoke $SERIAL --ca-dir output/pqc-ca --reason keyCompromise"
 
 echo ""
 echo "  Query again - status should change immediately!"
@@ -184,7 +188,7 @@ curl -s -X POST \
     -o output/response2.ocsp 2>/dev/null
 
 if [[ -f "output/response2.ocsp" ]] && [[ -s "output/response2.ocsp" ]]; then
-    qpki ocsp info output/response2.ocsp 2>/dev/null || echo -e "  ${RED}✗${NC} Status: revoked"
+    $PKI_BIN ocsp info output/response2.ocsp 2>/dev/null || echo -e "  ${RED}✗${NC} Status: revoked"
 fi
 
 echo ""

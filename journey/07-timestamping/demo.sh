@@ -25,7 +25,7 @@ print_step "Step 1: Create TSA CA"
 echo "  A Timestamp Authority (TSA) issues cryptographic proofs of time."
 echo ""
 
-run_cmd "qpki ca init --profile profiles/pqc-ca.yaml --var cn=\"TSA Root CA\" --ca-dir output/tsa-ca"
+run_cmd "$PKI_BIN ca init --profile profiles/pqc-ca.yaml --var cn=\"TSA Root CA\" --ca-dir output/tsa-ca"
 
 echo ""
 
@@ -40,7 +40,7 @@ print_step "Step 2: Generate TSA Key and CSR"
 echo "  Generate an ML-DSA-65 key pair and Certificate Signing Request for the TSA."
 echo ""
 
-run_cmd "qpki csr gen --algorithm ml-dsa-65 --keyout output/tsa.key --cn \"PQC Timestamp Authority\" -o output/tsa.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/tsa.key --cn \"PQC Timestamp Authority\" -o output/tsa.csr"
 
 echo ""
 
@@ -55,7 +55,7 @@ print_step "Step 3: Issue TSA Certificate"
 echo "  The TSA certificate has Extended Key Usage: timeStamping."
 echo ""
 
-run_cmd "qpki cert issue --ca-dir output/tsa-ca --profile profiles/pqc-tsa.yaml --csr output/tsa.csr --out output/tsa.crt"
+run_cmd "$PKI_BIN cert issue --ca-dir output/tsa-ca --profile profiles/pqc-tsa.yaml --csr output/tsa.csr --out output/tsa.crt"
 
 echo ""
 
@@ -98,7 +98,7 @@ echo ""
 echo "  Timestamping with PQC (RFC 3161)..."
 echo ""
 
-run_cmd "qpki tsa sign --data output/document.txt --cert output/tsa.crt --key output/tsa.key -o output/document.tsr"
+run_cmd "$PKI_BIN tsa sign --data output/document.txt --cert output/tsa.crt --key output/tsa.key -o output/document.tsr"
 
 echo ""
 
@@ -127,7 +127,7 @@ echo ""
 echo -e "  ${DIM}$ qpki tsa verify output/document.tsr --data output/document.txt --ca output/tsa-ca/ca.crt${NC}"
 echo ""
 
-if qpki tsa verify output/document.tsr --data output/document.txt --ca output/tsa-ca/ca.crt > /dev/null 2>&1; then
+if $PKI_BIN tsa verify output/document.tsr --data output/document.txt --ca output/tsa-ca/ca.crt > /dev/null 2>&1; then
     echo -e "  ${GREEN}✓${NC} Timestamp valid!"
 else
     # Show expected behavior (verification would succeed with proper token)
@@ -161,7 +161,7 @@ echo ""
 echo -e "  ${DIM}$ qpki tsa verify output/document.tsr --data output/document.txt --ca output/tsa-ca/ca.crt${NC}"
 echo ""
 
-if qpki tsa verify output/document.tsr --data output/document.txt --ca output/tsa-ca/ca.crt > /dev/null 2>&1; then
+if $PKI_BIN tsa verify output/document.tsr --data output/document.txt --ca output/tsa-ca/ca.crt > /dev/null 2>&1; then
     echo -e "  ${GREEN}✓${NC} Timestamp valid"
 else
     echo -e "  ${RED}✗${NC} Timestamp verification FAILED!"

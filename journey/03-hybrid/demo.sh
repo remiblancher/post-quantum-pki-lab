@@ -29,11 +29,11 @@ echo ""
 echo "  Standard: ITU-T X.509 Section 9.8 (Catalyst)"
 echo ""
 
-run_cmd "qpki ca init --profile profiles/hybrid-root-ca.yaml --var cn=\"Hybrid Root CA\" --ca-dir output/hybrid-ca"
+run_cmd "$PKI_BIN ca init --profile profiles/hybrid-root-ca.yaml --var cn=\"Hybrid Root CA\" --ca-dir output/hybrid-ca"
 
 echo ""
 echo -e "  ${BOLD}Hybrid CA details:${NC}"
-qpki inspect output/hybrid-ca/ca.crt 2>/dev/null | head -10 | sed 's/^/    /'
+$PKI_BIN inspect output/hybrid-ca/ca.crt 2>/dev/null | head -10 | sed 's/^/    /'
 echo ""
 
 pause
@@ -50,7 +50,7 @@ echo "    Primary:     ECDSA P-384 (classical)"
 echo "    Alternative: ML-DSA-65 (post-quantum)"
 echo ""
 
-run_cmd "qpki csr gen --algorithm ecdsa-p384 --hybrid ml-dsa-65 --keyout output/hybrid-server.key --hybrid-keyout output/hybrid-server-pqc.key --cn hybrid.example.com -o output/hybrid-server.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ecdsa-p384 --hybrid ml-dsa-65 --keyout output/hybrid-server.key --hybrid-keyout output/hybrid-server-pqc.key --cn hybrid.example.com -o output/hybrid-server.csr"
 
 echo ""
 
@@ -66,11 +66,11 @@ echo "  The certificate inherits the hybrid nature from the CA."
 echo "  It will contain both ECDSA and ML-DSA keys/signatures."
 echo ""
 
-run_cmd "qpki cert issue --ca-dir output/hybrid-ca --profile profiles/hybrid-tls-server.yaml --csr output/hybrid-server.csr --out output/hybrid-server.crt"
+run_cmd "$PKI_BIN cert issue --ca-dir output/hybrid-ca --profile profiles/hybrid-tls-server.yaml --csr output/hybrid-server.csr --out output/hybrid-server.crt"
 
 echo ""
 echo -e "  ${BOLD}Hybrid certificate details:${NC}"
-qpki inspect output/hybrid-server.crt 2>/dev/null | head -12 | sed 's/^/    /'
+$PKI_BIN inspect output/hybrid-server.crt 2>/dev/null | head -12 | sed 's/^/    /'
 echo ""
 
 pause
@@ -102,7 +102,7 @@ echo "    The qpki tool verifies BOTH signatures."
 echo ""
 
 echo -e "  ${DIM}$ qpki cert verify output/hybrid-server.crt --ca output/hybrid-ca/ca.crt${NC}"
-if qpki cert verify output/hybrid-server.crt --ca output/hybrid-ca/ca.crt 2>&1; then
+if $PKI_BIN cert verify output/hybrid-server.crt --ca output/hybrid-ca/ca.crt 2>&1; then
     echo ""
     echo -e "    ${GREEN}✓${NC} PQC client: BOTH ECDSA AND ML-DSA verified"
 fi

@@ -324,4 +324,4 @@ For timestamps to remain valid for decades:
 
 ---
 
-← [PQC Code Signing](../06-code-signing/) | [Next: LTV Signatures →](../08-ltv-signatures/)
+← [PQC Code Signing](../06-code-signing/) | [QLAB Home](../../README.md) | [Next: LTV Signatures →](../08-ltv-signatures/)

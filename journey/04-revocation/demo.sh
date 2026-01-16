@@ -28,7 +28,7 @@ print_step "Step 1: Create CA"
 echo "  First, we need a CA to issue and revoke certificates."
 echo ""
 
-run_cmd "qpki ca init --profile profiles/pqc-ca.yaml --var cn=\"Demo CA\" --ca-dir output/demo-ca"
+run_cmd "$PKI_BIN ca init --profile profiles/pqc-ca.yaml --var cn=\"Demo CA\" --ca-dir output/demo-ca"
 
 echo ""
 
@@ -43,7 +43,7 @@ print_step "Step 2: Generate Key and CSR"
 echo "  Generate an ML-DSA-65 key pair and Certificate Signing Request."
 echo ""
 
-run_cmd "qpki csr gen --algorithm ml-dsa-65 --keyout output/server.key --cn server.example.com -o output/server.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/server.key --cn server.example.com -o output/server.csr"
 
 echo ""
 
@@ -58,10 +58,14 @@ print_step "Step 3: Issue TLS Certificate"
 echo "  Issue a TLS certificate that we'll later revoke."
 echo ""
 
-run_cmd "qpki cert issue --ca-dir output/demo-ca --profile profiles/pqc-tls-server.yaml --csr output/server.csr --out output/server.crt"
+run_cmd "$PKI_BIN cert issue --ca-dir output/demo-ca --profile profiles/pqc-tls-server.yaml --csr output/server.csr --out output/server.crt"
 
 # Get serial number
 SERIAL=$(openssl x509 -in output/server.crt -noout -serial 2>/dev/null | cut -d= -f2)
+if [[ -z "$SERIAL" ]]; then
+    print_error "Failed to extract certificate serial number"
+    exit 1
+fi
 
 echo ""
 echo -e "  ${BOLD}Certificate issued:${NC}"
@@ -104,7 +108,7 @@ echo "    4 = superseded"
 echo "    5 = cessationOfOperation"
 echo ""
 
-run_cmd "qpki cert revoke $SERIAL --ca-dir output/demo-ca --reason keyCompromise"
+run_cmd "$PKI_BIN cert revoke $SERIAL --ca-dir output/demo-ca --reason keyCompromise"
 
 echo ""
 echo -e "  ${GREEN}✓${NC} Certificate revoked"
@@ -122,7 +126,7 @@ echo "  The CRL is a signed list of all revoked certificates."
 echo "  Clients download it to check certificate validity."
 echo ""
 
-run_cmd "qpki crl gen --ca-dir output/demo-ca"
+run_cmd "$PKI_BIN crl gen --ca-dir output/demo-ca"
 
 if [[ -f "output/demo-ca/crl/ca.crl" ]]; then
     crl_size=$(wc -c < "output/demo-ca/crl/ca.crl" | tr -d ' ')
@@ -148,7 +152,7 @@ echo ""
 
 echo -e "  ${DIM}$ qpki cert verify output/server.crt --ca output/demo-ca/ca.crt --crl output/demo-ca/crl/ca.crl${NC}"
 
-if ! qpki cert verify output/server.crt --ca output/demo-ca/ca.crt --crl output/demo-ca/crl/ca.crl 2>&1; then
+if ! $PKI_BIN cert verify output/server.crt --ca output/demo-ca/ca.crt --crl output/demo-ca/crl/ca.crl 2>&1; then
     echo ""
     echo -e "  ${RED}✗${NC} Certificate REVOKED - Verification failed (expected!)"
 else

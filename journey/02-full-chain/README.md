@@ -184,4 +184,4 @@ Use SLH-DSA when:
 
 ---
 
-← [The Revelation](../01-revelation/) | [Next: Hybrid →](../03-hybrid/)
+← [The Revelation](../01-revelation/) | [QLAB Home](../../README.md) | [Next: Hybrid →](../03-hybrid/)

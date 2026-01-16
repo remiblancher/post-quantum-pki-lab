@@ -234,4 +234,4 @@ PQC algorithms are mathematically sound, but they're new. Classical algorithms l
 
 ---
 
-← [Quick Start](../00-quickstart/) | [Next: Full Chain →](../02-full-chain/)
+← [Quick Start](../00-quickstart/) | [QLAB Home](../../README.md) | [Next: Full Chain →](../02-full-chain/)

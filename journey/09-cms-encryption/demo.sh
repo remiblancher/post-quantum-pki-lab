@@ -62,7 +62,7 @@ echo "  The CA signs both signing and encryption certificates."
 echo "  We use ML-DSA-65 for the CA (quantum-safe signatures)."
 echo ""
 
-run_cmd "qpki ca init --profile profiles/pqc-ca.yaml --var cn=\"Encryption CA\" --ca-dir output/encryption-ca"
+run_cmd "$PKI_BIN ca init --profile profiles/pqc-ca.yaml --var cn=\"Encryption CA\" --ca-dir output/encryption-ca"
 
 echo ""
 
@@ -78,14 +78,14 @@ echo "  Alice generates a signing key pair and gets a certificate."
 echo "  The CSR is self-signed (proof of possession). This works because ML-DSA can SIGN!"
 echo ""
 
-run_cmd "qpki csr gen --algorithm ml-dsa-65 --keyout output/alice-sign.key --cn \"Alice\" -o output/alice-sign.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/alice-sign.key --cn \"Alice\" -o output/alice-sign.csr"
 
 echo ""
 echo "  The CA verifies the CSR signature and issues the certificate."
 echo "  This certificate will be used to attest for her encryption key."
 echo ""
 
-run_cmd "qpki cert issue --ca-dir output/encryption-ca --profile profiles/pqc-signing.yaml --csr output/alice-sign.csr --out output/alice-sign.crt"
+run_cmd "$PKI_BIN cert issue --ca-dir output/encryption-ca --profile profiles/pqc-signing.yaml --csr output/alice-sign.csr --out output/alice-sign.crt"
 
 echo ""
 
@@ -135,7 +135,7 @@ echo "  │                                                                 │"
 echo "  └─────────────────────────────────────────────────────────────────┘"
 echo ""
 
-run_cmd "qpki csr gen --algorithm ml-kem-768 --keyout output/alice-enc.key --cn \"Alice\" --attest-cert output/alice-sign.crt --attest-key output/alice-sign.key -o output/alice-enc.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ml-kem-768 --keyout output/alice-enc.key --cn \"Alice\" --attest-cert output/alice-sign.crt --attest-key output/alice-sign.key -o output/alice-enc.csr"
 
 echo ""
 
@@ -179,7 +179,7 @@ echo "  │                                                                 │"
 echo "  └─────────────────────────────────────────────────────────────────┘"
 echo ""
 
-run_cmd "qpki cert issue --ca-dir output/encryption-ca --csr output/alice-enc.csr --profile profiles/pqc-encryption.yaml --attest-cert output/alice-sign.crt --out output/alice-enc.crt"
+run_cmd "$PKI_BIN cert issue --ca-dir output/encryption-ca --csr output/alice-enc.csr --profile profiles/pqc-encryption.yaml --attest-cert output/alice-sign.crt --out output/alice-enc.crt"
 
 echo ""
 
@@ -265,7 +265,7 @@ orig_size=$(wc -c < "output/secret-document.txt" | tr -d ' ')
 echo -e "  ${CYAN}Original size:${NC} $orig_size bytes"
 echo ""
 
-run_cmd "qpki cms encrypt --recipient output/alice-enc.crt --content-enc aes-256-gcm --in output/secret-document.txt --out output/secret-document.p7m"
+run_cmd "$PKI_BIN cms encrypt --recipient output/alice-enc.crt --content-enc aes-256-gcm --in output/secret-document.txt --out output/secret-document.p7m"
 
 echo ""
 
@@ -278,7 +278,7 @@ echo ""
 echo "  CMS EnvelopedData structure:"
 echo ""
 
-run_cmd "qpki cms info output/secret-document.p7m"
+run_cmd "$PKI_BIN cms info output/secret-document.p7m"
 
 echo ""
 
@@ -293,7 +293,7 @@ print_step "Step 7: Decrypt Document"
 echo "  Alice decrypts with her ML-KEM private key..."
 echo ""
 
-run_cmd "qpki cms decrypt --key output/alice-enc.key --in output/secret-document.p7m --out output/decrypted.txt"
+run_cmd "$PKI_BIN cms decrypt --key output/alice-enc.key --in output/secret-document.p7m --out output/decrypted.txt"
 
 echo ""
 echo "  Verifying decrypted content matches original..."

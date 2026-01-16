@@ -189,4 +189,4 @@ qpki cert verify output/server.crt \
 
 ---
 
-← [Hybrid](../03-hybrid/) | [Next: OCSP →](../05-ocsp/)
+← [Hybrid](../03-hybrid/) | [QLAB Home](../../README.md) | [Next: OCSP →](../05-ocsp/)
