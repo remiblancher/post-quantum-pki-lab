@@ -121,6 +121,12 @@ echo ""
 run_cmd "$PKI_BIN ca rotate --ca-dir output/ca --profile $SCRIPT_DIR/profiles/hybrid-ca.yaml"
 
 echo ""
+echo "  Activating the new hybrid version..."
+echo ""
+
+run_cmd "$PKI_BIN ca activate --ca-dir output/ca --version v2"
+
+echo ""
 echo "  Checking CA versions:"
 echo ""
 
@@ -149,6 +155,12 @@ echo "  ML-DSA-65 only (no classical fallback)."
 echo ""
 
 run_cmd "$PKI_BIN ca rotate --ca-dir output/ca --profile $SCRIPT_DIR/profiles/pqc-ca.yaml"
+
+echo ""
+echo "  Activating the new PQC version..."
+echo ""
+
+run_cmd "$PKI_BIN ca activate --ca-dir output/ca --version v3"
 
 echo ""
 echo "  Checking CA versions:"

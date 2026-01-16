@@ -195,6 +195,9 @@ qpki credential export <credential-id> \
 qpki ca rotate --ca-dir output/ca \
     --profile profiles/hybrid-ca.yaml
 
+# Activate the new version
+qpki ca activate --ca-dir output/ca --version v2
+
 # Check versions
 qpki ca versions --ca-dir output/ca
 # VERSION  STATUS    ALGORITHM
@@ -208,6 +211,9 @@ qpki ca versions --ca-dir output/ca
 # Rotate to full post-quantum
 qpki ca rotate --ca-dir output/ca \
     --profile profiles/pqc-ca.yaml
+
+# Activate the new version
+qpki ca activate --ca-dir output/ca --version v3
 
 # Check versions
 qpki ca versions --ca-dir output/ca
