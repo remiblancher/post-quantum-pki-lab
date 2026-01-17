@@ -291,4 +291,10 @@ Code signing certificates have specific extensions:
 
 ---
 
-← [PQC OCSP](../05-ocsp/) | [QLAB Home](../../README.md) | [Next: Timestamping →](../07-timestamping/)
+## What's Next?
+
+You've proven **WHO** signed the code and that it hasn't been tampered with.
+
+But **WHEN** was it signed? If the certificate expires, how do you prove the signature existed before expiration?
+
+← [PQC OCSP](../05-ocsp/) | [QLAB Home](../../README.md) | [Next: Timestamping →](../07-timestamping/) — Prove WHEN documents were signed.

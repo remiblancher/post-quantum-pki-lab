@@ -1,6 +1,6 @@
 # The Revelation: The Quantum Threat to Your Data Today
 
-> **Key Message:** Encrypted data captured today can be decrypted tomorrow. Signatures trusted today can be forged tomorrow. PQC is urgent.
+> **Key Message:** Your data is already being recorded. The clock is ticking.
 
 ## Why Change Algorithms?
 
@@ -180,40 +180,15 @@ NIST finalized 3 post-quantum algorithms (August 2024).
 
 **Bottom line:** Larger sizes, but performance is comparable or better. The trade-off is worth it for quantum resistance.
 
-### ML-KEM Variants (Key Encapsulation) — *used in this lab*
+### Algorithm Quick Reference
 
-ML-KEM (Module Lattice Key Encapsulation Mechanism) enables secure key exchange resistant to quantum attacks. Unlike traditional Diffie-Hellman where both parties contribute to the shared secret, ML-KEM uses **encapsulation**: one party generates a random secret and "wraps" it with the recipient's public key. Only the recipient can "unwrap" it with their private key.
+| Algorithm | Purpose | Replaces | Key Insight |
+|-----------|---------|----------|-------------|
+| **ML-KEM** | Key exchange | ECDH, RSA-KEM | Protects against SNDL |
+| **ML-DSA** | Signatures | ECDSA, RSA | Protects against TNFL |
+| **SLH-DSA** | Signatures (conservative) | — | Hash-based, larger but proven |
 
-| Variant | Security | Public Key | Ciphertext |
-|---------|----------|------------|------------|
-| ML-KEM-512 | Level 1 (~128-bit) | 800 bytes | 768 bytes |
-| ML-KEM-768 | Level 3 (~192-bit) | 1,184 bytes | 1,088 bytes |
-| ML-KEM-1024 | Level 5 (~256-bit) | 1,568 bytes | 1,568 bytes |
-
-### ML-DSA Variants (Signatures) — *used in this lab*
-
-ML-DSA (Module Lattice Digital Signature Algorithm) provides quantum-resistant digital signatures. It replaces ECDSA and RSA signatures in certificates, code signing, and document authentication. The security is based on the hardness of lattice problems that quantum computers cannot efficiently solve.
-
-| Variant | Security | Public Key | Signature |
-|---------|----------|------------|-----------|
-| ML-DSA-44 | Level 2 (~128-bit) | 1,312 bytes | 2,420 bytes |
-| ML-DSA-65 | Level 3 (~192-bit) | 1,952 bytes | 3,309 bytes |
-| ML-DSA-87 | Level 5 (~256-bit) | 2,592 bytes | 4,627 bytes |
-
-### SLH-DSA Variants (Stateless Hash-Based Signatures)
-
-SLH-DSA (Stateless Hash-Based Digital Signature Algorithm) is a conservative alternative to ML-DSA. Its security relies solely on hash functions — well-understood primitives with decades of cryptanalysis. The trade-off: significantly larger signatures. Use SLH-DSA when you need maximum confidence in long-term security assumptions.
-
-| Variant | Security | Public Key | Signature |
-|---------|----------|------------|-----------|
-| SLH-DSA-128s | Level 1 (~128-bit) | 32 bytes | 7,856 bytes |
-| SLH-DSA-128f | Level 1 (~128-bit) | 32 bytes | 17,088 bytes |
-| SLH-DSA-192s | Level 3 (~192-bit) | 48 bytes | 16,224 bytes |
-| SLH-DSA-192f | Level 3 (~192-bit) | 48 bytes | 35,664 bytes |
-| SLH-DSA-256s | Level 5 (~256-bit) | 64 bytes | 29,792 bytes |
-| SLH-DSA-256f | Level 5 (~256-bit) | 64 bytes | 49,856 bytes |
-
-*s = small (slower, smaller signatures), f = fast (faster, larger signatures)*
+*For detailed sizes and variants, see the [Glossary](../../docs/GLOSSARY.md).*
 
 ---
 

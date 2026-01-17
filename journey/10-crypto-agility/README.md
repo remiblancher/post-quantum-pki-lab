@@ -2,7 +2,7 @@
 
 ## CA Rotation and Trust Bundle Migration
 
-> **Key Message:** Crypto-agility is the ability to change algorithms without breaking your system. Use CA versioning and trust bundles.
+> **Key Message:** Crypto-agility = your PKI can switch algorithms without downtime. This requires versioning, not just configuration.
 
 ---
 

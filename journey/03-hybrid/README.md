@@ -2,7 +2,7 @@
 
 ## Hybrid Certificates: Classical + Post-Quantum
 
-> **Key Message:** You don't choose between classical and PQC. You stack them.
+> **Key Message:** Hybrid = run classical and PQC in parallel. Your PKI becomes multi-algorithm by design.
 
 ---
 

@@ -2,7 +2,7 @@
 
 ## Same PKI, Different Crypto
 
-> **Key Message:** The PKI doesn't change. Only the algorithm changes.
+> **Key Message:** Same workflow, new capabilities. The PKI must evolve to handle multiple algorithms — but your commands stay the same.
 
 ## The Scenario
 
@@ -131,6 +131,13 @@ qpki inspect pq-server.crt
 
 The workflow stays identical: `qpki ca init` → `qpki csr gen` → `qpki cert issue` → X.509 certificates.
 Only the algorithm (and sizes) change.
+
+> **Note:** While the workflow stays identical, your PKI infrastructure must evolve to support:
+> - Multiple algorithms in parallel (hybrid certificates)
+> - Crypto-agile enrollment (attestation for KEM keys)
+> - CA versioning for reversible migration
+>
+> You'll explore these capabilities in [UC-03](../03-hybrid/), [UC-09](../09-cms-encryption/), and [UC-10](../10-crypto-agility/).
 
 ---
 

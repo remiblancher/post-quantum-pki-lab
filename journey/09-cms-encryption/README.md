@@ -2,13 +2,15 @@
 
 ## Post-Quantum Document Encryption with ML-KEM + CSR Attestation
 
-> **Key Message:** You cannot prove possession of a KEM key by signing! Use a signing certificate to attest for encryption keys (RFC 9883).
+> **Key Message:** KEM keys can't sign their own CSR. Enrollment evolves — attestation bridges signing and encryption identities.
 
 ---
 
 ## The Scenario
 
-*"We need to send confidential documents to partners. How do we ensure only they can read them, even if quantum computers become available?"*
+*"We need to send confidential documents to partners. But wait — how do we prove someone owns an encryption key if that key can't sign anything?"*
+
+This is the **attestation problem**. Unlike signing keys (ML-DSA), encryption keys (ML-KEM) can only encapsulate and decapsulate — they cannot create signatures. So the traditional CSR workflow breaks.
 
 Document encryption is essential for:
 - **Confidential emails** (S/MIME)
@@ -290,12 +292,10 @@ qpki cms decrypt \
 
 ## What You Learned
 
-1. **KEM keys cannot sign** - ML-KEM can only encapsulate/decapsulate
-2. **CSR attestation** - Use a signing certificate to attest for KEM keys (RFC 9883)
-3. **RelatedCertificate** - Links encryption and signing certificates
-4. **Hybrid encryption** - AES (fast) + ML-KEM (quantum-safe)
-5. **CMS EnvelopedData** - Industry standard for document encryption
-6. **S/MIME pattern** - Separate signing and encryption certificates
+1. **KEM keys cannot sign** — Traditional CSR proof-of-possession doesn't work
+2. **Attestation solves this** — A signing certificate vouches for the KEM key (RFC 9883)
+3. **Two linked certificates** — Signing (ML-DSA) + Encryption (ML-KEM) via RelatedCertificate
+4. **Hybrid encryption** — AES for speed + ML-KEM for quantum-safe key exchange
 
 ---
 
