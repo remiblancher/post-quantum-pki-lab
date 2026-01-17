@@ -38,3 +38,9 @@ Technical reference for NIST post-quantum algorithm variants.
 | Level 1 | AES-128 | Standard security |
 | Level 3 | AES-192 | Recommended default |
 | Level 5 | AES-256 | Maximum security |
+
+## References
+
+- [FIPS 203: ML-KEM Standard](https://csrc.nist.gov/pubs/fips/203/final)
+- [FIPS 204: ML-DSA Standard](https://csrc.nist.gov/pubs/fips/204/final)
+- [FIPS 205: SLH-DSA Standard](https://csrc.nist.gov/pubs/fips/205/final)
