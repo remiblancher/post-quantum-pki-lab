@@ -58,7 +58,7 @@ echo "  Generate an ML-DSA-65 key pair and issue TSA certificate."
 echo "  The certificate has Extended Key Usage: timeStamping."
 echo ""
 
-run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/tsa.key --cn \"PQC Timestamp Authority\" -o output/tsa.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/tsa.key --cn \"PQC Timestamp Authority\" --out output/tsa.csr"
 
 echo ""
 
@@ -141,7 +141,7 @@ print_step "Step 5: Request Timestamp (via HTTP)"
 echo "  Creating timestamp request and sending to TSA server..."
 echo ""
 
-run_cmd "$PKI_BIN tsa request --data output/document.txt -o output/request.tsq"
+run_cmd "$PKI_BIN tsa request --data output/document.txt --out output/request.tsq"
 
 echo ""
 

@@ -76,7 +76,7 @@ qpki ca init --profile profiles/pqc-ca.yaml \
 qpki csr gen --algorithm ml-dsa-65 \
     --keyout output/ocsp-responder.key \
     --cn "OCSP Responder" \
-    -o output/ocsp-responder.csr
+    --out output/ocsp-responder.csr
 
 # Issue delegated OCSP responder certificate
 # Best practice: CA key stays offline
@@ -102,7 +102,7 @@ qpki ocsp serve --port 8888 --ca-dir output/pqc-ca \
 qpki csr gen --algorithm ml-dsa-65 \
     --keyout output/server.key \
     --cn server.example.com \
-    -o output/server.csr
+    --out output/server.csr
 
 # Issue TLS certificate
 qpki cert issue --ca-dir output/pqc-ca \
@@ -117,7 +117,7 @@ qpki cert issue --ca-dir output/pqc-ca \
 # Generate OCSP request
 qpki ocsp request --issuer output/pqc-ca/ca.crt \
     --cert output/server.crt \
-    -o output/request.ocsp
+    --out output/request.ocsp
 
 # Send to responder via HTTP POST
 curl -s -X POST \

@@ -43,7 +43,7 @@ echo "    - Extended Key Usage: codeSigning"
 echo "    - Key Usage: digitalSignature"
 echo ""
 
-run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/code-signing.key --cn \"ACME Software\" -o output/code-signing.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/code-signing.key --cn \"ACME Software\" --out output/code-signing.csr"
 
 echo ""
 
@@ -79,7 +79,7 @@ echo ""
 echo "  Signing with CMS/PKCS#7 format (industry standard)..."
 echo ""
 
-run_cmd "$PKI_BIN cms sign --data output/firmware.bin --cert output/code-signing.crt --key output/code-signing.key -o output/firmware.p7s"
+run_cmd "$PKI_BIN cms sign --data output/firmware.bin --cert output/code-signing.crt --key output/code-signing.key --out output/firmware.p7s"
 
 echo ""
 

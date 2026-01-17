@@ -78,7 +78,7 @@ echo "  Alice generates a signing key pair and gets a certificate."
 echo "  The CSR is self-signed (proof of possession). This works because ML-DSA can SIGN!"
 echo ""
 
-run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/alice-sign.key --cn \"Alice\" -o output/alice-sign.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/alice-sign.key --cn \"Alice\" --out output/alice-sign.csr"
 
 echo ""
 echo "  The CA verifies the CSR signature and issues the certificate."
@@ -135,7 +135,7 @@ echo "  │                                                                 │"
 echo "  └─────────────────────────────────────────────────────────────────┘"
 echo ""
 
-run_cmd "$PKI_BIN csr gen --algorithm ml-kem-768 --keyout output/alice-enc.key --cn \"Alice\" --attest-cert output/alice-sign.crt --attest-key output/alice-sign.key -o output/alice-enc.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ml-kem-768 --keyout output/alice-enc.key --cn \"Alice\" --attest-cert output/alice-sign.crt --attest-key output/alice-sign.key --out output/alice-enc.csr"
 
 echo ""
 

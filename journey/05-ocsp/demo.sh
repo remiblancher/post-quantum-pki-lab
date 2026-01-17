@@ -54,13 +54,13 @@ print_step "Step 2: Generate Keys and CSRs"
 echo "  Generate OCSP responder key and CSR..."
 echo ""
 
-run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/ocsp-responder.key --cn \"OCSP Responder\" -o output/ocsp-responder.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/ocsp-responder.key --cn \"OCSP Responder\" --out output/ocsp-responder.csr"
 
 echo ""
 echo "  Generate TLS server key and CSR..."
 echo ""
 
-run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/server.key --cn server.example.com -o output/server.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/server.key --cn server.example.com --out output/server.csr"
 
 echo ""
 
@@ -139,7 +139,7 @@ echo "  Let's query the OCSP responder for our server certificate status..."
 echo ""
 
 # Generate OCSP request
-run_cmd "$PKI_BIN ocsp request --issuer output/pqc-ca/ca.crt --cert output/server.crt -o output/request.ocsp"
+run_cmd "$PKI_BIN ocsp request --issuer output/pqc-ca/ca.crt --cert output/server.crt --out output/request.ocsp"
 
 echo ""
 echo "  Send request to OCSP responder via HTTP POST..."

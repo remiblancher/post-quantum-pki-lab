@@ -50,7 +50,7 @@ echo "    Primary:     ECDSA P-384 (classical)"
 echo "    Alternative: ML-DSA-65 (post-quantum)"
 echo ""
 
-run_cmd "$PKI_BIN csr gen --algorithm ecdsa-p384 --hybrid ml-dsa-65 --keyout output/hybrid-server.key --hybrid-keyout output/hybrid-server-pqc.key --cn hybrid.example.com -o output/hybrid-server.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ecdsa-p384 --hybrid ml-dsa-65 --keyout output/hybrid-server.key --hybrid-keyout output/hybrid-server-pqc.key --cn hybrid.example.com --out output/hybrid-server.csr"
 
 echo ""
 

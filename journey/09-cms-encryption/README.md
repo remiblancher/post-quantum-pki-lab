@@ -116,7 +116,7 @@ qpki ca init --profile profiles/pqc-ca.yaml \
 qpki csr gen --algorithm ml-dsa-65 \
     --keyout output/alice-sign.key \
     --cn "Alice" \
-    -o output/alice-sign.csr
+    --out output/alice-sign.csr
 
 # CA verifies CSR signature and issues certificate
 qpki cert issue --ca-dir output/encryption-ca \
@@ -135,7 +135,7 @@ qpki csr gen --algorithm ml-kem-768 \
     --cn "Alice" \
     --attest-cert output/alice-sign.crt \
     --attest-key output/alice-sign.key \
-    -o output/alice-enc.csr
+    --out output/alice-enc.csr
 ```
 
 ### Step 4: Issue Encryption Certificate (ML-KEM-768)

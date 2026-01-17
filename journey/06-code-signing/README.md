@@ -174,7 +174,7 @@ qpki ca init --profile profiles/pqc-ca.yaml \
 qpki csr gen --algorithm ml-dsa-65 \
     --keyout output/code-signing.key \
     --cn "ACME Software" \
-    -o output/code-signing.csr
+    --out output/code-signing.csr
 
 # Issue certificate from CSR
 qpki cert issue --ca-dir output/code-ca \
@@ -193,7 +193,7 @@ dd if=/dev/urandom of=output/firmware.bin bs=1024 count=100
 qpki cms sign --data output/firmware.bin \
     --cert output/code-signing.crt \
     --key output/code-signing.key \
-    -o output/firmware.p7s
+    --out output/firmware.p7s
 ```
 
 ### Step 4: Verify the Signature

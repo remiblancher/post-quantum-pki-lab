@@ -58,7 +58,7 @@ print_step "Step 2: Issue TSA Certificate"
 echo "  Generate TSA key and issue certificate..."
 echo ""
 
-run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/tsa.key --cn \"LTV Timestamp Authority\" -o output/tsa.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/tsa.key --cn \"LTV Timestamp Authority\" --out output/tsa.csr"
 
 echo ""
 
@@ -106,7 +106,7 @@ print_step "Step 4: Issue Signing Certificate"
 echo "  Generate document signing key and CSR for Alice..."
 echo ""
 
-run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/alice.key --cn \"Alice (Legal Counsel)\" -o output/alice.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/alice.key --cn \"Alice (Legal Counsel)\" --out output/alice.csr"
 
 echo ""
 
@@ -158,7 +158,7 @@ echo ""
 echo "  Signing with CMS (ML-DSA)..."
 echo ""
 
-run_cmd "$PKI_BIN cms sign --data output/contract.txt --cert output/alice.crt --key output/alice.key -o output/contract.p7s"
+run_cmd "$PKI_BIN cms sign --data output/contract.txt --cert output/alice.crt --key output/alice.key --out output/contract.p7s"
 
 echo ""
 
@@ -181,7 +181,7 @@ echo "  The timestamp proves WHEN the document was signed."
 echo "  This is critical because it proves the certificate was valid at signing time."
 echo ""
 
-run_cmd "$PKI_BIN tsa request --data output/contract.p7s -o output/request.tsq"
+run_cmd "$PKI_BIN tsa request --data output/contract.p7s --out output/request.tsq"
 
 echo ""
 

@@ -151,7 +151,7 @@ qpki ca export --ca-dir output/tsa-ca > output/tsa-ca/ca.crt
 qpki csr gen --algorithm ml-dsa-65 \
     --keyout output/tsa.key \
     --cn "PQC Timestamp Authority" \
-    -o output/tsa.csr
+    --out output/tsa.csr
 
 # Issue TSA certificate (EKU: timeStamping)
 qpki cert issue --ca-dir output/tsa-ca \
@@ -181,7 +181,7 @@ echo "Contract content - signed on $(date)" > output/document.txt
 ```bash
 # Create timestamp request
 qpki tsa request --data output/document.txt \
-    -o output/request.tsq
+    --out output/request.tsq
 
 # Send to TSA server via HTTP POST
 curl -s -X POST \

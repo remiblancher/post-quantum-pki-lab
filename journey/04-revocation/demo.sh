@@ -43,7 +43,7 @@ print_step "Step 2: Generate Key and CSR"
 echo "  Generate an ML-DSA-65 key pair and Certificate Signing Request."
 echo ""
 
-run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/server.key --cn server.example.com -o output/server.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/server.key --cn server.example.com --out output/server.csr"
 
 echo ""
 

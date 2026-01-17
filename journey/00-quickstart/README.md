@@ -62,7 +62,7 @@ qpki ca init --profile profiles/classic-root-ca.yaml \
 qpki csr gen --algorithm ecdsa-p384 \
     --keyout classic-server.key \
     --cn classic.example.com \
-    -o classic-server.csr
+    --out classic-server.csr
 
 # Issue TLS certificate
 qpki cert issue --ca-dir ./classic-ca \
@@ -85,7 +85,7 @@ qpki ca init --profile profiles/pqc-root-ca.yaml \
 qpki csr gen --algorithm ml-dsa-65 \
     --keyout pq-server.key \
     --cn pq.example.com \
-    -o pq-server.csr
+    --out pq-server.csr
 
 # Issue TLS certificate
 qpki cert issue --ca-dir ./pqc-ca \

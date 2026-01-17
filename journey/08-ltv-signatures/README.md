@@ -168,7 +168,7 @@ qpki ca export --ca-dir output/ltv-ca > output/ltv-ca/ca.crt
 qpki csr gen --algorithm ml-dsa-65 \
     --keyout output/tsa.key \
     --cn "LTV Timestamp Authority" \
-    -o output/tsa.csr
+    --out output/tsa.csr
 
 # Issue TSA certificate
 qpki cert issue --ca-dir output/ltv-ca \
@@ -193,7 +193,7 @@ qpki tsa serve --port 8318 \
 qpki csr gen --algorithm ml-dsa-65 \
     --keyout output/alice.key \
     --cn "Alice (Legal Counsel)" \
-    -o output/alice.csr
+    --out output/alice.csr
 
 # Issue document signing certificate
 qpki cert issue --ca-dir output/ltv-ca \
@@ -217,7 +217,7 @@ EOF
 qpki cms sign --data output/contract.txt \
     --cert output/alice.crt \
     --key output/alice.key \
-    -o output/contract.p7s
+    --out output/contract.p7s
 ```
 
 ### Step 6: Request Timestamp (via HTTP)
@@ -225,7 +225,7 @@ qpki cms sign --data output/contract.txt \
 ```bash
 # Create timestamp request
 qpki tsa request --data output/contract.p7s \
-    -o output/request.tsq
+    --out output/request.tsq
 
 # Send to TSA server via HTTP POST
 curl -s -X POST \

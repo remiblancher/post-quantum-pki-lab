@@ -85,7 +85,7 @@ qpki csr gen --algorithm ecdsa-p384 --hybrid ml-dsa-65 \
     --keyout output/hybrid-server.key \
     --hybrid-keyout output/hybrid-server-pqc.key \
     --cn hybrid.example.com \
-    -o output/hybrid-server.csr
+    --out output/hybrid-server.csr
 ```
 
 ### Step 3: Issue Hybrid TLS Certificate

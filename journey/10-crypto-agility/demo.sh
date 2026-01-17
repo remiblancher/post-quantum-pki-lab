@@ -101,7 +101,7 @@ CRED_V1=$($PKI_BIN credential list --cred-dir output/credentials 2>/dev/null | g
 if [[ -n "$CRED_V1" ]]; then
     echo ""
     echo -e "  ${CYAN}Credential ID:${NC} $CRED_V1"
-    run_cmd "$PKI_BIN credential export $CRED_V1 --ca-dir output/ca --cred-dir output/credentials -o output/server-v1.pem"
+    run_cmd "$PKI_BIN credential export $CRED_V1 --ca-dir output/ca --cred-dir output/credentials --out output/server-v1.pem"
 fi
 
 echo ""
@@ -197,7 +197,7 @@ CRED_V3=$($PKI_BIN credential list --cred-dir output/credentials 2>/dev/null | g
 if [[ -n "$CRED_V3" ]]; then
     echo ""
     echo -e "  ${CYAN}Credential ID:${NC} $CRED_V3"
-    run_cmd "$PKI_BIN credential export $CRED_V3 --ca-dir output/ca --cred-dir output/credentials -o output/server-v3.pem"
+    run_cmd "$PKI_BIN credential export $CRED_V3 --ca-dir output/ca --cred-dir output/credentials --out output/server-v3.pem"
 fi
 
 echo ""
@@ -226,15 +226,15 @@ echo "  └───────────────────────
 echo ""
 
 echo "  Trust store for legacy clients (v1 only):"
-run_cmd "$PKI_BIN ca export --ca-dir output/ca --version v1 -o output/trust-legacy.pem"
+run_cmd "$PKI_BIN ca export --ca-dir output/ca --version v1 --out output/trust-legacy.pem"
 
 echo ""
 echo "  Trust store for modern clients (v3 only):"
-run_cmd "$PKI_BIN ca export --ca-dir output/ca --version v3 -o output/trust-modern.pem"
+run_cmd "$PKI_BIN ca export --ca-dir output/ca --version v3 --out output/trust-modern.pem"
 
 echo ""
 echo "  Trust store for transition (all versions):"
-run_cmd "$PKI_BIN ca export --ca-dir output/ca --all -o output/trust-transition.pem"
+run_cmd "$PKI_BIN ca export --ca-dir output/ca --all --out output/trust-transition.pem"
 
 echo ""
 

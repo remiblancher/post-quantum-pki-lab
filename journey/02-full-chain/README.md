@@ -93,7 +93,7 @@ qpki inspect output/pqc-issuing-ca/ca.crt
 qpki csr gen --algorithm ml-dsa-65 \
     --keyout output/server.key \
     --cn server.example.com \
-    -o output/server.csr
+    --out output/server.csr
 ```
 
 ### Step 4: Issue TLS Server Certificate

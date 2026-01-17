@@ -185,7 +185,7 @@ qpki credential enroll --ca-dir output/ca \
 qpki credential export <credential-id> \
     --ca-dir output/ca \
     --cred-dir output/credentials \
-    -o output/server-v1.pem
+    --out output/server-v1.pem
 ```
 
 ### Step 2: Rotate to Hybrid CA (Phase 2)
@@ -236,20 +236,20 @@ qpki credential enroll --ca-dir output/ca \
 qpki credential export <credential-id> \
     --ca-dir output/ca \
     --cred-dir output/credentials \
-    -o output/server-v3.pem
+    --out output/server-v3.pem
 ```
 
 ### Step 5: Create Trust Stores
 
 ```bash
 # Trust store for legacy clients (v1 only)
-qpki ca export --ca-dir output/ca --version v1 -o output/trust-legacy.pem
+qpki ca export --ca-dir output/ca --version v1 --out output/trust-legacy.pem
 
 # Trust store for modern clients (v3 only)
-qpki ca export --ca-dir output/ca --version v3 -o output/trust-modern.pem
+qpki ca export --ca-dir output/ca --version v3 --out output/trust-modern.pem
 
 # Trust store for transition (all versions)
-qpki ca export --ca-dir output/ca --all -o output/trust-transition.pem
+qpki ca export --ca-dir output/ca --all --out output/trust-transition.pem
 ```
 
 ### Step 6: Verify Interoperability
