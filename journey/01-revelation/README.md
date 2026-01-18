@@ -178,7 +178,7 @@ NIST finalized 3 post-quantum algorithms (August 2024).
 
 **Bottom line:** Larger sizes, but signing/verification is faster. The trade-off is worth it for quantum resistance.
 
-*For detailed sizes, variants, and benchmarks, see [Algorithm Reference](../../docs/ALGORITHM-SIZES.md#performance-benchmarks).*
+*For detailed sizes, variants, and benchmarks, see [Algorithm Reference](../../docs/ALGORITHM-REFERENCE.md#performance-benchmarks).*
 
 ---
 

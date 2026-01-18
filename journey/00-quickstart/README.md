@@ -121,7 +121,7 @@ qpki inspect pq-server.crt
 | Signing | **~20% faster** |
 | Verification | **2x faster** |
 
-*Details: [Algorithm Sizes & Performance](../../docs/ALGORITHM-SIZES.md#performance-benchmarks)*
+*Details: [Algorithm Reference](../../docs/ALGORITHM-REFERENCE.md#performance-benchmarks)*
 
 **The trade-off:** Larger sizes, but faster operations and quantum resistance.
 
