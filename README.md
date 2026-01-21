@@ -104,8 +104,8 @@ UC-10: "Crypto-agility = CA versioning + trust bundles"
 | # | Mission | Time | Key Message |
 |---|---------|------|-------------|
 | 6 | [**PQC Code Signing**](journey/06-code-signing/) — Signatures That Outlive the Threat | 10 min | Code signatures live 10-30 years. PQC makes them unforgeable. |
-| 7 | [**PQC Timestamping**](journey/07-timestamping/) — Trust Now, Verify Forever | 10 min | Timestamps prove WHEN — even after cert expiration. |
-| 8 | [**PQC LTV**](journey/08-ltv-signatures/) — Sign Today, Verify in 30 Years | 10 min | LTV bundles all proofs for offline verification in 2055. |
+| 7 | [**PQC Timestamping**](journey/07-timestamping/) — Trust Now, Verify Forever | 15 min | Timestamps prove WHEN — even after cert expiration. |
+| 8 | [**PQC LTV**](journey/08-ltv-signatures/) — Sign Today, Verify in 30 Years | 15 min | LTV bundles all proofs for offline verification in 2055. |
 | 9 | [**CMS Encryption**](journey/09-cms-encryption/) — Encrypt documents (ML-KEM) | 10 min | KEM keys can't sign. Attestation links encryption to identity. |
 
 ### 🧭 Architecture & Migration
