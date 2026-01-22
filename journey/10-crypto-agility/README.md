@@ -145,15 +145,13 @@ CURRENT SITUATION
 
 | Step | What Happens | Key Concept |
 |------|--------------|-------------|
-| 1 | Explain crypto-agility | Definition and 3-phase strategy |
-| 2 | Create Migration CA (ECDSA) | Phase 1: Current state |
-| 3 | Rotate to Hybrid CA | Phase 2: Transition |
-| 4 | Rotate to Full PQC CA | Phase 3: Target state |
-| 5 | Issue PQC certificate | New certificates use active CA |
-| 6 | Create trust stores | Legacy, modern, transition bundles |
-| 7 | Prove interoperability | Old certs remain valid |
-| 8 | Incident simulation | Rollback to previous version |
-| 9 | Inspect certificates | Compare ECDSA vs ML-DSA |
+| 1 | Create Migration CA (ECDSA) | Phase 1: Current state |
+| 2 | Rotate to Hybrid CA | Phase 2: Transition |
+| 3 | Rotate to Full PQC CA | Phase 3: Target state |
+| 4 | Issue PQC certificate | New certificates use active CA |
+| 5 | Create trust stores | Legacy, modern, transition bundles |
+| 6 | Verify interoperability | Old certs remain valid |
+| 7 | Incident simulation | Rollback to previous version |
 
 ---
 

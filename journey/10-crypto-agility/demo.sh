@@ -17,10 +17,10 @@ source "$SCRIPT_DIR/../../lib/common.sh"
 setup_demo "PQC Crypto-Agility"
 
 # =============================================================================
-# Step 1: Understand Crypto-Agility
+# Introduction: Understand Crypto-Agility
 # =============================================================================
 
-print_step "Step 1: What is Crypto-Agility?"
+print_step "What is Crypto-Agility?"
 
 echo "  Crypto-agility is the ability of a system to:"
 echo ""
@@ -64,10 +64,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 2: Phase 1 - Create Classic CA (ECDSA)
+# Step 1: Phase 1 - Create Classic CA (ECDSA)
 # =============================================================================
 
-print_step "Step 2: Phase 1 - Create Migration CA (ECDSA)"
+print_step "Step 1: Phase 1 - Create Migration CA (ECDSA)"
 
 echo "  Creating the Migration CA with ECDSA (current state)..."
 echo "  This represents the starting point of our migration journey."
@@ -109,10 +109,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 3: Rotate to Hybrid CA (Phase 2)
+# Step 2: Rotate to Hybrid CA (Phase 2)
 # =============================================================================
 
-print_step "Step 3: Rotate to Hybrid CA (ECDSA + ML-DSA)"
+print_step "Step 2: Rotate to Hybrid CA (ECDSA + ML-DSA)"
 
 echo "  Rotating the CA to hybrid mode (Catalyst)..."
 echo "  The old ECDSA version becomes archived, new hybrid version is active."
@@ -145,10 +145,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 4: Rotate to Full PQC CA (Phase 3)
+# Step 3: Rotate to Full PQC CA (Phase 3)
 # =============================================================================
 
-print_step "Step 4: Rotate to Full PQC CA (ML-DSA)"
+print_step "Step 3: Rotate to Full PQC CA (ML-DSA)"
 
 echo "  Rotating the CA to full post-quantum..."
 echo "  ML-DSA-65 only (no classical fallback)."
@@ -181,10 +181,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 5: Issue PQC Server Certificate
+# Step 4: Issue PQC Server Certificate
 # =============================================================================
 
-print_step "Step 5: Issue PQC Server Certificate"
+print_step "Step 4: Issue PQC Server Certificate"
 
 echo "  Issuing a server certificate with ML-DSA..."
 echo ""
@@ -205,10 +205,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 6: Create Trust Stores
+# Step 5: Create Trust Stores
 # =============================================================================
 
-print_step "Step 6: Create Trust Stores"
+print_step "Step 5: Create Trust Stores"
 
 echo "  Creating trust stores for different client scenarios..."
 echo ""
@@ -251,10 +251,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 7: Prove Interoperability
+# Step 6: Verify Interoperability
 # =============================================================================
 
-print_step "Step 7: Prove Interoperability"
+print_step "Step 6: Verify Interoperability"
 
 echo "  Testing that certificates validate correctly with their trust stores:"
 echo ""
@@ -308,10 +308,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 8: Incident Simulation (Rollback)
+# Step 7: Incident Simulation (Rollback)
 # =============================================================================
 
-print_step "Step 8: Incident Simulation"
+print_step "Step 7: Incident Simulation"
 
 echo "  ┌─────────────────────────────────────────────────────────────────┐"
 echo "  │  SCENARIO: Compatibility issue detected on legacy appliances   │"
@@ -342,10 +342,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 9: Inspect Certificates
+# Conclusion: Inspect Certificates
 # =============================================================================
 
-print_step "Step 9: Inspect Certificates"
+print_step "Inspect Certificates"
 
 echo "  Examining the certificates we created:"
 echo ""
