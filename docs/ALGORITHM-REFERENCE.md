@@ -68,7 +68,7 @@ Technical reference for NIST post-quantum algorithm variants.
 
 ### ML-DSA vs RSA (Signatures)
 
-*Sources: [OpenSSL Cookbook](https://www.feistyduck.com/library/openssl-cookbook/online/openssl-command-line/performance.html), [arXiv:2503.12952](https://arxiv.org/abs/2503.12952)*
+*Sources: [OpenSSL Cookbook](https://www.feistyduck.com/library/openssl-cookbook/online/openssl-command-line/performance.html) (x86), [arXiv:2503.12952](https://arxiv.org/abs/2503.12952) (x86 @ 3.3 GHz)*
 
 | Algorithm | Sign | Verify | Ratio vs ML-DSA-65 |
 |-----------|------|--------|-------------------|
@@ -106,7 +106,7 @@ Technical reference for NIST post-quantum algorithm variants.
 
 ### ML-KEM vs X25519 vs RSA (Key Exchange)
 
-*Sources: [arXiv:2508.01694](https://arxiv.org/html/2508.01694v3), [filippo.io](https://words.filippo.io/dispatches/mlkem768/)*
+*Sources: [arXiv:2508.01694](https://arxiv.org/html/2508.01694v3) (x86), [filippo.io](https://words.filippo.io/dispatches/mlkem768/) (Apple M1)*
 
 | Algorithm | Operation | Time | Ratio vs ML-KEM-768 |
 |-----------|-----------|------|---------------------|
