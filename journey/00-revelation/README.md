@@ -4,9 +4,9 @@
 
 ## Why Change Algorithms?
 
-You just created a classical PKI with ECDSA. It works. So why change?
+Classical PKI with ECDSA works. So why change?
 
-The PKI you built in [Quick Start](../01-quickstart/) is structurally correct — but cryptographically fragile in the long term.
+A classical PKI is structurally correct — but cryptographically fragile in the long term.
 
 Because **quantum computers will break everything**.
 
