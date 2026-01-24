@@ -78,6 +78,24 @@ UC-09: "KEM keys require a new pattern: attestation"
 UC-10: "Crypto-agility = CA versioning + trust bundles"
 ```
 
+### 🗺️ Journey Map
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  AWARENESS              BUILD                    LIFECYCLE      │
+│  ┌──────┐ ┌──────┐      ┌──────┐ ┌──────┐    ┌──────┐ ┌──────┐ │
+│  │UC-00 │→│UC-01 │  →   │UC-02 │→│UC-03 │ →  │UC-04 │→│UC-05 │ │
+│  │Start │ │Why?  │      │Chain │ │Hybrid│    │CRL   │ │OCSP  │ │
+│  └──────┘ └──────┘      └──────┘ └──────┘    └──────┘ └──────┘ │
+│                                                       ↓        │
+│  MIGRATION              ENCRYPTION           LONG-TERM SIGS    │
+│  ┌──────┐               ┌──────┐            ┌──────┬──────┬────┐│
+│  │UC-10 │  ←            │UC-09 │    ←       │UC-06 │UC-07 │UC-08│
+│  │Agility│              │KEM   │            │Sign  │Time  │LTV ││
+│  └──────┘               └──────┘            └──────┴──────┴────┘│
+└─────────────────────────────────────────────────────────────────┘
+```
+
 ### 🚀 Getting Started
 
 | # | Mission | Time | Key Message |
@@ -99,14 +117,23 @@ UC-10: "Crypto-agility = CA versioning + trust bundles"
 | 4 | [**Revocation**](journey/04-revocation/) — CRL generation | 10 min | Revoking PQC certs = same command, same workflow. |
 | 5 | [**PQC OCSP**](journey/05-ocsp/) — Is This Cert Still Good? | 10 min | OCSP real-time status = same HTTP protocol. |
 
-### 💼 Real-World Applications
+### 💼 Long-Term Signatures Module
+
+> **Progression: Sign → Timestamp → Archive**
+> Code signing (UC-06) protects software integrity. Timestamping (UC-07) proves WHEN.
+> LTV (UC-08) bundles everything for offline verification decades later.
 
 | # | Mission | Time | Key Message |
 |---|---------|------|-------------|
 | 6 | [**PQC Code Signing**](journey/06-code-signing/) — Signatures That Outlive the Threat | 10 min | Code signatures live 10-30 years. PQC makes them unforgeable. |
 | 7 | [**PQC Timestamping**](journey/07-timestamping/) — Trust Now, Verify Forever | 15 min | Timestamps prove WHEN — even after cert expiration. |
 | 8 | [**PQC LTV**](journey/08-ltv-signatures/) — Sign Today, Verify in 30 Years | 15 min | LTV bundles all proofs for offline verification in 2055. |
-| 9 | [**CMS Encryption**](journey/09-cms-encryption/) — Encrypt documents (ML-KEM) | 10 min | KEM keys can't sign. Attestation links encryption to identity. |
+
+### 🔐 Encryption
+
+| # | Mission | Time | Key Message |
+|---|---------|------|-------------|
+| 9 | [**CMS Encryption**](journey/09-cms-encryption/) — Encrypt documents (ML-KEM) | 15 min | KEM keys can't sign. Attestation links encryption to identity. |
 
 ### 🧭 Architecture & Migration
 
@@ -143,6 +170,7 @@ UC-10: "Crypto-agility = CA versioning + trust bundles"
 
 - [QPKI - Post-Quantum PKI](https://github.com/remiblancher/post-quantum-pki) — The PKI toolkit used by QLAB
 - [Glossary](docs/GLOSSARY.md) — PQC and PKI terminology
+- [Troubleshooting](docs/TROUBLESHOOTING.md) — Common issues and solutions
 - [NIST Post-Quantum Cryptography](https://csrc.nist.gov/projects/post-quantum-cryptography)
 - [FIPS 203 (ML-KEM)](https://csrc.nist.gov/pubs/fips/203/final)
 - [FIPS 204 (ML-DSA)](https://csrc.nist.gov/pubs/fips/204/final)
