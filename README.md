@@ -47,17 +47,23 @@ cd post-quantum-pki-lab
 ./tooling/install.sh
 ```
 
-### Windows (PowerShell)
+### Windows
 
 ```powershell
+# 1. Install QPKI (PowerShell)
 git clone https://github.com/remiblancher/post-quantum-pki-lab.git
 cd post-quantum-pki-lab
 .\tooling\install.ps1
+
+# 2. Run demos (requires Git Bash or WSL)
+./journey/00-revelation/demo.sh
 ```
 
-> **Note:** The demos require a bash shell. Use [Git Bash](https://git-scm.com/downloads) or [WSL](https://learn.microsoft.com/en-us/windows/wsl/install) to run them.
+> **Note:** The install script works in PowerShell, but the demos require [Git Bash](https://git-scm.com/downloads) or [WSL](https://learn.microsoft.com/en-us/windows/wsl/install).
 
-Then start with: `./journey/00-revelation/demo.sh`
+### Getting Started
+
+Run: `./journey/00-revelation/demo.sh`
 
 **Requirements:** OpenSSL 3.x (for demo verification commands)
 
