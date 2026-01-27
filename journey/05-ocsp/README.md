@@ -53,7 +53,7 @@ Yes. Same HTTP protocol, same request/response format. Only signature sizes chan
 ## Run the Demo
 
 ```bash
-./demo.sh
+./journey/05-ocsp/demo.sh
 ```
 
 ---

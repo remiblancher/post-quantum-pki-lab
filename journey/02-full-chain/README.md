@@ -54,7 +54,7 @@ This demo shows a production-ready 3-level PKI hierarchy using only post-quantum
 ## Run the Demo
 
 ```bash
-./demo.sh
+./journey/02-full-chain/demo.sh
 ```
 
 ---

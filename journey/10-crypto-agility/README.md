@@ -158,7 +158,7 @@ CURRENT SITUATION
 ## Run the Demo
 
 ```bash
-./demo.sh
+./journey/10-crypto-agility/demo.sh
 ```
 
 ---

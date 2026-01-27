@@ -96,7 +96,7 @@ Traditional CSR workflow:
 ## Run the Demo
 
 ```bash
-./demo.sh
+./journey/09-cms-encryption/demo.sh
 ```
 
 ---

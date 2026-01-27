@@ -151,7 +151,7 @@ Sign the code BEFORE distributing it:
 ## Run the Demo
 
 ```bash
-./demo.sh
+./journey/06-code-signing/demo.sh
 ```
 
 ---

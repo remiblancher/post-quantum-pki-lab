@@ -125,7 +125,7 @@ A trusted authority (TSA) proves when the signature was created:
 ## Run the Demo
 
 ```bash
-./demo.sh
+./journey/07-timestamping/demo.sh
 ```
 
 ---

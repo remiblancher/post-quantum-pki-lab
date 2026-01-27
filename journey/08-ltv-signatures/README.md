@@ -142,7 +142,7 @@ Embed EVERYTHING needed in a self-sufficient bundle:
 ## Run the Demo
 
 ```bash
-./demo.sh
+./journey/08-ltv-signatures/demo.sh
 ```
 
 ---

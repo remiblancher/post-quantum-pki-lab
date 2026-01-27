@@ -61,7 +61,7 @@ The same way you revoke any certificate. PKI operations are algorithm-agnostic.
 ## Run the Demo
 
 ```bash
-./demo.sh
+./journey/04-revocation/demo.sh
 ```
 
 ---

@@ -58,7 +58,7 @@ This is the reality of PQC migration. You can't flip a switch and move everythin
 ## Run the Demo
 
 ```bash
-./demo.sh
+./journey/03-hybrid/demo.sh
 ```
 
 ---
