@@ -144,12 +144,13 @@ CURRENT SITUATION
 ## What We'll Do
 
 1. Create Migration CA (ECDSA)
-2. Rotate to hybrid (ECDSA + ML-DSA)
-3. Rotate to full PQC (ML-DSA)
-4. Issue PQC server certificate
-5. Create trust stores
-6. Verify interoperability
-7. Simulate rollback
+2. Issue ECDSA server certificate (v1)
+3. Rotate to hybrid (ECDSA + ML-DSA)
+4. Rotate to full PQC (ML-DSA)
+5. Issue PQC server certificate (v3)
+6. Create trust stores
+7. Verify certificates against trust stores
+8. Simulate rollback
 
 ---
 
@@ -163,14 +164,18 @@ CURRENT SITUATION
 
 ## The Commands
 
-### Step 1: Create Migration CA (Phase 1)
+### Step 1: Create Migration CA (ECDSA)
 
 ```bash
 # Create a Migration CA starting with ECDSA
 qpki ca init --profile profiles/classic-ca.yaml \
     --var cn="Migration CA" \
     --ca-dir output/ca
+```
 
+### Step 2: Issue ECDSA Server Certificate (v1)
+
+```bash
 # Issue ECDSA server certificate
 qpki credential enroll --ca-dir output/ca \
     --cred-dir output/credentials \
@@ -184,7 +189,7 @@ qpki credential export <credential-id> \
     --out output/server-v1.pem
 ```
 
-### Step 2: Rotate to Hybrid CA (Phase 2)
+### Step 3: Rotate to Hybrid CA
 
 ```bash
 # Rotate to hybrid mode (ECDSA + ML-DSA)
@@ -201,7 +206,7 @@ qpki ca versions --ca-dir output/ca
 # v2       active    hybrid-catalyst
 ```
 
-### Step 3: Rotate to Full PQC CA (Phase 3)
+### Step 4: Rotate to Full PQC CA
 
 ```bash
 # Rotate to full post-quantum
@@ -219,7 +224,7 @@ qpki ca versions --ca-dir output/ca
 # v3       active    ml-dsa-65
 ```
 
-### Step 4: Issue PQC Certificate
+### Step 5: Issue PQC Server Certificate (v3)
 
 ```bash
 # Issue PQC server certificate
@@ -235,7 +240,7 @@ qpki credential export <credential-id> \
     --out output/server-v3.pem
 ```
 
-### Step 5: Create Trust Stores
+### Step 6: Create Trust Stores
 
 ```bash
 # Trust store for legacy clients (v1 only)
@@ -248,7 +253,7 @@ qpki ca export --ca-dir output/ca --version v3 --out output/trust-modern.pem
 qpki ca export --ca-dir output/ca --all --out output/trust-transition.pem
 ```
 
-### Step 6: Verify Interoperability
+### Step 7: Verify Certificates Against Trust Stores
 
 ```bash
 # Old cert validates with legacy trust
@@ -262,7 +267,7 @@ qpki cert verify output/server-v1.pem --ca output/trust-transition.pem
 qpki cert verify output/server-v3.pem --ca output/trust-transition.pem
 ```
 
-### Step 7: Incident Simulation (Rollback)
+### Step 8: Simulate Rollback
 
 ```bash
 # Scenario: A compatibility issue is detected on legacy appliances.

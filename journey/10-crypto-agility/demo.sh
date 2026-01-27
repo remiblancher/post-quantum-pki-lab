@@ -27,12 +27,13 @@ echo ""
 
 echo -e "${BOLD}WHAT WE'LL DO:${NC}"
 echo "  1. Create Migration CA (ECDSA)"
-echo "  2. Rotate to hybrid (ECDSA + ML-DSA)"
-echo "  3. Rotate to full PQC (ML-DSA)"
-echo "  4. Issue PQC server certificate"
-echo "  5. Create trust stores"
-echo "  6. Verify interoperability"
-echo "  7. Simulate rollback"
+echo "  2. Issue ECDSA server certificate (v1)"
+echo "  3. Rotate to hybrid (ECDSA + ML-DSA)"
+echo "  4. Rotate to full PQC (ML-DSA)"
+echo "  5. Issue PQC server certificate (v3)"
+echo "  6. Create trust stores"
+echo "  7. Verify certificates against trust stores"
+echo "  8. Simulate rollback"
 echo ""
 
 echo -e "${DIM}Crypto-agility = change algorithms without breaking clients.${NC}"
@@ -88,10 +89,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 1: Phase 1 - Create Migration CA (ECDSA)
+# Step 1: Create Migration CA (ECDSA)
 # =============================================================================
 
-print_step "Step 1: Phase 1 - Create Migration CA (ECDSA)"
+print_step "Step 1: Create Migration CA (ECDSA)"
 
 echo "  Creating the Migration CA with ECDSA (current state)..."
 echo "  This represents the starting point of our migration journey."
@@ -113,8 +114,16 @@ fi
 
 echo ""
 
-# Issue ECDSA server certificate
+pause
+
+# =============================================================================
+# Step 2: Issue ECDSA Server Certificate (v1)
+# =============================================================================
+
+print_step "Step 2: Issue ECDSA Server Certificate (v1)"
+
 echo "  Issuing a server certificate with ECDSA..."
+echo "  This v1 certificate will be used to test backward compatibility."
 echo ""
 
 run_cmd "$PKI_BIN credential enroll --ca-dir $DEMO_TMP/ca --cred-dir $DEMO_TMP/credentials --profile $SCRIPT_DIR/profiles/classic-tls-server.yaml --var cn=server.example.com"
@@ -133,10 +142,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 2: Rotate to Hybrid CA (Phase 2)
+# Step 3: Rotate to Hybrid CA (Phase 2)
 # =============================================================================
 
-print_step "Step 2: Rotate to Hybrid CA (ECDSA + ML-DSA)"
+print_step "Step 3: Rotate to Hybrid CA (ECDSA + ML-DSA)"
 
 echo "  Rotating the CA to hybrid mode (Catalyst)..."
 echo "  The old ECDSA version becomes archived, new hybrid version is active."
@@ -169,10 +178,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 3: Rotate to Full PQC CA (Phase 3)
+# Step 4: Rotate to Full PQC CA (Phase 3)
 # =============================================================================
 
-print_step "Step 3: Rotate to Full PQC CA (ML-DSA)"
+print_step "Step 4: Rotate to Full PQC CA (ML-DSA)"
 
 echo "  Rotating the CA to full post-quantum..."
 echo "  ML-DSA-65 only (no classical fallback)."
@@ -205,10 +214,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 4: Issue PQC Server Certificate
+# Step 5: Issue PQC Server Certificate (v3)
 # =============================================================================
 
-print_step "Step 4: Issue PQC Server Certificate"
+print_step "Step 5: Issue PQC Server Certificate (v3)"
 
 echo "  Issuing a server certificate with ML-DSA..."
 echo ""
@@ -229,10 +238,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 5: Create Trust Stores
+# Step 6: Create Trust Stores
 # =============================================================================
 
-print_step "Step 5: Create Trust Stores"
+print_step "Step 6: Create Trust Stores"
 
 echo "  Creating trust stores for different client scenarios..."
 echo ""
@@ -275,10 +284,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 6: Verify Interoperability
+# Step 7: Verify Certificates Against Trust Stores
 # =============================================================================
 
-print_step "Step 6: Verify Interoperability"
+print_step "Step 7: Verify Certificates Against Trust Stores"
 
 echo "  Testing that certificates validate correctly with their trust stores:"
 echo ""
@@ -332,10 +341,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 7: Incident Simulation (Rollback)
+# Step 8: Simulate Rollback
 # =============================================================================
 
-print_step "Step 7: Incident Simulation"
+print_step "Step 8: Simulate Rollback"
 
 echo "  ┌─────────────────────────────────────────────────────────────────┐"
 echo "  │  SCENARIO: Compatibility issue detected on legacy appliances   │"
