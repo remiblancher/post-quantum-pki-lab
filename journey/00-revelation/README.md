@@ -44,6 +44,26 @@ TODAY                           FUTURE (5-15 years?)
    │                              All your secrets
 ```
 
+**The exposure window:**
+
+```
+TODAY            +10 years         +50 years
+(2025)           (2035)            (2075)
+  │                │                 │
+  ▼                ▼                 ▼
+┌────────────────────────────────────────────────────────────────┐
+│ ░░░░░░░░░░░░░░░░│▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│
+│    CAPTURED     │              EXPOSED                         │
+└────────────────────────────────────────────────────────────────┘
+        │                │                 │
+        │                │                 └─ Data should stay secret until here
+        │                └─ Quantum decrypts everything
+        └─ Adversaries recording NOW
+
+░░░ Encrypted but captured (false sense of security)
+▓▓▓ EXPOSED for 40 years (until required confidentiality ends)
+```
+
 → **Solution:** ML-KEM (quantum-resistant key exchange)
 
 ### TNFL: Trust Now, Forge Later
