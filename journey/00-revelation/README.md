@@ -120,7 +120,7 @@ Unlike SNDL, forgery is INSTANT once quantum arrives.
 No need to capture anything beforehand — just your public key.
 ```
 
-→ **Solution:** ML-DSA (quantum-resistant signatures) — *what this lab teaches*
+→ **Solution:** ML-DSA (quantum-resistant signatures)
 
 ---
 
