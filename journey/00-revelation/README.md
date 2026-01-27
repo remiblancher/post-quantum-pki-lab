@@ -249,15 +249,29 @@ NIST finalized 3 post-quantum algorithms (August 2024).
 
 ## Security Agency Recommendations
 
-Major security agencies worldwide are already mandating PQC migration:
+Major security agencies have published concrete migration timelines:
 
-| Agency | Country | Recommendation |
-|--------|---------|----------------|
-| **NSA (CNSA 2.0)** | USA | Full PQC migration by 2035 for national security systems |
-| **NIST** | USA | Standards finalized (2024), migration guidance published |
-| **ANSSI** | France | Hybrid approach recommended, PQC integration by 2025 |
-| **BSI** | Germany | PQC migration planning required for critical infrastructure |
-| **NCSC** | UK | Begin PQC planning now, prioritize high-value data |
+### NSA CNSA 2.0 (USA) — Timeline
+
+| Use Case | Deadline | Algorithms |
+|----------|----------|------------|
+| Software/firmware signing | 2025 | ML-DSA |
+| Web servers, cloud services | 2025 | ML-KEM + ML-DSA |
+| VPNs, network equipment | 2026 | ML-KEM |
+| Legacy systems | 2030 | Full migration |
+| National security systems | 2035 | Complete transition |
+
+### ANSSI (France)
+
+- **Hybrid mandatory** for high-security systems (classical + PQC)
+- ML-KEM and ML-DSA approved for use
+- Transition planning required now
+
+### BSI (Germany)
+
+- PQC readiness assessment required for critical infrastructure
+- Hybrid approach recommended during transition
+- Migration plans must be in place
 
 **The message is unanimous:** Start now. The transition takes years, and the threat is real.
 
