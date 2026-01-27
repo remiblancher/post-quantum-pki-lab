@@ -55,9 +55,6 @@ echo ""
 run_cmd "$PKI_BIN ca init --profile $PROFILES/hybrid-root-ca.yaml --var cn=\"Hybrid Root CA\" --ca-dir $DEMO_TMP/hybrid-ca"
 
 echo ""
-echo -e "  ${BOLD}Hybrid CA details:${NC}"
-$PKI_BIN inspect $DEMO_TMP/hybrid-ca/ca.crt 2>/dev/null | head -10 | sed 's/^/    /'
-echo ""
 
 pause
 
@@ -91,9 +88,6 @@ echo ""
 
 run_cmd "$PKI_BIN cert issue --ca-dir $DEMO_TMP/hybrid-ca --profile $PROFILES/hybrid-tls-server.yaml --csr $DEMO_TMP/hybrid-server.csr --out $DEMO_TMP/hybrid-server.crt"
 
-echo ""
-echo -e "  ${BOLD}Hybrid certificate details:${NC}"
-$PKI_BIN inspect $DEMO_TMP/hybrid-server.crt 2>/dev/null | head -12 | sed 's/^/    /'
 echo ""
 
 pause
