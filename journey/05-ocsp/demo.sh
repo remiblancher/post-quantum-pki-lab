@@ -226,8 +226,14 @@ echo ""
 
 if [[ -f "$DEMO_TMP/response2.ocsp" ]] && [[ -s "$DEMO_TMP/response2.ocsp" ]]; then
     $PKI_BIN ocsp info $DEMO_TMP/response2.ocsp 2>/dev/null || echo -e "  ${RED}✗${NC} Status: revoked"
+
+    resp_size=$(wc -c < "$DEMO_TMP/response2.ocsp" | tr -d ' ')
+    echo ""
+    echo -e "  ${CYAN}Response size:${NC} $resp_size bytes"
 fi
 
+echo ""
+echo -e "  ${RED}✗${NC} Certificate status: ${RED}REVOKED${NC}"
 echo ""
 echo "  ┌─────────────────────────────────────────────────────────────────┐"
 echo "  │  OCSP STATUS COMPARISON                                        │"
