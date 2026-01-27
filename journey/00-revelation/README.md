@@ -90,6 +90,21 @@ TODAY                           FUTURE (5-15 years?)
    │                              Impersonation possible
 ```
 
+**The forgery attack:**
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  1. Attacker extracts your PUBLIC key (available in any cert)   │
+│  2. Quantum computer derives your PRIVATE key                   │
+│  3. Attacker signs malware with YOUR key                        │
+│  4. Malware passes all signature verification ✓                 │
+│  5. Systems auto-update with "trusted" malicious code           │
+└─────────────────────────────────────────────────────────────────┘
+
+Unlike SNDL, forgery is INSTANT once quantum arrives.
+No need to capture anything beforehand — just your public key.
+```
+
 → **Solution:** ML-DSA (quantum-resistant signatures) — *what this lab teaches*
 
 ---
