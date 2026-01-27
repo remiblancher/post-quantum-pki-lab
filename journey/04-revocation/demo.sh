@@ -33,10 +33,9 @@ echo ""
 echo -e "${BOLD}WHAT WE'LL DO:${NC}"
 echo "  1. Create a CA (ML-DSA-65)"
 echo "  2. Issue a TLS certificate"
-echo "  3. Simulate key compromise"
-echo "  4. Revoke the certificate"
-echo "  5. Generate a CRL (Certificate Revocation List)"
-echo "  6. Verify the revoked certificate is rejected"
+echo "  3. Revoke the certificate (after key compromise)"
+echo "  4. Generate a CRL (Certificate Revocation List)"
+echo "  5. Verify the revoked certificate is rejected"
 echo ""
 
 echo -e "${DIM}Revocation workflow is identical for classical and PQC algorithms.${NC}"
@@ -60,27 +59,16 @@ echo ""
 pause
 
 # =============================================================================
-# Step 2: Generate Key and CSR
+# Step 2: Issue Certificate
 # =============================================================================
 
-print_step "Step 2: Generate Key and CSR"
+print_step "Step 2: Issue Certificate"
 
-echo "  Generate an ML-DSA-65 key pair and Certificate Signing Request."
+echo "  Generate an ML-DSA-65 key pair and issue a TLS certificate."
 echo ""
 
 run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout $DEMO_TMP/server.key --cn server.example.com --out $DEMO_TMP/server.csr"
 
-echo ""
-
-pause
-
-# =============================================================================
-# Step 3: Issue TLS Certificate
-# =============================================================================
-
-print_step "Step 3: Issue TLS Certificate"
-
-echo "  Issue a TLS certificate that we'll later revoke."
 echo ""
 
 run_cmd "$PKI_BIN cert issue --ca-dir $DEMO_TMP/demo-ca --profile $PROFILES/pqc-tls-server.yaml --csr $DEMO_TMP/server.csr --out $DEMO_TMP/server.crt"
@@ -100,12 +88,11 @@ echo ""
 pause
 
 # =============================================================================
-# Step 4: Incident - Key Compromise!
+# Incident - Key Compromise!
 # =============================================================================
 
-print_step "Step 4: Incident - Key Compromise!"
-
-echo -e "  ${RED}ALERT: The private key for server.example.com was exposed!${NC}"
+echo ""
+echo -e "  ${RED}🚨 ALERT: The private key for server.example.com was exposed!${NC}"
 echo ""
 echo "  Incident response steps:"
 echo "    1. [DONE] Detect the compromise"
@@ -118,10 +105,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 5: Revoke the Certificate
+# Step 3: Revoke the Certificate
 # =============================================================================
 
-print_step "Step 5: Revoke the Certificate"
+print_step "Step 3: Revoke the Certificate"
 
 echo "  Revocation reasons (RFC 5280):"
 echo ""
@@ -142,10 +129,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 6: Generate CRL
+# Step 4: Generate CRL
 # =============================================================================
 
-print_step "Step 6: Generate CRL (Certificate Revocation List)"
+print_step "Step 4: Generate CRL (Certificate Revocation List)"
 
 echo "  The CRL is a signed list of all revoked certificates."
 echo "  Clients download it to check certificate validity."
@@ -167,10 +154,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 7: Verify Revocation Status
+# Step 5: Verify Revocation Status
 # =============================================================================
 
-print_step "Step 7: Verify Revocation Status"
+print_step "Step 5: Verify Revocation Status"
 
 echo "  Let's verify the certificate is now rejected..."
 echo ""
