@@ -139,12 +139,11 @@ Sign the code BEFORE distributing it:
 
 ## What We'll Do
 
-| Aspect | Classical (ECDSA) | Post-Quantum (ML-DSA) |
-|--------|-------------------|----------------------|
-| Signature algorithm | ECDSA P-384 | ML-DSA-65 |
-| Signature size | ~96 bytes | ~3,309 bytes |
-| Future-proof | No | Yes |
-| Verification speed | Fast | Fast |
+1. Create a Code Signing CA (ML-DSA-65)
+2. Issue a code signing certificate
+3. Sign a firmware binary (CMS/PKCS#7)
+4. Verify the signature
+5. Tamper with the binary and verify again (should fail)
 
 ---
 

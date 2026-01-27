@@ -81,15 +81,11 @@ Traditional CSR workflow:
 
 ## What We'll Do
 
-| Step | What Happens | Key Concept |
-|------|--------------|-------------|
-| 1 | Create Encryption CA | ML-DSA-65 CA for signing |
-| 2 | Issue Signing Certificate | ML-DSA can sign its own CSR |
-| 3 | Generate Encryption CSR | Signed by signing key (RFC 9883) |
-| 4 | Issue Encryption Certificate | RelatedCertificate extension |
-| 5 | Show Certificate Pair | Two linked certificates |
-| 6 | Encrypt Document | CMS EnvelopedData (AES + ML-KEM) |
-| 7 | Decrypt Document | ML-KEM decapsulation |
+1. Understand the KEM key problem (can't sign CSR!)
+2. Issue a signing certificate (ML-DSA)
+3. Use CSR attestation to get encryption certificate (ML-KEM)
+4. Encrypt a document with CMS EnvelopedData
+5. Decrypt with the recipient's private key
 
 ---
 

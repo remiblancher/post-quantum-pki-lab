@@ -31,11 +31,11 @@ Short answer: **No.** The PKI workflow is identical. Only the algorithm name cha
 
 ## What We'll Do
 
-| Step | Classical | Post-Quantum |
-|------|-----------|--------------|
-| Create CA | ECDSA P-384 | ML-DSA-65 |
-| Issue cert | Same workflow | Same workflow |
-| Result | Vulnerable to quantum | Quantum-resistant |
+1. Create a classical Root CA (ECDSA P-384)
+2. Issue a TLS certificate (ECDSA P-384)
+3. Create a post-quantum Root CA (ML-DSA-65)
+4. Issue a TLS certificate (ML-DSA-65)
+5. Compare sizes
 
 ## Run the Demo
 

@@ -143,15 +143,12 @@ CURRENT SITUATION
 
 ## What We'll Do
 
-| Step | What Happens | Key Concept |
-|------|--------------|-------------|
-| 1 | Create Migration CA (ECDSA) | Phase 1: Current state |
-| 2 | Rotate to Hybrid CA | Phase 2: Transition |
-| 3 | Rotate to Full PQC CA | Phase 3: Target state |
-| 4 | Issue PQC certificate | New certificates use active CA |
-| 5 | Create trust stores | Legacy, modern, transition bundles |
-| 6 | Verify interoperability | Old certs remain valid |
-| 7 | Incident simulation | Rollback to previous version |
+1. Create a classic CA (ECDSA)
+2. Rotate to hybrid (ECDSA + ML-DSA)
+3. Rotate to full PQC (ML-DSA)
+4. Create trust bundles for different clients
+5. Verify interoperability
+6. Simulate rollback
 
 ---
 

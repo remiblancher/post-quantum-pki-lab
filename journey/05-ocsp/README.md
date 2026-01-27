@@ -37,16 +37,14 @@ Yes. Same HTTP protocol, same request/response format. Only signature sizes chan
 
 ## What We'll Do
 
-| Step | What Happens | Expected Result |
-|------|--------------|-----------------|
-| 1 | Create CA | PQC CA with ML-DSA-65 |
-| 2 | Issue OCSP responder certificate | Delegated responder ready |
-| 3 | Start OCSP responder | HTTP service on port 8888 |
-| 4 | Issue TLS certificate | Certificate to verify |
-| 5 | Query certificate status | Status: GOOD |
-| 6 | Revoke certificate | Certificate marked revoked |
-| 7 | Query again | Status: REVOKED (immediate!) |
-| 8 | Stop OCSP responder | Server stopped cleanly |
+1. Create a PQC CA
+2. Issue OCSP responder certificate
+3. Start OCSP responder
+4. Issue TLS certificate
+5. Query certificate status (GOOD)
+6. Revoke the certificate
+7. Query again (REVOKED)
+8. Stop OCSP responder
 
 ---
 

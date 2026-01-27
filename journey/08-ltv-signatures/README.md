@@ -125,17 +125,12 @@ Embed EVERYTHING needed in a self-sufficient bundle:
 
 ## What We'll Do
 
-| Step | What Happens | Expected Result |
-|------|--------------|-----------------|
-| 1 | Create CA | ML-DSA-65 CA ready |
-| 2 | Issue TSA certificate | TSA cert ready |
-| 3 | Start TSA server | HTTP service on port 8318 |
-| 4 | Issue Signing certificate | Alice cert ready |
-| 5 | Create & Sign Document | `contract.p7s` created |
-| 6 | Request Timestamp (via HTTP) | `contract.tsr` created |
-| 7 | Create LTV Bundle | All proofs packaged |
-| 8 | Verify Offline (Simulating 2055) | Status: VALID |
-| 9 | Stop TSA server | Server stopped cleanly |
+1. Create a CA for document signing
+2. Issue TSA and signing certificates
+3. Sign a 30-year contract
+4. Request a timestamp (proof of when it was signed)
+5. Create an LTV bundle (signature + timestamp + chain)
+6. Verify offline (simulating year 2055)
 
 ---
 

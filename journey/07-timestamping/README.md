@@ -109,16 +109,12 @@ A trusted authority (TSA) proves when the signature was created:
 
 ## What We'll Do
 
-| Step | What Happens | Expected Result |
-|------|--------------|-----------------|
-| 1 | Create TSA CA | PQC CA with ML-DSA-65 |
-| 2 | Issue TSA certificate | TSA with id-kp-timeStamping |
-| 3 | Start TSA server | HTTP service on port 8318 |
-| 4 | Create document | File to timestamp |
-| 5 | Request timestamp | Token via HTTP POST |
-| 6 | Verify timestamp | Status: VALID |
-| 7 | Tamper and verify | Status: INVALID |
-| 8 | Stop TSA server | Server stopped cleanly |
+1. Create a TSA CA (ML-DSA-65)
+2. Issue a TSA certificate
+3. Start an RFC 3161 timestamp server
+4. Create a document and request a timestamp
+5. Verify the timestamp
+6. Tamper with document and verify again (should fail)
 
 ---
 

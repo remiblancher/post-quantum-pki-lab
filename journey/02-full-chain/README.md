@@ -43,11 +43,11 @@ This demo shows a production-ready 3-level PKI hierarchy using only post-quantum
 
 ## What We'll Do
 
-| Level | Algorithm | Security Level |
-|-------|-----------|----------------|
-| Root CA | ML-DSA-87 | NIST Level 5 (~256-bit) |
-| Issuing CA | ML-DSA-65 | NIST Level 3 (~192-bit) |
-| TLS Server | ML-DSA-65 | NIST Level 3 (~192-bit) |
+1. Create a Root CA (ML-DSA-87 - highest security)
+2. Create an Issuing CA signed by the Root (ML-DSA-65)
+3. Generate a server key and CSR
+4. Issue a TLS server certificate
+5. Examine the complete chain
 
 ---
 

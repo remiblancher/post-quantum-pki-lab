@@ -46,12 +46,10 @@ This is the reality of PQC migration. You can't flip a switch and move everythin
 
 ## What We'll Do
 
-| Component | Classical | Hybrid (Catalyst) |
-|-----------|-----------|-------------------|
-| Public Key | ECDSA P-384 only | ECDSA P-384 + ML-DSA-65 |
-| Signature | ECDSA only | ECDSA + ML-DSA |
-| Legacy support | Yes | Yes |
-| Quantum-safe | No | Yes |
+1. Create a Hybrid Root CA (ECDSA + ML-DSA)
+2. Generate Hybrid Keys and CSR
+3. Issue Hybrid TLS Certificate
+4. Test Interoperability
 
 ---
 

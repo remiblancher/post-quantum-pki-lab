@@ -48,13 +48,11 @@ The same way you revoke any certificate. PKI operations are algorithm-agnostic.
 
 ## What We'll Do
 
-| Step | What Happens | Key Concept |
-|------|--------------|-------------|
-| 1 | Create PQC CA | Setup |
-| 2 | Issue certificate | CSR + issue (already learned) |
-| 3 | Revoke certificate | Mark as untrusted in CA DB |
-| 4 | Generate CRL | Publish revocation list |
-| 5 | Verify against CRL | Confirm revocation works |
+1. Create a CA (ML-DSA-65)
+2. Issue a TLS certificate
+3. Revoke the certificate (after key compromise)
+4. Generate a CRL (Certificate Revocation List)
+5. Verify the revoked certificate is rejected
 
 ---
 
