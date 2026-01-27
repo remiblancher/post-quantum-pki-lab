@@ -30,6 +30,8 @@ trap cleanup EXIT
 
 setup_demo "PQC Timestamping"
 
+PROFILES="$SCRIPT_DIR/profiles"
+
 # =============================================================================
 # Step 1: Create TSA CA
 # =============================================================================
@@ -39,10 +41,10 @@ print_step "Step 1: Create TSA CA"
 echo "  A Timestamp Authority (TSA) issues cryptographic proofs of time."
 echo ""
 
-run_cmd "$PKI_BIN ca init --profile profiles/pqc-ca.yaml --var cn=\"TSA Root CA\" --ca-dir output/tsa-ca"
+run_cmd "$PKI_BIN ca init --profile $PROFILES/pqc-ca.yaml --var cn=\"TSA Root CA\" --ca-dir $DEMO_TMP/tsa-ca"
 
 # Export CA certificate for verification
-$PKI_BIN ca export --ca-dir output/tsa-ca > output/tsa-ca/ca.crt
+$PKI_BIN ca export --ca-dir $DEMO_TMP/tsa-ca > $DEMO_TMP/tsa-ca/ca.crt
 
 echo ""
 
@@ -58,16 +60,16 @@ echo "  Generate an ML-DSA-65 key pair and issue TSA certificate."
 echo "  The certificate has Extended Key Usage: timeStamping."
 echo ""
 
-run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/tsa.key --cn \"PQC Timestamp Authority\" --out output/tsa.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout $DEMO_TMP/tsa.key --cn \"PQC Timestamp Authority\" --out $DEMO_TMP/tsa.csr"
 
 echo ""
 
-run_cmd "$PKI_BIN cert issue --ca-dir output/tsa-ca --profile profiles/pqc-tsa.yaml --csr output/tsa.csr --out output/tsa.crt"
+run_cmd "$PKI_BIN cert issue --ca-dir $DEMO_TMP/tsa-ca --profile $PROFILES/pqc-tsa.yaml --csr $DEMO_TMP/tsa.csr --out $DEMO_TMP/tsa.crt"
 
 echo ""
 
-if [[ -f "output/tsa.crt" ]]; then
-    cert_size=$(wc -c < "output/tsa.crt" | tr -d ' ')
+if [[ -f "$DEMO_TMP/tsa.crt" ]]; then
+    cert_size=$(wc -c < "$DEMO_TMP/tsa.crt" | tr -d ' ')
     echo -e "  ${CYAN}TSA certificate size:${NC} $cert_size bytes"
 fi
 
@@ -84,10 +86,10 @@ print_step "Step 3: Start TSA Server"
 echo "  Starting RFC 3161 HTTP timestamp server on port $TSA_PORT..."
 echo ""
 
-echo -e "  ${DIM}$ qpki tsa serve --port $TSA_PORT --cert output/tsa.crt --key output/tsa.key &${NC}"
+echo -e "  ${DIM}$ qpki tsa serve --port $TSA_PORT --cert $DEMO_TMP/tsa.crt --key $DEMO_TMP/tsa.key &${NC}"
 echo ""
 
-$PKI_BIN tsa serve --port $TSA_PORT --cert output/tsa.crt --key output/tsa.key &
+$PKI_BIN tsa serve --port $TSA_PORT --cert $DEMO_TMP/tsa.crt --key $DEMO_TMP/tsa.key &
 TSA_PID=$!
 
 sleep 1
@@ -113,7 +115,7 @@ print_step "Step 4: Create Document"
 echo "  Creating a test contract..."
 echo ""
 
-cat > output/document.txt << 'EOF'
+cat > $DEMO_TMP/document.txt << 'EOF'
 CONTRACT OF SALE
 
 Date: December 22, 2024
@@ -127,7 +129,7 @@ Signed electronically.
 EOF
 
 echo -e "  ${CYAN}Document content:${NC}"
-cat output/document.txt | sed 's/^/    /'
+cat $DEMO_TMP/document.txt | sed 's/^/    /'
 echo ""
 
 pause
@@ -141,21 +143,21 @@ print_step "Step 5: Request Timestamp (via HTTP)"
 echo "  Creating timestamp request and sending to TSA server..."
 echo ""
 
-run_cmd "$PKI_BIN tsa request --data output/document.txt --out output/request.tsq"
+run_cmd "$PKI_BIN tsa request --data $DEMO_TMP/document.txt --out $DEMO_TMP/request.tsq"
 
 echo ""
 
-echo -e "  ${DIM}$ curl -s -X POST -H \"Content-Type: application/timestamp-query\" --data-binary @output/request.tsq http://localhost:$TSA_PORT/ -o output/document.tsr${NC}"
+echo -e "  ${DIM}$ curl -s -X POST -H \"Content-Type: application/timestamp-query\" --data-binary @$DEMO_TMP/request.tsq http://localhost:$TSA_PORT/ -o $DEMO_TMP/document.tsr${NC}"
 echo ""
 
 curl -s -X POST \
     -H "Content-Type: application/timestamp-query" \
-    --data-binary @output/request.tsq \
+    --data-binary @$DEMO_TMP/request.tsq \
     "http://localhost:$TSA_PORT/" \
-    -o output/document.tsr
+    -o $DEMO_TMP/document.tsr
 
-if [[ -f "output/document.tsr" ]]; then
-    tsr_size=$(wc -c < "output/document.tsr" | tr -d ' ')
+if [[ -f "$DEMO_TMP/document.tsr" ]]; then
+    tsr_size=$(wc -c < "$DEMO_TMP/document.tsr" | tr -d ' ')
     echo -e "  ${GREEN}✓${NC} Timestamp token received"
     echo -e "  ${CYAN}Token size:${NC} $tsr_size bytes"
     echo -e "  ${DIM}(ML-DSA-65 signature is ~3,309 bytes)${NC}"
@@ -178,11 +180,11 @@ echo "  Verifying that the document hasn't been modified"
 echo "  and the timestamp is valid..."
 echo ""
 
-run_cmd "$PKI_BIN tsa verify output/document.tsr --data output/document.txt --ca output/tsa-ca/ca.crt"
+run_cmd "$PKI_BIN tsa verify $DEMO_TMP/document.tsr --data $DEMO_TMP/document.txt --ca $DEMO_TMP/tsa-ca/ca.crt"
 
 echo ""
 
-echo -e "  ${GREEN}✓${NC} Document hash: $(shasum -a 256 output/document.txt | cut -d' ' -f1 | head -c 16)..."
+echo -e "  ${GREEN}✓${NC} Document hash: $(shasum -a 256 $DEMO_TMP/document.txt | cut -d' ' -f1 | head -c 16)..."
 echo -e "  ${GREEN}✓${NC} Timestamp contains proof of existence"
 echo ""
 
@@ -197,18 +199,18 @@ print_step "Step 7: Tamper and Verify Again (INVALID)"
 echo -e "  ${RED}Simulating fraudulent modification...${NC}"
 echo ""
 
-echo "FRAUDULENT AMENDMENT: Amount changed to 1,000,000 EUR" >> output/document.txt
+echo "FRAUDULENT AMENDMENT: Amount changed to 1,000,000 EUR" >> $DEMO_TMP/document.txt
 
-echo -e "  ${DIM}$ echo \"FRAUDULENT AMENDMENT\" >> output/document.txt${NC}"
+echo -e "  ${DIM}$ echo \"FRAUDULENT AMENDMENT\" >> $DEMO_TMP/document.txt${NC}"
 echo ""
 
 echo "  Verifying the modified document..."
 echo ""
 
-echo -e "  ${DIM}$ qpki tsa verify output/document.tsr --data output/document.txt --ca output/tsa-ca/ca.crt${NC}"
+echo -e "  ${DIM}$ qpki tsa verify $DEMO_TMP/document.tsr --data $DEMO_TMP/document.txt --ca $DEMO_TMP/tsa-ca/ca.crt${NC}"
 echo ""
 
-if $PKI_BIN tsa verify output/document.tsr --data output/document.txt --ca output/tsa-ca/ca.crt > /dev/null 2>&1; then
+if $PKI_BIN tsa verify $DEMO_TMP/document.tsr --data $DEMO_TMP/document.txt --ca $DEMO_TMP/tsa-ca/ca.crt > /dev/null 2>&1; then
     echo -e "  ${GREEN}✓${NC} Timestamp valid"
 else
     echo -e "  ${RED}✗${NC} Timestamp verification FAILED!"

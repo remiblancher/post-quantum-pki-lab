@@ -16,6 +16,8 @@ source "$SCRIPT_DIR/../../lib/common.sh"
 
 setup_demo "PQC Code Signing"
 
+PROFILES="$SCRIPT_DIR/profiles"
+
 # =============================================================================
 # Step 1: Create Code Signing CA
 # =============================================================================
@@ -26,7 +28,7 @@ echo "  A code signing CA issues certificates for software publishers."
 echo "  We use ML-DSA-65 for quantum-resistant signatures."
 echo ""
 
-run_cmd "$PKI_BIN ca init --profile profiles/pqc-ca.yaml --var cn=\"Code Signing CA\" --ca-dir output/code-ca"
+run_cmd "$PKI_BIN ca init --profile $PROFILES/pqc-ca.yaml --var cn=\"Code Signing CA\" --ca-dir $DEMO_TMP/code-ca"
 
 echo ""
 
@@ -43,17 +45,17 @@ echo "    - Extended Key Usage: codeSigning"
 echo "    - Key Usage: digitalSignature"
 echo ""
 
-run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/code-signing.key --cn \"ACME Software\" --out output/code-signing.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout $DEMO_TMP/code-signing.key --cn \"ACME Software\" --out $DEMO_TMP/code-signing.csr"
 
 echo ""
 
-run_cmd "$PKI_BIN cert issue --ca-dir output/code-ca --profile profiles/pqc-code-signing.yaml --csr output/code-signing.csr --out output/code-signing.crt"
+run_cmd "$PKI_BIN cert issue --ca-dir $DEMO_TMP/code-ca --profile $PROFILES/pqc-code-signing.yaml --csr $DEMO_TMP/code-signing.csr --out $DEMO_TMP/code-signing.crt"
 
 echo ""
 
 # Show certificate info
-if [[ -f "output/code-signing.crt" ]]; then
-    cert_size=$(wc -c < "output/code-signing.crt" | tr -d ' ')
+if [[ -f "$DEMO_TMP/code-signing.crt" ]]; then
+    cert_size=$(wc -c < "$DEMO_TMP/code-signing.crt" | tr -d ' ')
     echo -e "  ${CYAN}Certificate size:${NC} $cert_size bytes"
 fi
 
@@ -70,21 +72,21 @@ print_step "Step 3: Sign a Binary"
 echo "  Creating a test firmware (100 KB)..."
 echo ""
 
-dd if=/dev/urandom of=output/firmware.bin bs=1024 count=100 2>/dev/null
+dd if=/dev/urandom of=$DEMO_TMP/firmware.bin bs=1024 count=100 2>/dev/null
 
-firmware_size=$(wc -c < "output/firmware.bin" | tr -d ' ')
+firmware_size=$(wc -c < "$DEMO_TMP/firmware.bin" | tr -d ' ')
 echo -e "  ${CYAN}Firmware size:${NC} $firmware_size bytes"
 echo ""
 
 echo "  Signing with CMS/PKCS#7 format (industry standard)..."
 echo ""
 
-run_cmd "$PKI_BIN cms sign --data output/firmware.bin --cert output/code-signing.crt --key output/code-signing.key --out output/firmware.p7s"
+run_cmd "$PKI_BIN cms sign --data $DEMO_TMP/firmware.bin --cert $DEMO_TMP/code-signing.crt --key $DEMO_TMP/code-signing.key --out $DEMO_TMP/firmware.p7s"
 
 echo ""
 
-if [[ -f "output/firmware.p7s" ]]; then
-    sig_size=$(wc -c < "output/firmware.p7s" | tr -d ' ')
+if [[ -f "$DEMO_TMP/firmware.p7s" ]]; then
+    sig_size=$(wc -c < "$DEMO_TMP/firmware.p7s" | tr -d ' ')
     echo -e "  ${CYAN}Signature size:${NC} $sig_size bytes"
     echo -e "  ${DIM}(ML-DSA-65 signature is ~3,309 bytes)${NC}"
 fi
@@ -102,7 +104,7 @@ print_step "Step 4: Verify the Signature"
 echo "  Simulating client-side verification..."
 echo ""
 
-run_cmd "$PKI_BIN cms verify output/firmware.p7s --data output/firmware.bin"
+run_cmd "$PKI_BIN cms verify $DEMO_TMP/firmware.p7s --data $DEMO_TMP/firmware.bin"
 
 echo ""
 echo -e "  ${GREEN}✓${NC} Signature valid!"
@@ -121,18 +123,18 @@ print_step "Step 5: Tamper and Verify Again"
 echo -e "  ${RED}Simulating malware injection...${NC}"
 echo ""
 
-echo "MALWARE_PAYLOAD" >> output/firmware.bin
+echo "MALWARE_PAYLOAD" >> $DEMO_TMP/firmware.bin
 
-echo -e "  ${DIM}$ echo \"MALWARE_PAYLOAD\" >> output/firmware.bin${NC}"
+echo -e "  ${DIM}$ echo \"MALWARE_PAYLOAD\" >> $DEMO_TMP/firmware.bin${NC}"
 echo ""
 
 echo "  Verifying the tampered firmware..."
 echo ""
 
-echo -e "  ${DIM}$ qpki cms verify output/firmware.p7s --data output/firmware.bin${NC}"
+echo -e "  ${DIM}$ qpki cms verify $DEMO_TMP/firmware.p7s --data $DEMO_TMP/firmware.bin${NC}"
 echo ""
 
-if $PKI_BIN cms verify output/firmware.p7s --data output/firmware.bin > /dev/null 2>&1; then
+if $PKI_BIN cms verify $DEMO_TMP/firmware.p7s --data $DEMO_TMP/firmware.bin > /dev/null 2>&1; then
     echo -e "  ${GREEN}✓${NC} Signature valid"
 else
     echo -e "  ${RED}✗${NC} Signature verification FAILED!"

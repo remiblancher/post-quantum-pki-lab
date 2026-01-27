@@ -21,6 +21,8 @@ source "$SCRIPT_DIR/../../lib/common.sh"
 
 setup_demo "PQC CMS Encryption + CSR Attestation"
 
+PROFILES="$SCRIPT_DIR/profiles"
+
 # =============================================================================
 # Introduction: The KEM Key Problem
 # =============================================================================
@@ -62,7 +64,7 @@ echo "  The CA signs both signing and encryption certificates."
 echo "  We use ML-DSA-65 for the CA (quantum-safe signatures)."
 echo ""
 
-run_cmd "$PKI_BIN ca init --profile profiles/pqc-ca.yaml --var cn=\"Encryption CA\" --ca-dir output/encryption-ca"
+run_cmd "$PKI_BIN ca init --profile $PROFILES/pqc-ca.yaml --var cn=\"Encryption CA\" --ca-dir $DEMO_TMP/encryption-ca"
 
 echo ""
 
@@ -78,20 +80,20 @@ echo "  Alice generates a signing key pair and gets a certificate."
 echo "  The CSR is self-signed (proof of possession). This works because ML-DSA can SIGN!"
 echo ""
 
-run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/alice-sign.key --cn \"Alice\" --out output/alice-sign.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout $DEMO_TMP/alice-sign.key --cn \"Alice\" --out $DEMO_TMP/alice-sign.csr"
 
 echo ""
 echo "  The CA verifies the CSR signature and issues the certificate."
 echo "  This certificate will be used to attest for her encryption key."
 echo ""
 
-run_cmd "$PKI_BIN cert issue --ca-dir output/encryption-ca --profile profiles/pqc-signing.yaml --csr output/alice-sign.csr --out output/alice-sign.crt"
+run_cmd "$PKI_BIN cert issue --ca-dir $DEMO_TMP/encryption-ca --profile $PROFILES/pqc-signing.yaml --csr $DEMO_TMP/alice-sign.csr --out $DEMO_TMP/alice-sign.crt"
 
 echo ""
 
 # Show certificate info
-if [[ -f "output/alice-sign.crt" ]]; then
-    cert_size=$(wc -c < "output/alice-sign.crt" | tr -d ' ')
+if [[ -f "$DEMO_TMP/alice-sign.crt" ]]; then
+    cert_size=$(wc -c < "$DEMO_TMP/alice-sign.crt" | tr -d ' ')
     echo -e "  ${CYAN}Certificate size:${NC} $cert_size bytes"
     echo -e "  ${CYAN}Algorithm:${NC} ML-DSA-65 (FIPS 204)"
     echo -e "  ${CYAN}Key Usage:${NC} digitalSignature, nonRepudiation"
@@ -135,13 +137,13 @@ echo "  │                                                                 │"
 echo "  └─────────────────────────────────────────────────────────────────┘"
 echo ""
 
-run_cmd "$PKI_BIN csr gen --algorithm ml-kem-768 --keyout output/alice-enc.key --cn \"Alice\" --attest-cert output/alice-sign.crt --attest-key output/alice-sign.key --out output/alice-enc.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ml-kem-768 --keyout $DEMO_TMP/alice-enc.key --cn \"Alice\" --attest-cert $DEMO_TMP/alice-sign.crt --attest-key $DEMO_TMP/alice-sign.key --out $DEMO_TMP/alice-enc.csr"
 
 echo ""
 
 # Show CSR info
-if [[ -f "output/alice-enc.csr" ]]; then
-    csr_size=$(wc -c < "output/alice-enc.csr" | tr -d ' ')
+if [[ -f "$DEMO_TMP/alice-enc.csr" ]]; then
+    csr_size=$(wc -c < "$DEMO_TMP/alice-enc.csr" | tr -d ' ')
     echo -e "  ${CYAN}CSR size:${NC} $csr_size bytes"
     echo -e "  ${CYAN}Key in CSR:${NC} ML-KEM-768 public key"
     echo -e "  ${CYAN}Signed by:${NC} Alice's ML-DSA-65 key (attestation)"
@@ -179,13 +181,13 @@ echo "  │                                                                 │"
 echo "  └─────────────────────────────────────────────────────────────────┘"
 echo ""
 
-run_cmd "$PKI_BIN cert issue --ca-dir output/encryption-ca --csr output/alice-enc.csr --profile profiles/pqc-encryption.yaml --attest-cert output/alice-sign.crt --out output/alice-enc.crt"
+run_cmd "$PKI_BIN cert issue --ca-dir $DEMO_TMP/encryption-ca --csr $DEMO_TMP/alice-enc.csr --profile $PROFILES/pqc-encryption.yaml --attest-cert $DEMO_TMP/alice-sign.crt --out $DEMO_TMP/alice-enc.crt"
 
 echo ""
 
 # Show certificate info
-if [[ -f "output/alice-enc.crt" ]]; then
-    cert_size=$(wc -c < "output/alice-enc.crt" | tr -d ' ')
+if [[ -f "$DEMO_TMP/alice-enc.crt" ]]; then
+    cert_size=$(wc -c < "$DEMO_TMP/alice-enc.crt" | tr -d ' ')
     echo -e "  ${CYAN}Certificate size:${NC} $cert_size bytes"
     echo -e "  ${CYAN}Algorithm:${NC} ML-KEM-768 (FIPS 203)"
     echo -e "  ${CYAN}Key Usage:${NC} keyEncipherment"
@@ -221,9 +223,9 @@ echo "  │                                                                 │"
 echo "  └─────────────────────────────────────────────────────────────────┘"
 echo ""
 
-if [[ -f "output/alice-sign.crt" && -f "output/alice-enc.crt" ]]; then
-    sign_size=$(wc -c < "output/alice-sign.crt" | tr -d ' ')
-    enc_size=$(wc -c < "output/alice-enc.crt" | tr -d ' ')
+if [[ -f "$DEMO_TMP/alice-sign.crt" && -f "$DEMO_TMP/alice-enc.crt" ]]; then
+    sign_size=$(wc -c < "$DEMO_TMP/alice-sign.crt" | tr -d ' ')
+    enc_size=$(wc -c < "$DEMO_TMP/alice-enc.crt" | tr -d ' ')
     echo -e "  ${CYAN}Signing cert:${NC}    $sign_size bytes (ML-DSA-65)"
     echo -e "  ${CYAN}Encryption cert:${NC} $enc_size bytes (ML-KEM-768)"
 fi
@@ -241,7 +243,7 @@ print_step "Step 6: Encrypt Document"
 echo "  Now that Alice has her certificates, she can receive encrypted documents."
 echo ""
 
-cat > output/secret-document.txt << 'EOF'
+cat > $DEMO_TMP/secret-document.txt << 'EOF'
 === CONFIDENTIAL DOCUMENT ===
 Project: Quantum Migration
 Date: 2025-01-15
@@ -258,19 +260,19 @@ EOF
 
 echo "  Document to encrypt:"
 echo ""
-cat output/secret-document.txt | sed 's/^/    /'
+cat $DEMO_TMP/secret-document.txt | sed 's/^/    /'
 echo ""
 
-orig_size=$(wc -c < "output/secret-document.txt" | tr -d ' ')
+orig_size=$(wc -c < "$DEMO_TMP/secret-document.txt" | tr -d ' ')
 echo -e "  ${CYAN}Original size:${NC} $orig_size bytes"
 echo ""
 
-run_cmd "$PKI_BIN cms encrypt --recipient output/alice-enc.crt --content-enc aes-256-gcm --in output/secret-document.txt --out output/secret-document.p7m"
+run_cmd "$PKI_BIN cms encrypt --recipient $DEMO_TMP/alice-enc.crt --content-enc aes-256-gcm --in $DEMO_TMP/secret-document.txt --out $DEMO_TMP/secret-document.p7m"
 
 echo ""
 
-if [[ -f "output/secret-document.p7m" ]]; then
-    enc_size=$(wc -c < "output/secret-document.p7m" | tr -d ' ')
+if [[ -f "$DEMO_TMP/secret-document.p7m" ]]; then
+    enc_size=$(wc -c < "$DEMO_TMP/secret-document.p7m" | tr -d ' ')
     echo -e "  ${CYAN}Encrypted size:${NC} $enc_size bytes"
 fi
 
@@ -278,7 +280,7 @@ echo ""
 echo "  CMS EnvelopedData structure:"
 echo ""
 
-run_cmd "$PKI_BIN cms info output/secret-document.p7m"
+run_cmd "$PKI_BIN cms info $DEMO_TMP/secret-document.p7m"
 
 echo ""
 
@@ -293,11 +295,11 @@ print_step "Step 7: Decrypt Document"
 echo "  Alice decrypts with her ML-KEM private key..."
 echo ""
 
-run_cmd "$PKI_BIN cms decrypt --key output/alice-enc.key --in output/secret-document.p7m --out output/decrypted.txt"
+run_cmd "$PKI_BIN cms decrypt --key $DEMO_TMP/alice-enc.key --in $DEMO_TMP/secret-document.p7m --out $DEMO_TMP/decrypted.txt"
 
 echo ""
 echo "  Verifying decrypted content matches original..."
-if diff -q output/secret-document.txt output/decrypted.txt > /dev/null 2>&1; then
+if diff -q $DEMO_TMP/decrypted.txt > /dev/null 2>&1; then
     echo -e "  ${GREEN}✓ Decryption successful! Content matches original.${NC}"
 else
     echo -e "  ${RED}✗ Decryption failed or content mismatch.${NC}"

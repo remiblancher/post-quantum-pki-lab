@@ -16,7 +16,7 @@ source "$SCRIPT_DIR/../../lib/common.sh"
 
 TSA_PORT=8318
 TSA_PID=""
-BUNDLE_DIR="output/ltv-bundle"
+BUNDLE_DIR="$DEMO_TMP/ltv-bundle"
 
 cleanup() {
     if [[ -n "$TSA_PID" ]] && kill -0 "$TSA_PID" 2>/dev/null; then
@@ -31,6 +31,8 @@ trap cleanup EXIT
 
 setup_demo "PQC LTV Signatures"
 
+PROFILES="$SCRIPT_DIR/profiles"
+
 # =============================================================================
 # Step 1: Create CA
 # =============================================================================
@@ -40,10 +42,10 @@ print_step "Step 1: Create CA"
 echo "  We need a CA to issue certificates for document signing and timestamping."
 echo ""
 
-run_cmd "$PKI_BIN ca init --profile profiles/pqc-ca.yaml --var cn=\"LTV Demo CA\" --ca-dir output/ltv-ca"
+run_cmd "$PKI_BIN ca init --profile $PROFILES/pqc-ca.yaml --var cn=\"LTV Demo CA\" --ca-dir $DEMO_TMP/ltv-ca"
 
 # Export CA certificate for chain building
-$PKI_BIN ca export --ca-dir output/ltv-ca > output/ltv-ca/ca.crt
+$PKI_BIN ca export --ca-dir $DEMO_TMP/ltv-ca > $DEMO_TMP/ltv-ca/ca.crt
 
 echo ""
 
@@ -58,11 +60,11 @@ print_step "Step 2: Issue TSA Certificate"
 echo "  Generate TSA key and issue certificate..."
 echo ""
 
-run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/tsa.key --cn \"LTV Timestamp Authority\" --out output/tsa.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout $DEMO_TMP/tsa.key --cn \"LTV Timestamp Authority\" --out $DEMO_TMP/tsa.csr"
 
 echo ""
 
-run_cmd "$PKI_BIN cert issue --ca-dir output/ltv-ca --profile profiles/pqc-tsa.yaml --csr output/tsa.csr --out output/tsa.crt"
+run_cmd "$PKI_BIN cert issue --ca-dir $DEMO_TMP/ltv-ca --profile $PROFILES/pqc-tsa.yaml --csr $DEMO_TMP/tsa.csr --out $DEMO_TMP/tsa.crt"
 
 echo ""
 
@@ -77,10 +79,10 @@ print_step "Step 3: Start TSA Server"
 echo "  Starting RFC 3161 HTTP timestamp server on port $TSA_PORT..."
 echo ""
 
-echo -e "  ${DIM}$ qpki tsa serve --port $TSA_PORT --cert output/tsa.crt --key output/tsa.key &${NC}"
+echo -e "  ${DIM}$ qpki tsa serve --port $TSA_PORT --cert $DEMO_TMP/tsa.crt --key $DEMO_TMP/tsa.key &${NC}"
 echo ""
 
-$PKI_BIN tsa serve --port $TSA_PORT --cert output/tsa.crt --key output/tsa.key &
+$PKI_BIN tsa serve --port $TSA_PORT --cert $DEMO_TMP/tsa.crt --key $DEMO_TMP/tsa.key &
 TSA_PID=$!
 
 sleep 1
@@ -106,11 +108,11 @@ print_step "Step 4: Issue Signing Certificate"
 echo "  Generate document signing key and CSR for Alice..."
 echo ""
 
-run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/alice.key --cn \"Alice (Legal Counsel)\" --out output/alice.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout $DEMO_TMP/alice.key --cn \"Alice (Legal Counsel)\" --out $DEMO_TMP/alice.csr"
 
 echo ""
 
-run_cmd "$PKI_BIN cert issue --ca-dir output/ltv-ca --profile profiles/pqc-document-signing.yaml --csr output/alice.csr --out output/alice.crt"
+run_cmd "$PKI_BIN cert issue --ca-dir $DEMO_TMP/ltv-ca --profile $PROFILES/pqc-document-signing.yaml --csr $DEMO_TMP/alice.csr --out $DEMO_TMP/alice.crt"
 
 echo ""
 
@@ -124,7 +126,7 @@ print_step "Step 5: Create & Sign the 30-Year Contract"
 
 SIGN_DATE=$(date "+%Y-%m-%d %H:%M:%S")
 
-cat > output/contract.txt << EOF
+cat > $DEMO_TMP/contract.txt << EOF
 ================================================================================
                     30-YEAR COMMERCIAL LEASE AGREEMENT
 ================================================================================
@@ -151,19 +153,19 @@ SIGNATURES:
 EOF
 
 echo -e "  ${CYAN}Contract content:${NC}"
-head -12 output/contract.txt | sed 's/^/    /'
+head $DEMO_TMP/contract.txt | sed 's/^/    /'
 echo "    ..."
 echo ""
 
 echo "  Signing with CMS (ML-DSA)..."
 echo ""
 
-run_cmd "$PKI_BIN cms sign --data output/contract.txt --cert output/alice.crt --key output/alice.key --out output/contract.p7s"
+run_cmd "$PKI_BIN cms sign --data $DEMO_TMP/contract.txt --cert $DEMO_TMP/alice.crt --key $DEMO_TMP/alice.key --out $DEMO_TMP/contract.p7s"
 
 echo ""
 
-if [[ -f "output/contract.p7s" ]]; then
-    sig_size=$(wc -c < "output/contract.p7s" | tr -d ' ')
+if [[ -f "$DEMO_TMP/contract.p7s" ]]; then
+    sig_size=$(wc -c < "$DEMO_TMP/contract.p7s" | tr -d ' ')
     echo -e "  ${CYAN}Signature size:${NC} $sig_size bytes"
 fi
 
@@ -181,21 +183,21 @@ echo "  The timestamp proves WHEN the document was signed."
 echo "  This is critical because it proves the certificate was valid at signing time."
 echo ""
 
-run_cmd "$PKI_BIN tsa request --data output/contract.p7s --out output/request.tsq"
+run_cmd "$PKI_BIN tsa request --data $DEMO_TMP/contract.p7s --out $DEMO_TMP/request.tsq"
 
 echo ""
 
-echo -e "  ${DIM}$ curl -s -X POST -H \"Content-Type: application/timestamp-query\" --data-binary @output/request.tsq http://localhost:$TSA_PORT/ -o output/contract.tsr${NC}"
+echo -e "  ${DIM}$ curl -s -X POST -H \"Content-Type: application/timestamp-query\" --data-binary @$DEMO_TMP/request.tsq http://localhost:$TSA_PORT/ -o $DEMO_TMP/contract.tsr${NC}"
 echo ""
 
 curl -s -X POST \
     -H "Content-Type: application/timestamp-query" \
-    --data-binary @output/request.tsq \
+    --data-binary @$DEMO_TMP/request.tsq \
     "http://localhost:$TSA_PORT/" \
-    -o output/contract.tsr
+    -o $DEMO_TMP/contract.tsr
 
-if [[ -f "output/contract.tsr" ]]; then
-    tsr_size=$(wc -c < "output/contract.tsr" | tr -d ' ')
+if [[ -f "$DEMO_TMP/contract.tsr" ]]; then
+    tsr_size=$(wc -c < "$DEMO_TMP/contract.tsr" | tr -d ' ')
     echo -e "  ${GREEN}✓${NC} Timestamp token received"
     echo -e "  ${CYAN}Timestamp size:${NC} $tsr_size bytes"
 else
@@ -219,10 +221,10 @@ echo ""
 mkdir -p "$BUNDLE_DIR"
 
 # Copy all components
-cp output/contract.txt "$BUNDLE_DIR/document.txt"
-cp output/contract.p7s "$BUNDLE_DIR/signature.p7s"
-cp output/contract.tsr "$BUNDLE_DIR/timestamp.tsr"
-cat output/alice.crt output/ltv-ca/ca.crt > "$BUNDLE_DIR/chain.pem"
+cp $DEMO_TMP/contract.txt "$BUNDLE_DIR/document.txt"
+cp $DEMO_TMP/contract.p7s "$BUNDLE_DIR/signature.p7s"
+cp $DEMO_TMP/contract.tsr "$BUNDLE_DIR/timestamp.tsr"
+cat $DEMO_TMP/alice.crt $DEMO_TMP/ltv-ca/ca.crt > "$BUNDLE_DIR/chain.pem"
 
 # Create manifest
 cat > "$BUNDLE_DIR/manifest.json" << EOF

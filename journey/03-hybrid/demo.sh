@@ -15,6 +15,8 @@ source "$SCRIPT_DIR/../../lib/common.sh"
 
 setup_demo "Hybrid Certificates (Catalyst)"
 
+PROFILES="$SCRIPT_DIR/profiles"
+
 # =============================================================================
 # Step 1: Create Hybrid Root CA
 # =============================================================================
@@ -29,11 +31,11 @@ echo ""
 echo "  Standard: ITU-T X.509 Section 9.8 (Catalyst)"
 echo ""
 
-run_cmd "$PKI_BIN ca init --profile profiles/hybrid-root-ca.yaml --var cn=\"Hybrid Root CA\" --ca-dir output/hybrid-ca"
+run_cmd "$PKI_BIN ca init --profile $PROFILES/hybrid-root-ca.yaml --var cn=\"Hybrid Root CA\" --ca-dir $DEMO_TMP/hybrid-ca"
 
 echo ""
 echo -e "  ${BOLD}Hybrid CA details:${NC}"
-$PKI_BIN inspect output/hybrid-ca/ca.crt 2>/dev/null | head -10 | sed 's/^/    /'
+$PKI_BIN inspect $DEMO_TMP/hybrid-ca/ca.crt 2>/dev/null | head -10 | sed 's/^/    /'
 echo ""
 
 pause
@@ -50,7 +52,7 @@ echo "    Primary:     ECDSA P-384 (classical)"
 echo "    Alternative: ML-DSA-65 (post-quantum)"
 echo ""
 
-run_cmd "$PKI_BIN csr gen --algorithm ecdsa-p384 --hybrid ml-dsa-65 --keyout output/hybrid-server.key --hybrid-keyout output/hybrid-server-pqc.key --cn hybrid.example.com --out output/hybrid-server.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ecdsa-p384 --hybrid ml-dsa-65 --keyout $DEMO_TMP/hybrid-server.key --hybrid-keyout $DEMO_TMP/hybrid-server-pqc.key --cn hybrid.example.com --out $DEMO_TMP/hybrid-server.csr"
 
 echo ""
 
@@ -66,11 +68,11 @@ echo "  The certificate inherits the hybrid nature from the CA."
 echo "  It will contain both ECDSA and ML-DSA keys/signatures."
 echo ""
 
-run_cmd "$PKI_BIN cert issue --ca-dir output/hybrid-ca --profile profiles/hybrid-tls-server.yaml --csr output/hybrid-server.csr --out output/hybrid-server.crt"
+run_cmd "$PKI_BIN cert issue --ca-dir $DEMO_TMP/hybrid-ca --profile $PROFILES/hybrid-tls-server.yaml --csr $DEMO_TMP/hybrid-server.csr --out $DEMO_TMP/hybrid-server.crt"
 
 echo ""
 echo -e "  ${BOLD}Hybrid certificate details:${NC}"
-$PKI_BIN inspect output/hybrid-server.crt 2>/dev/null | head -12 | sed 's/^/    /'
+$PKI_BIN inspect $DEMO_TMP/hybrid-server.crt 2>/dev/null | head -12 | sed 's/^/    /'
 echo ""
 
 pause
@@ -87,8 +89,8 @@ echo -e "  ${BOLD}Test 1: Legacy Client (OpenSSL)${NC}"
 echo "    OpenSSL doesn't understand PQC, but still verifies."
 echo ""
 
-echo -e "  ${DIM}$ openssl verify -CAfile output/hybrid-ca/ca.crt output/hybrid-server.crt${NC}"
-if openssl verify -CAfile output/hybrid-ca/ca.crt output/hybrid-server.crt 2>&1; then
+echo -e "  ${DIM}$ openssl verify -CAfile $DEMO_TMP/hybrid-ca/ca.crt $DEMO_TMP/hybrid-server.crt${NC}"
+if openssl verify -CAfile $DEMO_TMP/hybrid-ca/ca.crt $DEMO_TMP/hybrid-server.crt 2>&1; then
     echo ""
     echo -e "    ${GREEN}✓${NC} Legacy client: Certificate verified via ECDSA"
     echo -e "    ${DIM}(PQC extensions are ignored)${NC}"
@@ -101,8 +103,8 @@ echo -e "  ${BOLD}Test 2: PQC-Aware Client (pki)${NC}"
 echo "    The qpki tool verifies BOTH signatures."
 echo ""
 
-echo -e "  ${DIM}$ qpki cert verify output/hybrid-server.crt --ca output/hybrid-ca/ca.crt${NC}"
-if $PKI_BIN cert verify output/hybrid-server.crt --ca output/hybrid-ca/ca.crt 2>&1; then
+echo -e "  ${DIM}$ qpki cert verify $DEMO_TMP/hybrid-server.crt --ca $DEMO_TMP/hybrid-ca/ca.crt${NC}"
+if $PKI_BIN cert verify $DEMO_TMP/hybrid-server.crt --ca $DEMO_TMP/hybrid-ca/ca.crt 2>&1; then
     echo ""
     echo -e "    ${GREEN}✓${NC} PQC client: BOTH ECDSA AND ML-DSA verified"
 fi
@@ -126,10 +128,10 @@ pause
 
 print_step "Step 5: Size Comparison"
 
-if [[ -f "output/hybrid-ca/ca.crt" ]]; then
-    hybrid_ca_size=$(wc -c < "output/hybrid-ca/ca.crt" | tr -d ' ')
-    hybrid_cert_size=$(wc -c < "output/hybrid-server.crt" | tr -d ' ')
-    hybrid_key_size=$(wc -c < "output/hybrid-server.key" | tr -d ' ')
+if [[ -f "$DEMO_TMP/hybrid-ca/ca.crt" ]]; then
+    hybrid_ca_size=$(wc -c < "$DEMO_TMP/hybrid-ca/ca.crt" | tr -d ' ')
+    hybrid_cert_size=$(wc -c < "$DEMO_TMP/hybrid-server.crt" | tr -d ' ')
+    hybrid_key_size=$(wc -c < "$DEMO_TMP/hybrid-server.key" | tr -d ' ')
 
     echo -e "  ${BOLD}Hybrid certificate sizes:${NC}"
     echo ""

@@ -16,6 +16,8 @@ source "$SCRIPT_DIR/../../lib/common.sh"
 
 setup_demo "OCSP Verification"
 
+PROFILES="$SCRIPT_DIR/profiles"
+
 OCSP_PORT=8888
 OCSP_PID=""
 
@@ -36,10 +38,10 @@ print_step "Step 1: Create CA"
 echo "  First, we create a PQC CA."
 echo ""
 
-run_cmd "$PKI_BIN ca init --profile profiles/pqc-ca.yaml --var cn=\"PQC CA\" --ca-dir output/pqc-ca"
+run_cmd "$PKI_BIN ca init --profile $PROFILES/pqc-ca.yaml --var cn=\"PQC CA\" --ca-dir $DEMO_TMP/pqc-ca"
 
 # Export CA certificate for OCSP request (issuerKeyHash requires CA public key)
-$PKI_BIN ca export --ca-dir output/pqc-ca > output/pqc-ca/ca.crt
+$PKI_BIN ca export --ca-dir $DEMO_TMP/pqc-ca > $DEMO_TMP/pqc-ca/ca.crt
 
 echo ""
 
@@ -54,13 +56,13 @@ print_step "Step 2: Generate Keys and CSRs"
 echo "  Generate OCSP responder key and CSR..."
 echo ""
 
-run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/ocsp-responder.key --cn \"OCSP Responder\" --out output/ocsp-responder.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout $DEMO_TMP/ocsp-responder.key --cn \"OCSP Responder\" --out $DEMO_TMP/ocsp-responder.csr"
 
 echo ""
 echo "  Generate TLS server key and CSR..."
 echo ""
 
-run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/server.key --cn server.example.com --out output/server.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout $DEMO_TMP/server.key --cn server.example.com --out $DEMO_TMP/server.csr"
 
 echo ""
 
@@ -75,16 +77,16 @@ print_step "Step 3: Issue Certificates"
 echo "  Issue delegated OCSP responder certificate (best practice: CA key stays offline)..."
 echo ""
 
-run_cmd "$PKI_BIN cert issue --ca-dir output/pqc-ca --profile profiles/pqc-ocsp-responder.yaml --csr output/ocsp-responder.csr --out output/ocsp-responder.crt"
+run_cmd "$PKI_BIN cert issue --ca-dir $DEMO_TMP/pqc-ca --profile $PROFILES/pqc-ocsp-responder.yaml --csr $DEMO_TMP/ocsp-responder.csr --out $DEMO_TMP/ocsp-responder.crt"
 
 echo ""
 echo "  Issue TLS server certificate to verify..."
 echo ""
 
-run_cmd "$PKI_BIN cert issue --ca-dir output/pqc-ca --profile profiles/pqc-tls-server.yaml --csr output/server.csr --out output/server.crt"
+run_cmd "$PKI_BIN cert issue --ca-dir $DEMO_TMP/pqc-ca --profile $PROFILES/pqc-tls-server.yaml --csr $DEMO_TMP/server.csr --out $DEMO_TMP/server.crt"
 
 # Get serial number
-SERIAL=$(openssl x509 -in output/server.crt -noout -serial 2>/dev/null | cut -d= -f2)
+SERIAL=$(openssl x509 -in $DEMO_TMP/server.crt -noout -serial 2>/dev/null | cut -d= -f2)
 if [[ -z "$SERIAL" ]]; then
     print_error "Failed to extract certificate serial number"
     exit 1
@@ -107,12 +109,12 @@ echo "  The OCSP responder is an HTTP service that answers status queries."
 echo "  It signs responses with its delegated certificate (CA key stays offline)."
 echo ""
 
-echo -e "  ${DIM}$ qpki ocsp serve --port $OCSP_PORT --ca-dir output/pqc-ca --cert output/ocsp-responder.crt --key output/ocsp-responder.key &${NC}"
+echo -e "  ${DIM}$ qpki ocsp serve --port $OCSP_PORT --ca-dir $DEMO_TMP/pqc-ca --cert $DEMO_TMP/ocsp-responder.crt --key $DEMO_TMP/ocsp-responder.key &${NC}"
 echo ""
 
-$PKI_BIN ocsp serve --port $OCSP_PORT --ca-dir output/pqc-ca \
-    --cert output/ocsp-responder.crt \
-    --key output/ocsp-responder.key > /dev/null 2>&1 &
+$PKI_BIN ocsp serve --port $OCSP_PORT --ca-dir $DEMO_TMP/pqc-ca \
+    --cert $DEMO_TMP/ocsp-responder.crt \
+    --key $DEMO_TMP/ocsp-responder.key > /dev/null 2>&1 &
 OCSP_PID=$!
 
 sleep 2
@@ -139,22 +141,22 @@ echo "  Let's query the OCSP responder for our server certificate status..."
 echo ""
 
 # Generate OCSP request
-run_cmd "$PKI_BIN ocsp request --issuer output/pqc-ca/ca.crt --cert output/server.crt --out output/request.ocsp"
+run_cmd "$PKI_BIN ocsp request --issuer $DEMO_TMP/pqc-ca/ca.crt --cert $DEMO_TMP/server.crt --out $DEMO_TMP/request.ocsp"
 
 echo ""
 echo "  Send request to OCSP responder via HTTP POST..."
 echo ""
 
-run_cmd "curl -s -X POST -H \"Content-Type: application/ocsp-request\" --data-binary @output/request.ocsp http://localhost:$OCSP_PORT/ -o output/response.ocsp"
+run_cmd "curl -s -X POST -H \"Content-Type: application/ocsp-request\" --data-binary @$DEMO_TMP/request.ocsp http://localhost:$OCSP_PORT/ -o $DEMO_TMP/response.ocsp"
 
 echo ""
 echo "  Inspect the response..."
 echo ""
 
-if [[ -f "output/response.ocsp" ]] && [[ -s "output/response.ocsp" ]]; then
-    $PKI_BIN ocsp info output/response.ocsp 2>/dev/null || echo -e "  ${GREEN}✓${NC} Status: good"
+if [[ -f "$DEMO_TMP/response.ocsp" ]] && [[ -s "$DEMO_TMP/response.ocsp" ]]; then
+    $PKI_BIN ocsp info $DEMO_TMP/response.ocsp 2>/dev/null || echo -e "  ${GREEN}✓${NC} Status: good"
 
-    resp_size=$(wc -c < "output/response.ocsp" | tr -d ' ')
+    resp_size=$(wc -c < "$DEMO_TMP/response.ocsp" | tr -d ' ')
     echo ""
     echo -e "  ${CYAN}Response size:${NC} $resp_size bytes"
 fi
@@ -174,7 +176,7 @@ print_step "Step 6: Revoke and Re-query"
 echo -e "  ${RED}Simulating key compromise...${NC}"
 echo ""
 
-run_cmd "$PKI_BIN cert revoke $SERIAL --ca-dir output/pqc-ca --reason keyCompromise"
+run_cmd "$PKI_BIN cert revoke $SERIAL --ca-dir $DEMO_TMP/pqc-ca --reason keyCompromise"
 
 echo ""
 echo "  Query again - status should change immediately!"
@@ -183,12 +185,12 @@ echo ""
 # Re-query
 curl -s -X POST \
     -H "Content-Type: application/ocsp-request" \
-    --data-binary @output/request.ocsp \
+    --data-binary @$DEMO_TMP/request.ocsp \
     "http://localhost:$OCSP_PORT/" \
-    -o output/response2.ocsp 2>/dev/null
+    -o $DEMO_TMP/response2.ocsp 2>/dev/null
 
-if [[ -f "output/response2.ocsp" ]] && [[ -s "output/response2.ocsp" ]]; then
-    $PKI_BIN ocsp info output/response2.ocsp 2>/dev/null || echo -e "  ${RED}✗${NC} Status: revoked"
+if [[ -f "$DEMO_TMP/response2.ocsp" ]] && [[ -s "$DEMO_TMP/response2.ocsp" ]]; then
+    $PKI_BIN ocsp info $DEMO_TMP/response2.ocsp 2>/dev/null || echo -e "  ${RED}✗${NC} Status: revoked"
 fi
 
 echo ""

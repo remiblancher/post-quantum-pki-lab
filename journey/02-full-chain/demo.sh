@@ -15,6 +15,8 @@ source "$SCRIPT_DIR/../../lib/common.sh"
 
 setup_demo "Full PQC Chain of Trust"
 
+PROFILES="$SCRIPT_DIR/profiles"
+
 # =============================================================================
 # Step 1: Create Root CA (ML-DSA-87)
 # =============================================================================
@@ -25,11 +27,11 @@ echo "  The Root CA is the trust anchor of your PKI."
 echo "  It uses ML-DSA-87 (NIST Level 5) for maximum security."
 echo ""
 
-run_cmd "$PKI_BIN ca init --profile profiles/pqc-root-ca.yaml --var cn=\"PQC Root CA\" --ca-dir output/pqc-root-ca"
+run_cmd "$PKI_BIN ca init --profile $PROFILES/pqc-root-ca.yaml --var cn=\"PQC Root CA\" --ca-dir $DEMO_TMP/pqc-root-ca"
 
 echo ""
 echo -e "  ${BOLD}Root CA details:${NC}"
-$PKI_BIN inspect output/pqc-root-ca/ca.crt 2>/dev/null | head -8 | sed 's/^/    /'
+$PKI_BIN inspect $DEMO_TMP/pqc-root-ca/ca.crt 2>/dev/null | head -8 | sed 's/^/    /'
 echo ""
 
 pause
@@ -44,7 +46,7 @@ echo "  The Issuing CA issues end-entity certificates."
 echo "  It uses ML-DSA-65 (NIST Level 3) - good balance of security/performance."
 echo ""
 
-run_cmd "$PKI_BIN ca init --profile profiles/pqc-issuing-ca.yaml --var cn=\"PQC Issuing CA\" --parent output/pqc-root-ca --ca-dir output/pqc-issuing-ca"
+run_cmd "$PKI_BIN ca init --profile $PROFILES/pqc-issuing-ca.yaml --var cn=\"PQC Issuing CA\" --parent $DEMO_TMP/pqc-root-ca --ca-dir $DEMO_TMP/pqc-issuing-ca"
 
 echo ""
 echo -e "  ${BOLD}Chain visualization:${NC}"
@@ -68,7 +70,7 @@ print_step "Step 3: Generate Server Key and CSR"
 echo "  Generate an ML-DSA-65 key pair and Certificate Signing Request."
 echo ""
 
-run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout output/server.key --cn server.example.com --out output/server.csr"
+run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout $DEMO_TMP/server.key --cn server.example.com --out $DEMO_TMP/server.csr"
 
 echo ""
 
@@ -83,11 +85,11 @@ print_step "Step 4: Issue TLS Server Certificate"
 echo "  The TLS server certificate uses ML-DSA-65 for authentication."
 echo ""
 
-run_cmd "$PKI_BIN cert issue --ca-dir output/pqc-issuing-ca --profile profiles/pqc-tls-server.yaml --csr output/server.csr --out output/server.crt"
+run_cmd "$PKI_BIN cert issue --ca-dir $DEMO_TMP/pqc-issuing-ca --profile $PROFILES/pqc-tls-server.yaml --csr $DEMO_TMP/server.csr --out $DEMO_TMP/server.crt"
 
 echo ""
 echo -e "  ${BOLD}Certificate details:${NC}"
-$PKI_BIN inspect output/server.crt 2>/dev/null | head -10 | sed 's/^/    /'
+$PKI_BIN inspect $DEMO_TMP/server.crt 2>/dev/null | head -10 | sed 's/^/    /'
 echo ""
 
 pause
@@ -122,10 +124,10 @@ echo "  └───────────────────────
 echo ""
 
 # Certificate sizes
-if [[ -f "output/pqc-root-ca/ca.crt" ]]; then
-    root_size=$(wc -c < "output/pqc-root-ca/ca.crt" | tr -d ' ')
-    issuing_size=$(wc -c < "output/pqc-issuing-ca/ca.crt" | tr -d ' ')
-    server_size=$(wc -c < "output/server.crt" | tr -d ' ')
+if [[ -f "$DEMO_TMP/pqc-root-ca/ca.crt" ]]; then
+    root_size=$(wc -c < "$DEMO_TMP/pqc-root-ca/ca.crt" | tr -d ' ')
+    issuing_size=$(wc -c < "$DEMO_TMP/pqc-issuing-ca/ca.crt" | tr -d ' ')
+    server_size=$(wc -c < "$DEMO_TMP/server.crt" | tr -d ' ')
     chain_total=$((root_size + issuing_size + server_size))
 
     echo -e "  ${BOLD}Certificate sizes:${NC}"
