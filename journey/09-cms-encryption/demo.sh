@@ -24,7 +24,29 @@ setup_demo "PQC CMS Encryption + CSR Attestation"
 PROFILES="$SCRIPT_DIR/profiles"
 
 # =============================================================================
-# Introduction: The KEM Key Problem
+# Introduction
+# =============================================================================
+
+echo -e "${BOLD}SCENARIO:${NC}"
+echo "  \"I need to encrypt documents for specific recipients."
+echo "   How do I get encryption certificates with ML-KEM?\""
+echo ""
+
+echo -e "${BOLD}WHAT WE'LL DO:${NC}"
+echo "  1. Understand the KEM key problem (can't sign CSR!)"
+echo "  2. Issue a signing certificate (ML-DSA)"
+echo "  3. Use CSR attestation to get encryption certificate (ML-KEM)"
+echo "  4. Encrypt a document with CMS EnvelopedData"
+echo "  5. Decrypt with the recipient's private key"
+echo ""
+
+echo -e "${DIM}RFC 9883 defines CSR attestation for KEM keys.${NC}"
+echo ""
+
+pause "Press Enter to start..."
+
+# =============================================================================
+# The KEM Key Problem
 # =============================================================================
 
 print_step "The KEM Key Problem (RFC 9883)"

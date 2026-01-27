@@ -18,6 +18,28 @@ setup_demo "Full PQC Chain of Trust"
 PROFILES="$SCRIPT_DIR/profiles"
 
 # =============================================================================
+# Introduction
+# =============================================================================
+
+echo -e "${BOLD}SCENARIO:${NC}"
+echo "  \"I need a complete PKI hierarchy with post-quantum cryptography."
+echo "   How do I set up Root CA, Issuing CA, and end-entity certificates?\""
+echo ""
+
+echo -e "${BOLD}WHAT WE'LL DO:${NC}"
+echo "  1. Create a Root CA (ML-DSA-87 - highest security)"
+echo "  2. Create an Issuing CA signed by the Root (ML-DSA-65)"
+echo "  3. Generate a server key and CSR"
+echo "  4. Issue a TLS server certificate"
+echo "  5. Examine the complete chain"
+echo ""
+
+echo -e "${DIM}Root CA uses Level 5, Issuing CA uses Level 3 for performance.${NC}"
+echo ""
+
+pause "Press Enter to start..."
+
+# =============================================================================
 # Step 1: Create Root CA (ML-DSA-87)
 # =============================================================================
 

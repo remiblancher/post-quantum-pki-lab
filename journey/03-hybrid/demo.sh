@@ -18,6 +18,27 @@ setup_demo "Hybrid Certificates (Catalyst)"
 PROFILES="$SCRIPT_DIR/profiles"
 
 # =============================================================================
+# Introduction
+# =============================================================================
+
+echo -e "${BOLD}SCENARIO:${NC}"
+echo "  \"I need to migrate to PQC but can't break legacy clients."
+echo "   How do I support both classical and post-quantum simultaneously?\""
+echo ""
+
+echo -e "${BOLD}WHAT WE'LL DO:${NC}"
+echo "  1. Create a Hybrid Root CA (ECDSA + ML-DSA)"
+echo "  2. Generate hybrid keys and CSR"
+echo "  3. Issue a hybrid TLS certificate"
+echo "  4. Verify with both OpenSSL (classical) and QPKI (PQC)"
+echo ""
+
+echo -e "${DIM}Hybrid = Catalyst standard (ITU-T X.509 Section 9.8)${NC}"
+echo ""
+
+pause "Press Enter to start..."
+
+# =============================================================================
 # Step 1: Create Hybrid Root CA
 # =============================================================================
 

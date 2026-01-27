@@ -34,6 +34,29 @@ setup_demo "PQC LTV Signatures"
 PROFILES="$SCRIPT_DIR/profiles"
 
 # =============================================================================
+# Introduction
+# =============================================================================
+
+echo -e "${BOLD}SCENARIO:${NC}"
+echo "  \"I signed a 30-year contract. How do I ensure the signature"
+echo "   can still be verified in 2055 when the CA is long gone?\""
+echo ""
+
+echo -e "${BOLD}WHAT WE'LL DO:${NC}"
+echo "  1. Create a CA for document signing"
+echo "  2. Issue TSA and signing certificates"
+echo "  3. Sign a 30-year contract"
+echo "  4. Request a timestamp (proof of when it was signed)"
+echo "  5. Create an LTV bundle (signature + timestamp + chain)"
+echo "  6. Verify offline (simulating year 2055)"
+echo ""
+
+echo -e "${DIM}LTV = Long-Term Validation. Bundle everything for offline verification.${NC}"
+echo ""
+
+pause "Press Enter to start..."
+
+# =============================================================================
 # Step 1: Create CA
 # =============================================================================
 

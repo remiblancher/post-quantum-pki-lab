@@ -22,6 +22,29 @@ setup_demo "Certificate Revocation"
 PROFILES="$SCRIPT_DIR/profiles"
 
 # =============================================================================
+# Introduction
+# =============================================================================
+
+echo -e "${BOLD}SCENARIO:${NC}"
+echo "  \"A private key has been compromised!"
+echo "   How do I revoke the certificate and inform clients?\""
+echo ""
+
+echo -e "${BOLD}WHAT WE'LL DO:${NC}"
+echo "  1. Create a CA (ML-DSA-65)"
+echo "  2. Issue a TLS certificate"
+echo "  3. Simulate key compromise"
+echo "  4. Revoke the certificate"
+echo "  5. Generate a CRL (Certificate Revocation List)"
+echo "  6. Verify the revoked certificate is rejected"
+echo ""
+
+echo -e "${DIM}Revocation workflow is identical for classical and PQC algorithms.${NC}"
+echo ""
+
+pause "Press Enter to start..."
+
+# =============================================================================
 # Step 1: Create CA
 # =============================================================================
 

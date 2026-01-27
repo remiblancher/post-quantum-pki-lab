@@ -30,6 +30,29 @@ cleanup() {
 trap cleanup EXIT
 
 # =============================================================================
+# Introduction
+# =============================================================================
+
+echo -e "${BOLD}SCENARIO:${NC}"
+echo "  \"I need real-time certificate status, not stale CRLs."
+echo "   Does OCSP work with post-quantum certificates?\""
+echo ""
+
+echo -e "${BOLD}WHAT WE'LL DO:${NC}"
+echo "  1. Create a PQC CA"
+echo "  2. Issue OCSP responder and server certificates"
+echo "  3. Start an OCSP responder (HTTP service)"
+echo "  4. Query certificate status (should be GOOD)"
+echo "  5. Revoke the certificate"
+echo "  6. Query again (should be REVOKED)"
+echo ""
+
+echo -e "${DIM}OCSP provides immediate revocation status - no waiting for CRL refresh.${NC}"
+echo ""
+
+pause "Press Enter to start..."
+
+# =============================================================================
 # Step 1: Create CA
 # =============================================================================
 

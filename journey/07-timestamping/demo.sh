@@ -33,6 +33,29 @@ setup_demo "PQC Timestamping"
 PROFILES="$SCRIPT_DIR/profiles"
 
 # =============================================================================
+# Introduction
+# =============================================================================
+
+echo -e "${BOLD}SCENARIO:${NC}"
+echo "  \"I need to prove when a document existed."
+echo "   How do I create quantum-resistant timestamps?\""
+echo ""
+
+echo -e "${BOLD}WHAT WE'LL DO:${NC}"
+echo "  1. Create a TSA CA (ML-DSA-65)"
+echo "  2. Issue a TSA certificate"
+echo "  3. Start an RFC 3161 timestamp server"
+echo "  4. Create a document and request a timestamp"
+echo "  5. Verify the timestamp"
+echo "  6. Tamper with document and verify again (should fail)"
+echo ""
+
+echo -e "${DIM}RFC 3161 timestamps are the industry standard for proof of existence.${NC}"
+echo ""
+
+pause "Press Enter to start..."
+
+# =============================================================================
 # Step 1: Create TSA CA
 # =============================================================================
 

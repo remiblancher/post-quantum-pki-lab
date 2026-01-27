@@ -17,7 +17,30 @@ source "$SCRIPT_DIR/../../lib/common.sh"
 setup_demo "PQC Crypto-Agility"
 
 # =============================================================================
-# Introduction: Understand Crypto-Agility
+# Introduction
+# =============================================================================
+
+echo -e "${BOLD}SCENARIO:${NC}"
+echo "  \"I need to migrate from ECDSA to PQC without breaking clients."
+echo "   How do I rotate CA algorithms safely?\""
+echo ""
+
+echo -e "${BOLD}WHAT WE'LL DO:${NC}"
+echo "  1. Create a classic CA (ECDSA)"
+echo "  2. Rotate to hybrid (ECDSA + ML-DSA)"
+echo "  3. Rotate to full PQC (ML-DSA)"
+echo "  4. Create trust bundles for different clients"
+echo "  5. Verify interoperability"
+echo "  6. Simulate rollback"
+echo ""
+
+echo -e "${DIM}Crypto-agility = change algorithms without breaking clients.${NC}"
+echo ""
+
+pause "Press Enter to start..."
+
+# =============================================================================
+# Understanding Crypto-Agility
 # =============================================================================
 
 print_step "What is Crypto-Agility?"

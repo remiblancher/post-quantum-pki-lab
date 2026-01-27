@@ -19,6 +19,28 @@ setup_demo "PQC Code Signing"
 PROFILES="$SCRIPT_DIR/profiles"
 
 # =============================================================================
+# Introduction
+# =============================================================================
+
+echo -e "${BOLD}SCENARIO:${NC}"
+echo "  \"I distribute firmware that must remain trusted for 10+ years."
+echo "   How do I sign code with quantum-resistant signatures?\""
+echo ""
+
+echo -e "${BOLD}WHAT WE'LL DO:${NC}"
+echo "  1. Create a Code Signing CA (ML-DSA-65)"
+echo "  2. Issue a code signing certificate"
+echo "  3. Sign a firmware binary (CMS/PKCS#7)"
+echo "  4. Verify the signature"
+echo "  5. Tamper with the binary and verify again (should fail)"
+echo ""
+
+echo -e "${DIM}CMS/PKCS#7 is the industry standard for code signing.${NC}"
+echo ""
+
+pause "Press Enter to start..."
+
+# =============================================================================
 # Step 1: Create Code Signing CA
 # =============================================================================
 
