@@ -323,7 +323,7 @@ run_cmd "$PKI_BIN cms decrypt --key $DEMO_TMP/alice-enc.key --in $DEMO_TMP/secre
 
 echo ""
 echo "  Verifying decrypted content matches original..."
-if diff -q $DEMO_TMP/decrypted.txt > /dev/null 2>&1; then
+if diff -q $DEMO_TMP/secret-document.txt $DEMO_TMP/decrypted.txt > /dev/null 2>&1; then
     echo -e "  ${GREEN}✓ Decryption successful! Content matches original.${NC}"
 else
     echo -e "  ${RED}✗ Decryption failed or content mismatch.${NC}"
