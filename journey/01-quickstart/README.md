@@ -51,13 +51,16 @@ After running the demo, artifacts are in `output/`.
 
 > **Profiles:** See `profiles/` in this directory to customize algorithms or extensions.
 
-### Step 1: Classical (ECDSA P-384)
+### Step 1: Create Classical Root CA
 
 ```bash
-# Create CA
 qpki ca init --profile profiles/classic-root-ca.yaml \
     --var cn="Classic Root CA" --ca-dir ./classic-ca
+```
 
+### Step 2: Issue Classical TLS Certificate
+
+```bash
 # Generate key and CSR
 qpki csr gen --algorithm ecdsa-p384 \
     --keyout classic-server.key \
@@ -69,18 +72,18 @@ qpki cert issue --ca-dir ./classic-ca \
     --profile profiles/classic-tls-server.yaml \
     --csr classic-server.csr \
     --out classic-server.crt
-
-# Inspect
-qpki inspect classic-server.crt
 ```
 
-### Step 2: Post-Quantum (ML-DSA-65)
+### Step 3: Create Post-Quantum Root CA
 
 ```bash
-# Create CA
 qpki ca init --profile profiles/pqc-root-ca.yaml \
     --var cn="PQ Root CA" --ca-dir ./pqc-ca
+```
 
+### Step 4: Issue Post-Quantum TLS Certificate
+
+```bash
 # Generate key and CSR
 qpki csr gen --algorithm ml-dsa-65 \
     --keyout pq-server.key \
@@ -92,9 +95,6 @@ qpki cert issue --ca-dir ./pqc-ca \
     --profile profiles/pqc-tls-server.yaml \
     --csr pq-server.csr \
     --out pq-server.crt
-
-# Inspect
-qpki inspect pq-server.crt
 ```
 
 **Notice anything?** The workflow is identical. Only the algorithm name changes.
