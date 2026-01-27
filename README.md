@@ -16,9 +16,10 @@ QLAB uses **[QPKI](https://github.com/remiblancher/post-quantum-pki)** for all P
 
 ## Why This Matters
 
-Quantum computers will eventually break RSA and ECC cryptography.
-The question isn't *if*, but *when* — and whether your data and signatures
-will still need to be trusted **after that moment**.
+> **"The question is not *if* quantum computers will break our cryptography, but *when*."**
+> — Michele Mosca, co-founder of the Institute for Quantum Computing
+
+Intelligence agencies are already storing encrypted traffic — undersea cables, internet communications, diplomatic exchanges, medical records — waiting patiently for quantum computers to decrypt it all.
 
 This matters today because:
 

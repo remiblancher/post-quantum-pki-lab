@@ -102,33 +102,37 @@ TODAY                           FUTURE (5-15 years?)
 
 ---
 
-## Mosca's Inequality
+## Mosca's Theorem
 
 Michele Mosca formalized the urgency of migration:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                                                                 │
-│   If  X + Y > Z  →  You have time (but start planning)         │
-│   If  X + Y ≤ Z  →  ACT NOW                                    │
+│   If  X + Y > Z  →  ACT NOW                                     │
 │                                                                 │
-│   X = Years until quantum computer (10-15 years estimate)      │
-│   Y = Time to migrate your systems (2-5 years)                 │
-│   Z = Required confidentiality duration of your data           │
+│   X = Security shelf-life (how long your data must stay secret) │
+│   Y = Time to migrate your systems to post-quantum              │
+│   Z = Time until quantum computers break current crypto         │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Example: Medical Records
+**The intuition:** If the time your data needs protection (X) plus the time to migrate (Y) exceeds the time until quantum arrives (Z), you're already late.
+
+### Example: Medical Records (HIPAA)
 
 ```
-X = 10 years  (quantum computer estimate)
-Y = 5 years   (infrastructure migration)
-Z = 50 years  (patient records - HIPAA)
+X = 50 years  (patient records must stay confidential)
+Y = 5 years   (infrastructure migration time)
+Z = 10 years  (quantum computer estimate)
 
-X + Y = 15 years
+X + Y = 55 years
+Z = 10 years
 
-15 < 50  →  YOU'RE 35 YEARS LATE!
+55 > 10  →  ACT NOW
+
+You need 55 years of protection, but quantum arrives in 10.
 ```
 
 ---
