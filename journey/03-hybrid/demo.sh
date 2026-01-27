@@ -54,6 +54,9 @@ echo ""
 
 run_cmd "$PKI_BIN ca init --profile $PROFILES/hybrid-root-ca.yaml --var cn=\"Hybrid Root CA\" --ca-dir $DEMO_TMP/hybrid-ca"
 
+# Export CA certificate for verification
+$PKI_BIN ca export --ca-dir $DEMO_TMP/hybrid-ca > $DEMO_TMP/hybrid-ca/ca.crt
+
 echo ""
 
 pause
