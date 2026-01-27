@@ -18,6 +18,8 @@ Because **quantum computers will break everything**.
 
 ## The Twin Threats
 
+**Q-Day** is the day quantum computers become powerful enough to break current cryptography (RSA, ECC, ECDSA, ECDH). Estimates range from 10-15 years, but the exact date is unknown — and irrelevant for data that must stay secret for decades.
+
 Quantum computers will break both **encryption** and **signatures**:
 
 ### SNDL: Store Now, Decrypt Later
@@ -47,8 +49,8 @@ TODAY                           FUTURE (5-15 years?)
 **The exposure window:**
 
 ```
-TODAY            +10 years         +50 years
-(2025)           (2035)            (2075)
+TODAY            Q-DAY             +50 years
+(2025)           (~2035)           (2075)
   │                │                 │
   ▼                ▼                 ▼
 ┌────────────────────────────────────────────────────────────────┐
@@ -57,7 +59,7 @@ TODAY            +10 years         +50 years
 └────────────────────────────────────────────────────────────────┘
         │                │                 │
         │                │                 └─ Data should stay secret until here
-        │                └─ Quantum decrypts everything
+        │                └─ Q-Day: Quantum decrypts everything
         └─ Adversaries recording NOW
 
 ░░░ Encrypted but captured (false sense of security)
