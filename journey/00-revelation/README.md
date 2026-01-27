@@ -251,7 +251,7 @@ NIST finalized 3 post-quantum algorithms (August 2024).
 
 Major security agencies have published concrete migration timelines:
 
-### NSA CNSA 2.0 (USA) — Timeline
+### [NSA CNSA 2.0](https://media.defense.gov/2022/Sep/07/2003071834/-1/-1/0/CSA_CNSA_2.0_ALGORITHMS_.PDF) (USA) — Timeline
 
 | Use Case | Deadline | Algorithms |
 |----------|----------|------------|
@@ -261,13 +261,13 @@ Major security agencies have published concrete migration timelines:
 | Legacy systems | 2030 | Full migration |
 | National security systems | 2035 | Complete transition |
 
-### ANSSI (France)
+### [ANSSI](https://cyber.gouv.fr/publications/avis-de-lanssi-sur-la-migration-vers-la-cryptographie-post-quantique) (France)
 
 - **Hybrid mandatory** for high-security systems (classical + PQC)
 - ML-KEM and ML-DSA approved for use
 - Transition planning required now
 
-### BSI (Germany)
+### [BSI](https://www.bsi.bund.de/EN/Themen/Unternehmen-und-Organisationen/Informationen-und-Empfehlungen/Quantentechnologien-und-Post-Quanten-Kryptografie/quantentechnologien-und-post-quanten-kryptografie_node.html) (Germany)
 
 - PQC readiness assessment required for critical infrastructure
 - Hybrid approach recommended during transition
