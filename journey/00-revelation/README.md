@@ -261,15 +261,6 @@ NIST finalized 3 post-quantum algorithms (August 2024).
 
 ---
 
-## What You Learned
-
-1. **SNDL is real:** Adversaries record encrypted traffic today → ML-KEM protects
-2. **TNFL is real:** Signatures trusted today can be forged tomorrow → ML-DSA protects
-3. **Timing matters:** Your data's sensitivity lifetime determines urgency
-4. **NIST standards are ready:** ML-KEM (FIPS 203) and ML-DSA (FIPS 204) are finalized
-
----
-
 ## Security Agency Recommendations
 
 Major security agencies have published concrete migration timelines:
@@ -316,6 +307,15 @@ The European Union has established a coordinated roadmap for PQC adoption:
 - Migration plans must be in place
 
 **The message is unanimous:** Start now. The transition takes years, and the threat is real.
+
+---
+
+## What You Learned
+
+1. **SNDL is real:** Adversaries record encrypted traffic today → ML-KEM protects
+2. **TNFL is real:** Signatures trusted today can be forged tomorrow → ML-DSA protects
+3. **Timing matters:** Your data's sensitivity lifetime determines urgency
+4. **NIST standards are ready:** ML-KEM (FIPS 203) and ML-DSA (FIPS 204) are finalized
 
 ---
 
