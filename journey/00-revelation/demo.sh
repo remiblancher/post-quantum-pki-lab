@@ -19,8 +19,9 @@ echo -e "${BOLD}SCENARIO:${NC}"
 echo "  \"Our data is encrypted. Why worry about quantum computers?\""
 echo ""
 echo -e "${BOLD}WHAT WE'LL DO:${NC}"
-echo "  1. Understand the SNDL threat"
-echo "  2. Calculate YOUR urgency with Mosca's theorem"
+echo "  1. Understand the SNDL threat (encryption)"
+echo "  2. Understand the TNFL threat (signatures)"
+echo "  3. Calculate YOUR urgency with Mosca's theorem"
 echo ""
 
 pause "Press Enter to start..."
@@ -54,10 +55,38 @@ echo ""
 pause
 
 # =============================================================================
-# Step 2: Mosca's Inequality Calculator
+# Step 2: The TNFL Threat
 # =============================================================================
 
-print_step "Step 2: Mosca's Theorem Calculator"
+print_step "Step 2: The TNFL Threat"
+
+echo "  Trust Now, Forge Later (TNFL):"
+echo ""
+echo "  Signatures you trust today can be FORGED once quantum arrives."
+echo "  Malicious firmware signed with your key installs without question."
+echo ""
+echo -e "  ${YELLOW}Forgery is INSTANT — no need to capture anything beforehand.${NC}"
+echo ""
+echo "  ┌─────────────────────────────────────────────────────────────┐"
+echo "  │  The forgery attack:                                        │"
+echo "  │                                                             │"
+echo "  │  1. Attacker extracts your PUBLIC key (from any cert)       │"
+echo "  │  2. Quantum computer derives your PRIVATE key               │"
+echo "  │  3. Attacker signs malware with YOUR key                    │"
+echo "  │  4. Malware passes all signature verification ✓             │"
+echo "  │  5. Systems auto-update with 'trusted' malicious code       │"
+echo "  └─────────────────────────────────────────────────────────────┘"
+echo ""
+echo -e "  ${CYAN}Unlike SNDL, forgery requires NO prior capture — just your public key.${NC}"
+echo ""
+
+pause
+
+# =============================================================================
+# Step 3: Mosca's Theorem Calculator
+# =============================================================================
+
+print_step "Step 3: Mosca's Theorem Calculator"
 
 echo -e "${CYAN}Formula: If X + Y > Z → ACT NOW${NC}"
 echo ""
@@ -113,10 +142,10 @@ fi
 pause
 
 # =============================================================================
-# Step 3: The Solutions - NIST Standards
+# Step 4: The Solutions - NIST Standards
 # =============================================================================
 
-print_step "Step 3: The Solutions"
+print_step "Step 4: The Solutions"
 
 echo "  NIST finalized 3 post-quantum algorithms (August 2024):"
 echo ""
