@@ -67,6 +67,9 @@ Yes. Same HTTP protocol, same request/response format. Only signature sizes chan
 qpki ca init --profile profiles/pqc-ca.yaml \
     --var cn="PQC CA" \
     --ca-dir output/pqc-ca
+
+# Export CA certificate for OCSP requests
+qpki ca export --ca-dir output/pqc-ca > output/pqc-ca/ca.crt
 ```
 
 ### Step 2: Issue OCSP Responder Certificate
