@@ -39,7 +39,7 @@ This lab demonstrates:
 
 ## Installation
 
-**Requirements:** Go 1.25+, OpenSSL 3.x
+### macOS / Linux
 
 ```bash
 git clone https://github.com/remiblancher/post-quantum-pki-lab.git
@@ -47,7 +47,17 @@ cd post-quantum-pki-lab
 ./tooling/install.sh
 ```
 
+### Windows (PowerShell)
+
+```powershell
+git clone https://github.com/remiblancher/post-quantum-pki-lab.git
+cd post-quantum-pki-lab
+.\tooling\install.ps1
+```
+
 Then start with: `./journey/00-revelation/demo.sh`
+
+**Requirements:** OpenSSL 3.x (for demo verification commands)
 
 ---
 
