@@ -26,7 +26,7 @@ echo "   How do I rotate CA algorithms safely?\""
 echo ""
 
 echo -e "${BOLD}WHAT WE'LL DO:${NC}"
-echo "  1. Create a classic CA (ECDSA)"
+echo "  1. Create Migration CA (ECDSA)"
 echo "  2. Rotate to hybrid (ECDSA + ML-DSA)"
 echo "  3. Rotate to full PQC (ML-DSA)"
 echo "  4. Issue PQC server certificate"
@@ -88,7 +88,7 @@ echo ""
 pause
 
 # =============================================================================
-# Step 1: Phase 1 - Create Classic CA (ECDSA)
+# Step 1: Phase 1 - Create Migration CA (ECDSA)
 # =============================================================================
 
 print_step "Step 1: Phase 1 - Create Migration CA (ECDSA)"

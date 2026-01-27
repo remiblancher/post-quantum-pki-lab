@@ -143,7 +143,7 @@ CURRENT SITUATION
 
 ## What We'll Do
 
-1. Create a classic CA (ECDSA)
+1. Create Migration CA (ECDSA)
 2. Rotate to hybrid (ECDSA + ML-DSA)
 3. Rotate to full PQC (ML-DSA)
 4. Issue PQC server certificate
