@@ -69,7 +69,7 @@ qpki ca init --profile profiles/pqc-ca.yaml \
     --ca-dir output/pqc-ca
 
 # Export CA certificate for OCSP requests
-qpki ca export --ca-dir output/pqc-ca > output/pqc-ca/ca.crt
+qpki ca export --ca-dir output/pqc-ca --out output/pqc-ca/ca.crt
 ```
 
 ### Step 2: Issue OCSP Responder Certificate

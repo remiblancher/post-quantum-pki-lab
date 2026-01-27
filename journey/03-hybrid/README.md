@@ -74,7 +74,7 @@ qpki ca init --profile profiles/hybrid-root-ca.yaml \
     --ca-dir output/hybrid-ca
 
 # Export CA certificate for verification
-qpki ca export --ca-dir output/hybrid-ca > output/hybrid-ca/ca.crt
+qpki ca export --ca-dir output/hybrid-ca --out output/hybrid-ca/ca.crt
 
 # Inspect
 qpki inspect output/hybrid-ca/ca.crt

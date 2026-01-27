@@ -16,7 +16,6 @@ source "$SCRIPT_DIR/../../lib/common.sh"
 
 TSA_PORT=8318
 TSA_PID=""
-BUNDLE_DIR="$DEMO_TMP/ltv-bundle"
 
 cleanup() {
     if [[ -n "$TSA_PID" ]] && kill -0 "$TSA_PID" 2>/dev/null; then
@@ -32,6 +31,7 @@ trap cleanup EXIT
 setup_demo "PQC LTV Signatures"
 
 PROFILES="$SCRIPT_DIR/profiles"
+BUNDLE_DIR="$DEMO_TMP/ltv-bundle"
 
 # =============================================================================
 # Introduction
@@ -68,7 +68,7 @@ echo ""
 run_cmd "$PKI_BIN ca init --profile $PROFILES/pqc-ca.yaml --var cn=\"LTV Demo CA\" --ca-dir $DEMO_TMP/ltv-ca"
 
 # Export CA certificate for chain building
-$PKI_BIN ca export --ca-dir $DEMO_TMP/ltv-ca > $DEMO_TMP/ltv-ca/ca.crt
+$PKI_BIN ca export --ca-dir $DEMO_TMP/ltv-ca --out $DEMO_TMP/ltv-ca/ca.crt
 
 echo ""
 

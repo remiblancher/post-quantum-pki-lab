@@ -40,11 +40,13 @@ echo ""
 
 echo -e "${BOLD}WHAT WE'LL DO:${NC}"
 echo "  1. Create a PQC CA"
-echo "  2. Issue OCSP responder and server certificates"
-echo "  3. Start an OCSP responder (HTTP service)"
-echo "  4. Query certificate status (should be GOOD)"
-echo "  5. Revoke the certificate"
-echo "  6. Query again (should be REVOKED)"
+echo "  2. Issue OCSP responder certificate"
+echo "  3. Start OCSP responder"
+echo "  4. Issue TLS certificate"
+echo "  5. Query certificate status (GOOD)"
+echo "  6. Revoke the certificate"
+echo "  7. Query again (REVOKED)"
+echo "  8. Stop OCSP responder"
 echo ""
 
 echo -e "${DIM}OCSP provides immediate revocation status - no waiting for CRL refresh.${NC}"
@@ -64,69 +66,37 @@ echo ""
 run_cmd "$PKI_BIN ca init --profile $PROFILES/pqc-ca.yaml --var cn=\"PQC CA\" --ca-dir $DEMO_TMP/pqc-ca"
 
 # Export CA certificate for OCSP request (issuerKeyHash requires CA public key)
-$PKI_BIN ca export --ca-dir $DEMO_TMP/pqc-ca > $DEMO_TMP/pqc-ca/ca.crt
+$PKI_BIN ca export --ca-dir $DEMO_TMP/pqc-ca --out $DEMO_TMP/pqc-ca/ca.crt
 
 echo ""
 
 pause
 
 # =============================================================================
-# Step 2: Generate Keys and CSRs
+# Step 2: Issue OCSP Responder Certificate
 # =============================================================================
 
-print_step "Step 2: Generate Keys and CSRs"
+print_step "Step 2: Issue OCSP Responder Certificate"
 
-echo "  Generate OCSP responder key and CSR..."
+echo "  Generate OCSP responder key and issue certificate."
+echo "  Best practice: CA key stays offline, responder has delegated certificate."
 echo ""
 
 run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout $DEMO_TMP/ocsp-responder.key --cn \"OCSP Responder\" --out $DEMO_TMP/ocsp-responder.csr"
 
 echo ""
-echo "  Generate TLS server key and CSR..."
-echo ""
-
-run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout $DEMO_TMP/server.key --cn server.example.com --out $DEMO_TMP/server.csr"
-
-echo ""
-
-pause
-
-# =============================================================================
-# Step 3: Issue Certificates
-# =============================================================================
-
-print_step "Step 3: Issue Certificates"
-
-echo "  Issue delegated OCSP responder certificate (best practice: CA key stays offline)..."
-echo ""
 
 run_cmd "$PKI_BIN cert issue --ca-dir $DEMO_TMP/pqc-ca --profile $PROFILES/pqc-ocsp-responder.yaml --csr $DEMO_TMP/ocsp-responder.csr --out $DEMO_TMP/ocsp-responder.crt"
 
 echo ""
-echo "  Issue TLS server certificate to verify..."
-echo ""
-
-run_cmd "$PKI_BIN cert issue --ca-dir $DEMO_TMP/pqc-ca --profile $PROFILES/pqc-tls-server.yaml --csr $DEMO_TMP/server.csr --out $DEMO_TMP/server.crt"
-
-# Get serial number
-SERIAL=$(openssl x509 -in $DEMO_TMP/server.crt -noout -serial 2>/dev/null | cut -d= -f2)
-if [[ -z "$SERIAL" ]]; then
-    print_error "Failed to extract certificate serial number"
-    exit 1
-fi
-
-echo ""
-echo -e "  ${BOLD}Certificates issued:${NC}"
-echo -e "    Server serial: ${YELLOW}$SERIAL${NC}"
-echo ""
 
 pause
 
 # =============================================================================
-# Step 4: Start OCSP Responder
+# Step 3: Start OCSP Responder
 # =============================================================================
 
-print_step "Step 4: Start OCSP Responder"
+print_step "Step 3: Start OCSP Responder"
 
 echo "  The OCSP responder is an HTTP service that answers status queries."
 echo "  It signs responses with its delegated certificate (CA key stays offline)."
@@ -155,10 +125,39 @@ echo ""
 pause
 
 # =============================================================================
+# Step 4: Issue TLS Certificate
+# =============================================================================
+
+print_step "Step 4: Issue TLS Certificate"
+
+echo "  Generate TLS server key and issue certificate to verify."
+echo ""
+
+run_cmd "$PKI_BIN csr gen --algorithm ml-dsa-65 --keyout $DEMO_TMP/server.key --cn server.example.com --out $DEMO_TMP/server.csr"
+
+echo ""
+
+run_cmd "$PKI_BIN cert issue --ca-dir $DEMO_TMP/pqc-ca --profile $PROFILES/pqc-tls-server.yaml --csr $DEMO_TMP/server.csr --out $DEMO_TMP/server.crt"
+
+# Get serial number
+SERIAL=$(openssl x509 -in $DEMO_TMP/server.crt -noout -serial 2>/dev/null | cut -d= -f2)
+if [[ -z "$SERIAL" ]]; then
+    print_error "Failed to extract certificate serial number"
+    exit 1
+fi
+
+echo ""
+echo -e "  ${BOLD}Certificate issued:${NC}"
+echo -e "    Serial: ${YELLOW}$SERIAL${NC}"
+echo ""
+
+pause
+
+# =============================================================================
 # Step 5: Query Certificate Status
 # =============================================================================
 
-print_step "Step 5: Query Certificate Status"
+print_step "Step 5: Query Certificate Status (GOOD)"
 
 echo "  Let's query the OCSP responder for our server certificate status..."
 echo ""
@@ -191,10 +190,10 @@ echo ""
 pause
 
 # =============================================================================
-# Step 6: Revoke and Re-query
+# Step 6: Revoke Certificate
 # =============================================================================
 
-print_step "Step 6: Revoke and Re-query"
+print_step "Step 6: Revoke Certificate"
 
 echo -e "  ${RED}Simulating key compromise...${NC}"
 echo ""
@@ -202,6 +201,17 @@ echo ""
 run_cmd "$PKI_BIN cert revoke $SERIAL --ca-dir $DEMO_TMP/pqc-ca --reason keyCompromise"
 
 echo ""
+echo -e "  ${GREEN}✓${NC} Certificate revoked"
+echo ""
+
+pause
+
+# =============================================================================
+# Step 7: Query Again (REVOKED)
+# =============================================================================
+
+print_step "Step 7: Query Again (REVOKED)"
+
 echo "  Query again - status should change immediately!"
 echo ""
 

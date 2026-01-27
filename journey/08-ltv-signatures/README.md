@@ -158,7 +158,7 @@ qpki ca init --profile profiles/pqc-ca.yaml \
     --ca-dir output/ltv-ca
 
 # Export CA certificate
-qpki ca export --ca-dir output/ltv-ca > output/ltv-ca/ca.crt
+qpki ca export --ca-dir output/ltv-ca --out output/ltv-ca/ca.crt
 ```
 
 ### Step 2: Issue TSA Certificate

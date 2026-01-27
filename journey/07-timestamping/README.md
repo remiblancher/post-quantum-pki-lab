@@ -141,7 +141,7 @@ qpki ca init --profile profiles/pqc-ca.yaml \
     --ca-dir output/tsa-ca
 
 # Export CA certificate for verification
-qpki ca export --ca-dir output/tsa-ca > output/tsa-ca/ca.crt
+qpki ca export --ca-dir output/tsa-ca --out output/tsa-ca/ca.crt
 ```
 
 ### Step 2: Issue TSA Certificate
