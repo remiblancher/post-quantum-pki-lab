@@ -18,6 +18,8 @@ QLAB uses **[QPKI](https://github.com/remiblancher/post-quantum-pki)** for all P
 
 By completing this lab, you'll be able to:
 
+- Understand the quantum threats to current cryptography (**SNDL**, **TNFL**)
+- **Assess your PQC migration urgency** using Mosca's theorem
 - Issue classical and post-quantum certificates with the **same workflow**
 - Build complete PQC hierarchies (Root CA → Issuing CA → End-Entity)
 - Deploy **hybrid certificates** for backward-compatible migration
