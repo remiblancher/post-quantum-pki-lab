@@ -105,13 +105,9 @@ else
     echo -e "${BOLD}Enter your values:${NC}"
     echo ""
 
-    read -p "  X - Years your data must stay secret: " X
-    if [[ -z "$X" ]]; then
-        echo ""
-        echo -e "  ${YELLOW}Examples: Healthcare=50, Government=75, Firmware=20${NC}"
-        read -p "  X: " X
-        X=${X:-50}
-    fi
+    echo -e "  ${YELLOW}Examples: Healthcare=50, Government=75, Firmware=20${NC}"
+    read -p "  X - Years your data must stay secret (default: 50): " X
+    X=${X:-50}
 
     read -p "  Y - Years to migrate your systems (default: 5): " Y
     Y=${Y:-5}
