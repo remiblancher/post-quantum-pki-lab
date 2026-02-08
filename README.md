@@ -129,7 +129,7 @@ cd post-quantum-pki-lab
 
 | # | Lab | Time | Takeaway |
 |---|-----|------|----------|
-| 9 | [**PQC Encryption**](journey/09-cms-encryption/) | 15 min | KEM keys require a new pattern: attestation |
+| 9 | [**Encryption**](journey/09-cms-encryption/) | 15 min | KEM keys require a new pattern: attestation |
 
 ↓ *And for production migration?*
 
