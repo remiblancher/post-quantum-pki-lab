@@ -5,9 +5,9 @@ description: "Understand the quantum threat with SNDL and TNFL attacks, Mosca's 
 
 # The Quantum Threat to Your Data Today
 
-> **Key Message:** Your data is already being recorded. The clock is ticking.
-
 ## Why Change Algorithms?
+
+> **Key Message:** Your data is already being recorded. The clock is ticking.
 
 Classical PKI with ECDSA works. So why change?
 
