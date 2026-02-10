@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-#  UC-08: LTV Signatures - Sign Today, Verify in 30 Years
+#  Lab-08: LTV Signatures - Sign Today, Verify in 30 Years
 #
 #  Long-Term Validation for document signing with ML-DSA
 #  Bundle everything needed for offline verification decades from now

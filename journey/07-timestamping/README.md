@@ -1,9 +1,9 @@
 ---
-title: "PQC Timestamping: Trust Now, Verify Forever"
+title: "Lab-07: PQC Timestamping"
 description: "Create RFC 3161 timestamps with ML-DSA to prove when documents were signed, with proofs that remain valid for decades."
 ---
 
-# PQC Timestamping: Trust Now, Verify Forever
+# Lab-07: PQC Timestamping
 
 ## Post-Quantum Timestamping with ML-DSA
 

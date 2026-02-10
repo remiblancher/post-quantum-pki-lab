@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-#  UC-06: Code Signing - Signatures That Outlive the Threat
+#  Lab-06: Code Signing - Signatures That Outlive the Threat
 #
 #  Post-quantum code signing with ML-DSA
 #  Sign binaries and verify integrity

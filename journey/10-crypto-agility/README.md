@@ -1,9 +1,9 @@
 ---
-title: "PQC Crypto-Agility: Migrate Without Breaking"
+title: "Lab-10: Crypto-Agility"
 description: "Implement CA rotation and trust bundle migration to switch algorithms without downtime, enabling gradual client migration."
 ---
 
-# PQC Crypto-Agility: Migrate Without Breaking
+# Lab-10: Crypto-Agility
 
 ## CA Rotation and Trust Bundle Migration
 

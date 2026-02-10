@@ -1,9 +1,9 @@
 ---
-title: "Classical vs Post-Quantum"
+title: "Lab-01: Classical vs Post-Quantum"
 description: "Compare classical ECDSA and post-quantum ML-DSA PKI workflows side by side."
 ---
 
-# Classical vs Post-Quantum
+# Lab-01: Classical vs Post-Quantum
 
 ## Same PKI, Different Crypto
 
@@ -140,7 +140,7 @@ Only the algorithm (and sizes) change.
 > - Crypto-agile enrollment (attestation for KEM keys)
 > - CA versioning for reversible migration
 >
-> You'll explore these capabilities in [UC-03](../03-hybrid/), [UC-09](../09-cms-encryption/), and [UC-10](../10-crypto-agility/).
+> You'll explore these capabilities in [Lab-03](../03-hybrid/), [Lab-09](../09-cms-encryption/), and [Lab-10](../10-crypto-agility/).
 
 ---
 

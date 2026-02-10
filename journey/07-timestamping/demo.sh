@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-#  UC-07: Timestamping - Trust Now, Verify Forever
+#  Lab-07: Timestamping - Trust Now, Verify Forever
 #
 #  Post-quantum timestamping with ML-DSA
 #  Prove when documents existed with unforgeable timestamps

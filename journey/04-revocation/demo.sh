@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-#  UC-04: Certificate Revocation
+#  Lab-04: Certificate Revocation
 #
 #  Incident Response: When Keys Are Compromised
 #  Revoke certificates and generate CRLs

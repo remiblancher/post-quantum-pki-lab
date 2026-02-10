@@ -1,9 +1,9 @@
 ---
-title: "Full PQC Chain of Trust"
+title: "Lab-02: Full PQC Chain"
 description: "Build a complete post-quantum PKI hierarchy with Root CA, Issuing CA, and TLS certificates using ML-DSA algorithms."
 ---
 
-# Full PQC Chain of Trust
+# Lab-02: Full PQC Chain
 
 ## Build a Complete PQC PKI Hierarchy
 
@@ -17,7 +17,7 @@ description: "Build a complete post-quantum PKI hierarchy with Root CA, Issuing 
 
 This demo shows a production-ready 3-level PKI hierarchy using only post-quantum algorithms. No classical cryptography anywhere in the chain.
 
-*For legacy client compatibility, see [UC-03: Hybrid](../03-hybrid/).*
+*For legacy client compatibility, see [Lab-03: Hybrid](../03-hybrid/).*
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -161,7 +161,7 @@ Use SLH-DSA when:
 | Scenario | Recommendation |
 |----------|----------------|
 | New internal PKI | **Full PQC** - Start quantum-safe |
-| Public-facing servers | Hybrid (UC-03) - Legacy client support |
+| Public-facing servers | Hybrid (Lab-03) - Legacy client support |
 | Government/Military | **Full PQC** - Regulatory requirements |
 | IoT (long-lived) | **Full PQC** - Future-proof devices |
 | Short-lived tokens | Classical OK - Low SNDL risk |

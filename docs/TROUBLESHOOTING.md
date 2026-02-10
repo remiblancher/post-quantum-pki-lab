@@ -36,7 +36,7 @@ Common issues and solutions when working with post-quantum PKI.
 **Cause:** Client library doesn't support FIPS 204 (ML-DSA).
 
 **Solutions:**
-1. Use hybrid certificates (UC-03) — legacy clients use ECDSA, modern clients verify both
+1. Use hybrid certificates (Lab-03) — legacy clients use ECDSA, modern clients verify both
 2. Update client libraries to versions supporting PQC
 3. Check [QPKI compatibility matrix](https://github.com/remiblancher/post-quantum-pki#compatibility)
 
@@ -68,7 +68,7 @@ qpki inspect server.crt
 
 **Symptom:** `attestation verification failed` when issuing encryption certificate.
 
-**Cause:** ML-KEM keys cannot sign their own CSR (see UC-09).
+**Cause:** ML-KEM keys cannot sign their own CSR (see Lab-09).
 
 **Solution:**
 ```bash
@@ -128,7 +128,7 @@ qpki ocsp request \
 
 ### When should I migrate to PQC?
 
-Use Mosca's inequality (UC-01):
+Use Mosca's inequality (Lab-01):
 
 ```
 Migration Time + Data Shelf Life > Time to Quantum Computer
@@ -145,7 +145,7 @@ If your data must remain confidential for 10+ years, start now.
 
 ### How to rollback if PQC breaks something?
 
-Use CA versioning (UC-10):
+Use CA versioning (Lab-10):
 
 ```bash
 # Export previous CA version

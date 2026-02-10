@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-#  UC-10: Crypto-Agility - Migrate Without Breaking
+#  Lab-10: Crypto-Agility - Migrate Without Breaking
 #
 #  Demonstrate CA rotation and trust bundle migration:
 #  Phase 1: Classic (ECDSA) → Phase 2: Hybrid → Phase 3: Full PQC

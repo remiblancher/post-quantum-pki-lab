@@ -1,9 +1,9 @@
 ---
-title: "PQC CRL: Oops, We Need to Revoke!"
+title: "Lab-04: PQC Revocation"
 description: "Handle certificate revocation and CRL generation for post-quantum certificates using the same familiar PKI workflow."
 ---
 
-# PQC CRL: Oops, We Need to Revoke!
+# Lab-04: PQC Revocation
 
 ## Incident Response: When Keys Are Compromised
 

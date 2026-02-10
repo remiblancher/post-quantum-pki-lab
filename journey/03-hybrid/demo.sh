@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-#  UC-03: Hybrid Certificates (Catalyst)
+#  Lab-03: Hybrid Certificates (Catalyst)
 #
 #  Best of Both Worlds: Classical + Post-Quantum
 #  ECDSA P-384 + ML-DSA-65 in a single certificate

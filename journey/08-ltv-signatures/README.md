@@ -1,9 +1,9 @@
 ---
-title: "PQC LTV: Sign Today, Verify in 30 Years"
+title: "Lab-08: PQC LTV Signatures"
 description: "Build long-term validation bundles that package all proofs for offline verification decades later, without external dependencies."
 ---
 
-# PQC LTV: Sign Today, Verify in 30 Years
+# Lab-08: PQC LTV Signatures
 
 ## Long-Term Validation for Document Signing
 

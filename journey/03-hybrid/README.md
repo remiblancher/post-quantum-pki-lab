@@ -1,9 +1,9 @@
 ---
-title: "Hybrid Catalyst: Best of Both Worlds"
+title: "Lab-03: Hybrid Catalyst"
 description: "Create hybrid certificates combining classical ECDSA and post-quantum ML-DSA for backward compatibility with legacy clients while being quantum-ready."
 ---
 
-# Hybrid Catalyst: Best of Both Worlds
+# Lab-03: Hybrid Catalyst
 
 ## Hybrid Certificates: Classical + Post-Quantum
 

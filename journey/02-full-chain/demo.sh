@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-#  UC-02: Full PQC Chain of Trust
+#  Lab-02: Full PQC Chain of Trust
 #
 #  Build a complete quantum-resistant PKI hierarchy
 #  Root CA → Issuing CA → TLS Server

@@ -1,9 +1,9 @@
 ---
-title: "PQC Code Signing: Signatures That Outlive the Threat"
+title: "Lab-06: PQC Code Signing"
 description: "Sign software and firmware with ML-DSA to ensure signatures remain unforgeable by future quantum computers."
 ---
 
-# PQC Code Signing: Signatures That Outlive the Threat
+# Lab-06: PQC Code Signing
 
 ## Post-Quantum Code Signing with ML-DSA
 

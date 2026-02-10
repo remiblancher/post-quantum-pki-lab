@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-#  UC-05: OCSP - Real-Time Certificate Verification
+#  Lab-05: OCSP - Real-Time Certificate Verification
 #
 #  Real-time certificate status checking with OCSP
 #  Query certificate status and see immediate revocation effects

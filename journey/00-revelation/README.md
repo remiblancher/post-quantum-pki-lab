@@ -1,9 +1,9 @@
 ---
-title: "The Quantum Threat to Your Data Today"
+title: "Lab-00: The Quantum Threat"
 description: "Understand the quantum threat with SNDL and TNFL attacks, Mosca's theorem for migration urgency, and NIST post-quantum algorithm standards."
 ---
 
-# The Quantum Threat to Your Data Today
+# Lab-00: The Quantum Threat
 
 ## Why Change Algorithms?
 

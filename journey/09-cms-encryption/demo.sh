@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-#  UC-09: PQC Encryption - For Your Eyes Only
+#  Lab-09: PQC Encryption - For Your Eyes Only
 #
 #  Post-quantum document encryption with ML-KEM
 #  + CSR Attestation workflow (RFC 9883)
