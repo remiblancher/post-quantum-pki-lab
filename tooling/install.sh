@@ -62,7 +62,7 @@ fi
 # Download pre-built binary from GitHub releases
 # =============================================================================
 
-GITHUB_REPO="remiblancher/post-quantum-pki"
+GITHUB_REPO="remiblancher/qpki"
 VERSION="${PKI_VERSION:-latest}"
 
 echo ""
@@ -147,7 +147,7 @@ echo "  1. Clone the QPKI repository:"
 echo -e "     ${CYAN}git clone https://github.com/$GITHUB_REPO.git${NC}"
 echo ""
 echo "  2. Build the binary:"
-echo -e "     ${CYAN}cd post-quantum-pki && go build -o ../post-quantum-pki-lab/bin/qpki ./cmd/qpki${NC}"
+echo -e "     ${CYAN}cd qpki && go build -o ../qlab/bin/qpki ./cmd/qpki${NC}"
 echo ""
 echo "  3. Run this script again to verify:"
 echo -e "     ${CYAN}./tooling/install.sh${NC}"
